@@ -2,4 +2,8 @@ from escaperoom.rooms.base import BaseRoom
 
 
 class DNSRoom(BaseRoom):
-    NAME = 'dns'
+    def __init__(self):
+        pass
+
+    def solve(self):
+        pass
