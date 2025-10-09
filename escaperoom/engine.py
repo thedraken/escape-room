@@ -21,6 +21,14 @@ class Engine:
                     "load: If a save.txt file is found and it is valid, will load it and set that as your current progress. Will overwrite any progress already done in this session")
                 print("quit: Exits the game and prints currently collected evidence to a transcript file")
                 print("help: Gives a list of available commands")
+            case "look":
+                match self.current_location:
+                    case CurrentRoom.BASE:
+                        print("You are in the lobby, you can move to any room from here. Where would you like to go?")
+                    case CurrentRoom.SOC:
+                        print("You are in the SOC room, there is a triage desk with a large file of SSH logs, called auth.log, that show authentication attempts. Your task is to identify the most likely attacking subnet.")
+                    case CurrentRoom.MALWARE:
+                        print("You are in the Malware lab, there is a JSON-line file, called proc_tree.jsonl, that shows a process tree containing a malicious chain ending with an exfil command.")
             case move if move.startswith("move"):
                 is_valid = False
                 commands = move.split(" ")

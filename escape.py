@@ -48,8 +48,8 @@ print(r"""
 print("Escape before the the cybersecurity minotaur captures you")
 print("Type 'quit' to quit")
 print("Type help for assistance")
+engine = escaperoom.engine.Engine()
 
 while run_game:
-    engine = escaperoom.engine.Engine()
     next_step = input("What would you like to do?")
     run_game = engine.command(next_step)
