@@ -31,6 +31,10 @@ class Engine:
         return True
 
     def __do_look(self):
+        """
+        Will check the current location and look in the room, giving the user a description
+        :return: NONE
+        """
         match self.current_location:
             case CurrentRoom.BASE:
                 print("You are in the lobby, you can move to any room from here. Where would you like to go?")
@@ -42,6 +46,11 @@ class Engine:
                     "You are in the Malware lab, there is a JSON-line file, called proc_tree.jsonl, that shows a process tree containing a malicious chain ending with an exfil command.")
 
     def __do_move(self, move):
+        """
+        Will move to the selected room, it assumes the move is a space separated command
+        :param move: move dns as an example
+        :return: NONE
+        """
         is_valid = False
         commands = move.split(" ")
         if commands[0] == "move" and len(commands) > 1:
@@ -72,6 +81,10 @@ class Engine:
             print(f"You have entered into {self.current_location}")
 
     def __do_help(self):
+        """
+        Prints the current instructions available for a user to use
+        :return: NONE
+        """
         print("look: Allows you to look in the current room and see what is available")
         print(
             "move <room>: Allows you to move to a room to solve, rooms available are: dns, malware, soc, vault, gate, and lobby")
