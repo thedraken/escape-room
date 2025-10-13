@@ -1,4 +1,4 @@
-from engine import CurrentRoom
+from escaperoom.rooms.currentroom import CurrentRoom
 
 
 class Transcript:

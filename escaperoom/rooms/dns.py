@@ -1,13 +1,12 @@
-from escaperoom.engine import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
+from escaperoom.rooms.currentroom import CurrentRoom
 
 
 class DNSRoom(BaseRoom):
     def __init__(self):
         super().__init__()
-        pass
+        self.__room = CurrentRoom.DNS
 
     def solve(self):
-        print("do something")
-        self._add_log_to_transcript("I did something", CurrentRoom.DNS)
-        pass
+        print("You called solve on " + CurrentRoom.get_room_name(self.__room))
+        self._add_log_to_transcript("I did something", self.__room)

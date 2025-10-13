@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 
 from escaperoom import transcript
-from escaperoom.engine import CurrentRoom
+from escaperoom.rooms.currentroom import CurrentRoom
 
 
 class BaseRoom(ABC):
@@ -10,8 +10,7 @@ class BaseRoom(ABC):
 
     @abstractmethod
     def solve(self):
-        while False:
-            yield none
+        pass
 
     def _add_log_to_transcript(self, log, current_room: CurrentRoom):
         if not log or not current_room:
