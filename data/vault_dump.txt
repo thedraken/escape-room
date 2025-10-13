@@ -1,0 +1,42 @@
+SAFE { 8 - 29 - 38 }
+SAFE{32 - 36 - 27}
+== BEGIN MARK ==
+SAFE{9-14-
+23}
+== END MARK ==
+SAFE { 8 - 13 - 77 }
+SAFE { 8 - 5 - 58 }
+SAFE{ 17-4-48 }
+SAFE{ 31-13-9 }
+SAFE{ 11-20-76 }
+S A F E{7-40-43}
+SAFE { 4 - 14 - 12 }
+‘SAFE’ markers may be split.
+SAFE{2 - 7 - 69}
+S A F E{2-15-38}
+SAFE { 34 - 28 - 31 }
+SAFE{34-23-12}
+SAFE{10 - 5 - 80}
+SAFE{17 - 18 - 39}
+SAFE{40-4-17}
+SAFE{ 16-37-22 }
+RANDOM DATA BLOCK 0x3f
+SAFE{9-4-19}
+Telemetry stream initiated.
+SAFE { 39 - 17 - 23 }
+SAFE{ 28-22-71 }
+S A F E{36-39-56}
+SAFE{30-21-25}
+SAFE{  5-6-11 } <<< maybe
+SAFE{31 - 2 - 30}
+SAFE{20 - 35 - 75}
+SAFE{1-22-35}
+SAFE{9 - 20 - 54}
+SAFE{34 - 22 - 68}
+SAFE{22 - 16 - 71}
+SAFE{5-13-4}
+SAFE{20-27-73}
+SAFE{31 - 8 - 77}
+partialSAFE{3-4-}garbage
+S A F E{31-8-8}
+SAFE{37-39-40}
