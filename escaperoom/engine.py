@@ -20,15 +20,12 @@ class Engine:
         hint
         save
         load
-        help
         :return: returns if the game should carry on running, if false, the game will be ended by the escape CLI
         """
         match command.lower():
             case "quit":
                 print("Thank you for playing")
                 return False
-            case "help":
-                self.__print_help_text()
             case "look":
                 self.__do_look()
             case move if move.startswith("move"):
@@ -36,18 +33,24 @@ class Engine:
             case inspect if inspect.startswith("inspect"):
                 self.__do_inspect(inspect)
             case use if use.startswith("use"):
-                print("Use")
+                self.__do_use(use)
             case "inventory":
-                print("Inventory")
+                self.__do_inventory()
             case "hint":
-                print("Hint")
+                self.__do_hint()
             case "save":
-                print("Save")
+                self.__do_save()
             case "load":
-                print("Load")
+                self.__do_load()
         return True
 
     def __do_inspect(self, inspect):
+        """
+        If you are in a valid location and inspect the right item, this will attempt to solve the room
+        Relies on the current_room set in the engine
+        :param inspect: The item to inspect
+        :return: Nothing
+        """
         is_valid = False
         commands = inspect.split(" ")
         if commands[0] == "inspect" and len(commands) > 1:
@@ -55,19 +58,23 @@ class Engine:
             if item == CurrentRoom.get_room_item(self.current_location):
                 is_valid = True
         if is_valid:
-            match self.current_location:
-                case CurrentRoom.SOC:
-                    socRoom = SocRoom()
-                    socRoom.solve()
-                case CurrentRoom.DNS:
-                    dnsRoom = DNSRoom()
-                    dnsRoom.solve()
-                case CurrentRoom.MALWARE:
-                    malwareRoom = MalwareRoom()
-                    malwareRoom.solve()
-                case CurrentRoom.VAULT:
-                    vaultRoom = VaultRoom()
-                    vaultRoom.solve()
+            try:
+                match self.current_location:
+                    case CurrentRoom.SOC:
+                        soc_room = SocRoom()
+                        soc_room.solve()
+                    case CurrentRoom.DNS:
+                        dns_room = DNSRoom()
+                        dns_room.solve()
+                    case CurrentRoom.MALWARE:
+                        malware_room = MalwareRoom()
+                        malware_room.solve()
+                    case CurrentRoom.VAULT:
+                        vault_room = VaultRoom()
+                        vault_room.solve()
+            except Exception as e:
+                print("An error occurred in solving the room:")
+                print(e)
         else:
             print(
                 "Please enter an item with the inspect command, you are in "
@@ -76,6 +83,11 @@ class Engine:
                 + CurrentRoom.get_room_item(self.current_location))
 
     def __do_move(self, move):
+        """
+        Allows the user to move to a room specified, if the room is invalid also reports on it
+        :param move:
+        :return:
+        """
         is_valid = False
         commands = move.split(" ")
         if commands[0] == "move" and len(commands) > 1:
@@ -106,6 +118,10 @@ class Engine:
             print(f"You have entered into {self.current_location}")
 
     def __do_look(self):
+        """
+        Prints details about the current room the user is in
+        :return: Nothing
+        """
         match self.current_location:
             case CurrentRoom.BASE:
                 print("You are in the lobby, you can move to any room from here. Where would you like to go?")
@@ -125,7 +141,26 @@ class Engine:
             case CurrentRoom.FINAL_GATE:
                 print("The final gate stands before you, have you collected all the pieces to exit the gate?")
 
-    def __print_help_text(self):
+    def __do_use(self, use):
+        """
+
+        :param use:
+        :return:
+        """
+        pass
+
+    def __do_inventory(self):
+        """
+
+        :return:
+        """
+        pass
+
+    def __do_hint(self):
+        """
+        Prints a list of commands the user can currently do
+        :return: Nothing
+        """
         print("look: Allows you to look in the current room and see what is available")
         print(
             "move <room>: Allows you to move to a room to solve, rooms available are: dns, malware, soc, vault, gate, and lobby")
@@ -137,9 +172,22 @@ class Engine:
               + CurrentRoom.get_room_name(self.current_location)
               + " and can use " + CurrentRoom.get_use_item(self.current_location))
         print("inventory: Prints a list of all items found your inventory")
-        print("hint: Gives you a hint for your current room")
         print("save: Saves the progress of your current game to a file in the data folder, called save.txt")
         print("load: If a save.txt file is found and it is valid, will load it and set that as your current progress. "
               "Will overwrite any progress already done in this session")
         print("quit: Exits the game and prints currently collected evidence to a transcript file")
         print("help: Gives a list of available commands")
+
+    def __do_save(self):
+        """
+
+        :return:
+        """
+        pass
+
+    def __do_load(self):
+        """
+
+        :return:
+        """
+        pass

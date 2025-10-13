@@ -8,5 +8,9 @@ class SocRoom(BaseRoom):
         self.__room = CurrentRoom.SOC
 
     def solve(self):
+        """
+        Add a method description here. Do not forget to return the result!
+        :return:
+        """
         print("You called solve on " + CurrentRoom.get_room_name(self.__room))
         self._add_log_to_transcript("I did something", self.__room)

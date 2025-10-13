@@ -32,8 +32,8 @@ _____    ____    __| _/ \__    ___/|  |__   ____   _____ _____    ______   /    
     """)
 
 print("Enjoy the escape room!")
-print("Type 'quit' to quit")
-print("Type help for assistance")
+print("Type quit to quit")
+print("Type hint for assistance")
 engine = escaperoom.engine.Engine()
 
 while run_game:
