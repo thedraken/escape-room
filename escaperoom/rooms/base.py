@@ -1,12 +1,12 @@
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 
-from escaperoom import transcript
 from escaperoom.rooms.currentroom import CurrentRoom
+from escaperoom.transcript import Transcript
 
 
 class BaseRoom(ABC):
-    def __init__(self):
-        self.transcript = transcript.Transcript()
+    def __init__(self, transcript: Transcript):
+        self.transcript = transcript
 
     @abstractmethod
     def solve(self):
