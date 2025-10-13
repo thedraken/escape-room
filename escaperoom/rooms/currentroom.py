@@ -36,7 +36,7 @@ class CurrentRoom(Enum):
     @staticmethod
     def get_room_item(current_room: Enum):
         """
-        Will tell you which item is inspectable in the room
+        Will tell you which item is inspectable in the current room
         :param current_room: The room you want to know the item of
         :return: The item that can be inspected, or no item if none is found
         """
