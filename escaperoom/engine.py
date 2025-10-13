@@ -195,7 +195,7 @@ class Engine:
               "Will overwrite any progress already done in this session")
         self.transcript.print_message(
             "quit: Exits the game and prints currently collected evidence to a transcript file")
-        self.transcript.print_message("help: Gives a list of available commands")
+        self.transcript.print_message("hint: Gives a list of available commands")
 
     def __do_save(self):
         """

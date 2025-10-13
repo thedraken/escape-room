@@ -17,7 +17,6 @@ transcript.print_message("Type hint for assistance")
 
 engine = escaperoom.engine.Engine(transcript)
 
-
 while run_game:
     next_step = input("What would you like to do?")
     transcript.append_log("What would you like to do?")
