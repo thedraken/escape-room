@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from escaperoom.rooms.currentroom import CurrentRoom
@@ -25,14 +26,20 @@ class Transcript:
         transcript_value = self.transcript_dict.get(current_room)
         transcript_value += transcript_text
         self.transcript_dict.update({current_room: transcript_value})
-        self.transcript_crono_order += CurrentRoom.get_room_name(current_room) + ": " + transcript_text
+        self.append_log(CurrentRoom.get_room_name(current_room) + ": " + transcript_text)
 
     def append_log(self, log_text):
-        self.transcript_crono_order += log_text + "\n"
+        """
+        Logs an action, but does not attach to the run.txt file for submission
+        The log is appended with the current date time
+        :param log_text: The log text to add
+        :return: NONE
+        """
+        self.transcript_crono_order += str(datetime.datetime.now()) + " - " + log_text + "\n"
 
     def print_message(self, message):
         print(str(message))
-        self.append_log(str(message) + "\n")
+        self.append_log(str(message))
 
     def save_transcript(self):
         os.sep.join(["data", "transcript_crono.txt"])

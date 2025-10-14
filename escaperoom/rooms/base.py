@@ -15,10 +15,22 @@ class BaseRoom(ABC):
         pass
 
     def _add_log_to_transcript(self, log):
+        """
+        Adds the official log to the run.txt transcript, this is what we will be graded on so check formatting!
+        :param log: The log to add
+        :return: None
+        """
         if not log or not self._current_room:
             return
         else:
             self._transcript.append(log, self._current_room)
 
     def open_file(self):
-        return open(os.sep.join(["data", CurrentRoom.get_room_item(self._current_room)]), "r")
+        """
+        Will open the file for the relevant room, if it exists
+        :return: A file stream for reading, if the room has a file to open, otherwise None
+        """
+        item = CurrentRoom.get_room_item(self._current_room)
+        if item != "no item":
+            return open(os.sep.join(["data", item]), "r")
+        return None
