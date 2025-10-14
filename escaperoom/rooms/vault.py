@@ -25,6 +25,7 @@ class VaultRoom(BaseRoom):
                 # https://regex101.com/r/AKN3hE/2
                 # As I have three matching groups, will return a tuple of 3 items
                 tuple_result = p.findall(file_entry)
+                # We will add all matching results to the list
                 results = []
                 for tup in tuple_result:
                     if len(tup) == 3:
@@ -34,16 +35,19 @@ class VaultRoom(BaseRoom):
                         value2 = utils.convert_to_float(tup[1])
                         value3 = utils.convert_to_float(tup[2])
                         if value1 is None or value2 is None or value3 is None:
-                            self._transcript.print_message("The provided values are not a float: " + str(tup))
+                            # self._transcript.print_message("The provided values are not a float: " + str(tup))
+                            # Bad values that are not numbers, continue to the next set
                             continue
                         elif value1 + value2 == value3:
+                            # These values work for what we needed, add them to our results
                             self._transcript.print_message("The values " + str(tup) + " are valid")
                             results.append(tup)
-                        else:
-                            self._transcript.print_message("The values " + str(tup) + " do not add up")
-                    else:
-                        self._transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
+                        # else:
+                        # self._transcript.print_message("The values " + str(tup) + " do not add up")
+                    # else:
+                    #self._transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
                 if len(results) != 0:
+                    # We have at least one result, let's handle it
                     # TODO add log of correct data format as per PDF
                     self._transcript.print_message("The results of vault are: " + str(results))
                     self._add_log_to_transcript(str(results))
