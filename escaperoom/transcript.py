@@ -30,9 +30,9 @@ class Transcript:
     def append_log(self, log_text):
         self.transcript_crono_order += log_text + "\n"
 
-    def print_message(self, message: str):
-        print(message)
-        self.append_log(message + "\n")
+    def print_message(self, message):
+        print(str(message))
+        self.append_log(str(message) + "\n")
 
     def save_transcript(self):
         os.sep.join(["data", "transcript_crono.txt"])

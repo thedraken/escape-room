@@ -5,8 +5,7 @@ from escaperoom.transcript import Transcript
 
 class SocRoom(BaseRoom):
     def __init__(self, transcript: Transcript):
-        super().__init__(transcript)
-        self.__room = CurrentRoom.SOC
+        super().__init__(transcript, CurrentRoom.SOC)
 
     def solve(self):
         """
@@ -15,7 +14,7 @@ class SocRoom(BaseRoom):
         """
         try: # we use a try catch to open the file
             # open the auth.log file
-            with open('data/auth.log', 'r') as auth_file:
+            with self.open_file() as auth_file:
                 malformed_lines_count = 0
                 skipped_lines_count = 0
                 # read file line by line
@@ -40,6 +39,6 @@ class SocRoom(BaseRoom):
             print("File not found!!!")
             return None
 
-        self.transcript.print_message(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
+        self._add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
 
         return None

@@ -1,4 +1,3 @@
-import os
 import re
 
 from escaperoom.rooms.base import BaseRoom
@@ -8,7 +7,7 @@ from escaperoom.transcript import Transcript
 
 class VaultRoom(BaseRoom):
     def __init__(self, transcript: Transcript):
-        super().__init__(transcript)
+        super().__init__(transcript, CurrentRoom.VAULT)
         self.__room = CurrentRoom.VAULT
 
     def solve(self):
@@ -19,7 +18,7 @@ class VaultRoom(BaseRoom):
         :return: the list of values that meet the expected rules for the room
         """
         try:
-            with open(os.sep.join(["data", "vault_dump.txt"]), "r") as vault_file:
+            with self.open_file() as vault_file:
                 file_entry = vault_file.read()
                 p = re.compile(pattern="\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-\s*(\d+)\s*}\s*",
                                flags=re.MULTILINE | re.IGNORECASE)
@@ -30,26 +29,26 @@ class VaultRoom(BaseRoom):
                 for tup in tuple_result:
                     if len(tup) == 3:
                         from escaperoom.utils import Utils
-                        utils = Utils(self.transcript)
+                        utils = Utils(self._transcript)
                         value1 = utils.convert_to_float(tup[0])
                         value2 = utils.convert_to_float(tup[1])
                         value3 = utils.convert_to_float(tup[2])
                         if value1 is None or value2 is None or value3 is None:
-                            self.transcript.print_message("The provided values are not a float: " + str(tup))
+                            self._transcript.print_message("The provided values are not a float: " + str(tup))
                             continue
                         elif value1 + value2 == value3:
-                            self.transcript.print_message("The values " + str(tup) + " are valid")
+                            self._transcript.print_message("The values " + str(tup) + " are valid")
                             results.append(tup)
                         else:
-                            self.transcript.print_message("The values " + str(tup) + " do not add up")
+                            self._transcript.print_message("The values " + str(tup) + " do not add up")
                     else:
-                        self.transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
+                        self._transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
                 if len(results) != 0:
-                    self.transcript.print_message("The results of vault are: " + str(results))
-                    self._add_log_to_transcript(str(results), self.__room)
+                    self._transcript.print_message("The results of vault are: " + str(results))
+                    self._add_log_to_transcript(str(results))
                     return results
                 else:
-                    self.transcript.print_message("Vault was not solved")
+                    self._transcript.print_message("Vault was not solved")
                     return None
         except Exception as e:
-            self.transcript.print_message("An error occurred:\n" + str(e))
+            self._transcript.print_message("An error occurred:\n" + str(e))

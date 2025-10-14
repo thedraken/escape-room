@@ -5,13 +5,12 @@ from escaperoom.transcript import Transcript
 
 class DNSRoom(BaseRoom):
     def __init__(self, transcript: Transcript):
-        super().__init__(transcript)
-        self.__room = CurrentRoom.DNS
+        super().__init__(transcript, CurrentRoom.DNS)
 
     def solve(self):
         """
         Add a method description here. Do not forget to return the result!
         :return:
         """
-        self.transcript.print_message("You called solve on " + CurrentRoom.get_room_name(self.__room))
-        self._add_log_to_transcript("I did something", self.__room)
+        self._transcript.print_message("You called solve on " + CurrentRoom.get_room_name(self._current_room))
+        self._add_log_to_transcript("I did something")
