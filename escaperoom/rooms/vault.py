@@ -13,8 +13,10 @@ class VaultRoom(BaseRoom):
 
     def solve(self):
         """
-        Add a method description here. Do not forget to return the result!
-        :return:
+        Takes the vault_dump.txt file and looks for the following pattern, ignoring any whitespace:
+        SAFE{a-b-c}
+        where a + b = c and will return the list of values that match that amount
+        :return: the list of values that meet the expected rules for the room
         """
         try:
             with open(os.sep.join(["data", "vault_dump.txt"]), "r") as vault_file:

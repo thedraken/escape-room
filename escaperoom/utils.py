@@ -22,6 +22,11 @@ class Utils:
         return True
 
     def convert_to_float(self, value: str) -> float | None:
+        """
+        Converts a string value into a float
+        :param value: The string value to convert
+        :return: The float value, or none if not applicable
+        """
         try:
             return float(value)
         except ValueError:
