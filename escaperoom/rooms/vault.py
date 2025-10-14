@@ -44,6 +44,7 @@ class VaultRoom(BaseRoom):
                     else:
                         self._transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
                 if len(results) != 0:
+                    # TODO add log of correct data format as per PDF
                     self._transcript.print_message("The results of vault are: " + str(results))
                     self._add_log_to_transcript(str(results))
                     return results
