@@ -48,9 +48,11 @@ class VaultRoom(BaseRoom):
                     #self._transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
                 if len(results) != 0:
                     # We have at least one result, let's handle it
-                    # TODO add log of correct data format as per PDF
                     self._transcript.print_message("The results of vault are: " + str(results))
-                    self._add_log_to_transcript(str(results))
+                    for item in results:
+                        self._add_log_to_transcript(f"TOKEN[SAFE]={item[0]}-{item[1]}-{item[2]}\n")
+                        self._add_log_to_transcript("EVIDENCE[SAFE].MATCH=SAFE{a-b-c}\n")
+                        self._add_log_to_transcript(f"EVIDENCE[SAFE].CHECK={item[0]}+{item[1]}={item[2]}\n")
                     return results
                 else:
                     self._transcript.print_message("Vault was not solved")

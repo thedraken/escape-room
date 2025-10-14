@@ -7,11 +7,11 @@ class Transcript:
     def __init__(self):
         self.transcript_dict = {
             CurrentRoom.BASE: "",
-            CurrentRoom.MALWARE: "",
-            CurrentRoom.FINAL_GATE: "",
-            CurrentRoom.DNS: "",
             CurrentRoom.SOC: "",
-            CurrentRoom.VAULT: ""
+            CurrentRoom.DNS: "",
+            CurrentRoom.VAULT: "",
+            CurrentRoom.MALWARE: "",
+            CurrentRoom.FINAL_GATE: ""
         }
         self.transcript_crono_order = ""
 
@@ -24,7 +24,7 @@ class Transcript:
         """
         transcript_value = self.transcript_dict.get(current_room)
         transcript_value += transcript_text
-        self.transcript_dict.update({current_room: transcript_text})
+        self.transcript_dict.update({current_room: transcript_value})
         self.transcript_crono_order += CurrentRoom.get_room_name(current_room) + ": " + transcript_text
 
     def append_log(self, log_text):
@@ -44,8 +44,8 @@ class Transcript:
             print(e)
         try:
             with open(os.sep.join(["data", "run.txt"]), "w") as transcript_file:
-                # TODO TM write to the transcript file with the dictionary properly
-                transcript_file.write(str(self.transcript_dict))
+                for item in self.transcript_dict:
+                    transcript_file.write(str(self.transcript_dict.get(item)) + "\n")
         except Exception as e:
             print("An error occurred writing the file:")
             print(e)
