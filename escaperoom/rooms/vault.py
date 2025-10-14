@@ -27,9 +27,11 @@ class VaultRoom(BaseRoom):
                 results = []
                 for tup in tuple_result:
                     if len(tup) == 3:
-                        value1 = self.convert_to_float(tup[0])
-                        value2 = self.convert_to_float(tup[1])
-                        value3 = self.convert_to_float(tup[2])
+                        from escaperoom.utils import Utils
+                        utils = Utils(self.transcript)
+                        value1 = utils.convert_to_float(tup[0])
+                        value2 = utils.convert_to_float(tup[1])
+                        value3 = utils.convert_to_float(tup[2])
                         if value1 is None or value2 is None or value3 is None:
                             self.transcript.print_message("The provided values are not a float: " + str(tup))
                             continue
@@ -42,17 +44,10 @@ class VaultRoom(BaseRoom):
                         self.transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
                 if len(results) != 0:
                     self.transcript.print_message("The results of vault are: " + str(results))
-                    self._add_log_to_transcript(str(results[0]), self.__room)
+                    self._add_log_to_transcript(str(results), self.__room)
                     return results
                 else:
                     self.transcript.print_message("Vault was not solved")
                     return None
         except Exception as e:
             self.transcript.print_message("An error occurred:\n" + str(e))
-
-    def convert_to_float(self, value: str) -> float | None:
-        try:
-            return float(value)
-        except ValueError:
-            self.transcript.print_message(value + " is not a valid number")
-        return None
