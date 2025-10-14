@@ -13,5 +13,33 @@ class SocRoom(BaseRoom):
         Add a method description here. Do not forget to return the result!
         :return:
         """
-        self.transcript.print_message("You called solve on " + CurrentRoom.get_room_name(self.__room))
-        self._add_log_to_transcript("I did something", self.__room)
+        try: # we use a try catch to open the file
+            # open the auth.log file
+            with open('data/auth.log', 'r') as auth_file:
+                malformed_lines_count = 0
+                skipped_lines_count = 0
+                # read file line by line
+                for line in auth_file:
+                    # remove extra spaces
+                    line = line.strip()
+
+                    # skip empty or null lines
+                    if not line:
+                        malformed_lines_count += 1
+                        continue
+
+                    # this is to filter only the failed password attempts
+                    if "Failed password" not in line:
+                        skipped_lines_count += 1
+                        continue
+
+                print(malformed_lines_count)
+                print(skipped_lines_count)
+
+        except FileNotFoundError:
+            print("File not found!!!")
+            return None
+
+        self.transcript.print_message(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
+
+        return None
