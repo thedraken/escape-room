@@ -1,3 +1,5 @@
+import os
+
 from escaperoom.rooms.currentroom import CurrentRoom
 
 
@@ -33,14 +35,15 @@ class Transcript:
         self.append_log(message + "\n")
 
     def save_transcript(self):
+        os.sep.join(["data", "transcript_crono.txt"])
         try:
-            with open("data\\transcript_crono", "w") as transcript_file:
+            with open(os.sep.join(["data", "transcript_crono.txt"]), "w") as transcript_file:
                 transcript_file.write(self.transcript_crono_order)
         except Exception as e:
             print("An error occurred writing the file:")
             print(e)
         try:
-            with open("data\\run.txt", "w") as transcript_file:
+            with open(os.sep.join(["data", "run.txt"]), "w") as transcript_file:
                 # TODO TM write to the transcript file with the dictionary properly
                 transcript_file.write(str(self.transcript_dict))
         except Exception as e:
