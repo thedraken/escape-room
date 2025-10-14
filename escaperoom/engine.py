@@ -1,8 +1,4 @@
 from escaperoom.rooms.currentroom import CurrentRoom
-from escaperoom.rooms.dns import DNSRoom
-from escaperoom.rooms.malware import MalwareRoom
-from escaperoom.rooms.soc import SocRoom
-from escaperoom.rooms.vault import VaultRoom
 from escaperoom.utils import Utils
 
 
@@ -69,15 +65,19 @@ class Engine:
             try:
                 match self.current_location:
                     case CurrentRoom.SOC:
+                        from escaperoom.rooms.soc import SocRoom
                         soc_room = SocRoom(self.transcript)
                         soc_room.solve()
                     case CurrentRoom.DNS:
+                        from escaperoom.rooms.dns import DNSRoom
                         dns_room = DNSRoom(self.transcript)
                         dns_room.solve()
                     case CurrentRoom.MALWARE:
+                        from escaperoom.rooms.malware import MalwareRoom
                         malware_room = MalwareRoom(self.transcript)
                         malware_room.solve()
                     case CurrentRoom.VAULT:
+                        from escaperoom.rooms.vault import VaultRoom
                         vault_room = VaultRoom(self.transcript)
                         vault_room.solve()
             except Exception as e:
