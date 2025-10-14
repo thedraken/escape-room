@@ -32,13 +32,13 @@ class SocRoom(BaseRoom):
                         skipped_lines_count += 1
                         continue
 
-                print(malformed_lines_count)
-                print(skipped_lines_count)
+                self._transcript.print_message(malformed_lines_count)
+                self._transcript.print_message(skipped_lines_count)
 
         except FileNotFoundError:
-            print("File not found!!!")
+            self._transcript.print_message("File not found!!!")
             return None
 
-        self._add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
+        self._add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}\n")
 
         return None
