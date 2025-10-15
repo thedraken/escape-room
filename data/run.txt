@@ -1,0 +1,9 @@
+
+
+TOKEN[DNS]=phrase
+EVIDENCE[DNS].KEY=hint2
+EVIDENCE[DNS].DECODED_LINE=Look inside the DNS switch for the right phrase.
+
+
+
+
