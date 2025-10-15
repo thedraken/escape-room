@@ -1,20 +1,30 @@
 from escaperoom.rooms.base import BaseRoom
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
-
+import re
 
 class SocRoom(BaseRoom):
     def __init__(self, transcript: Transcript):
-        super().__init__(transcript, CurrentRoom.SOC)
+        super().__init__(transcript)
+        self.__room = CurrentRoom.SOC
 
     def solve(self):
         """
-        Add a method description here. Do not forget to return the result!
-        :return:
+       This method is to find the most likely attacking subnet by:
+       -Going through each and every line in the auth.log file
+       -Skip all malformed or NULL lines
+       -Check if the valid lines have valid IP addresses
+       -And then get all "Failed Password" attempts
+       -Get the IP address with most failed passwords and then get its last two digits
+       -Find the number of times theyve tried to attempt
+       -Gte the token {LAST TWO DIGITS OF THE IP ADDRESS}{NUMBER OF TIMES TRIED}
+       -Send the token and other counts to the transcripts
         """
+        ip_pattern = re.compile(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b')
+
         try: # we use a try catch to open the file
             # open the auth.log file
-            with self.open_file() as auth_file:
+            with open('data/auth.log', 'r') as auth_file:
                 malformed_lines_count = 0
                 skipped_lines_count = 0
                 # read file line by line
@@ -32,13 +42,30 @@ class SocRoom(BaseRoom):
                         skipped_lines_count += 1
                         continue
 
-                self._transcript.print_message(malformed_lines_count)
-                self._transcript.print_message(skipped_lines_count)
+                    # try to find an IP address in this line
+                    match = ip_pattern.search(line)
+
+                    if match:
+                        ip = match.group(1)
+                        # print(ip)
+                        parts = ip.split('.')
+
+                        is_valid = True
+                        for part in parts:
+                            try:
+                                number = int(part)
+                                if number < 0 or number > 255:
+                                    is_valid = False
+                                    break
+                            except:
+                                is_valid = False
+                                break
+
 
         except FileNotFoundError:
-            self._transcript.print_message("File not found!!!")
+            print("File not found!!!")
             return None
 
-        self._add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}\n")
+        self.transcript.print_message(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
 
         return None
