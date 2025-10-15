@@ -16,12 +16,16 @@ class SocRoom(BaseRoom):
        -Skip all malformed or NULL lines
        -Check if the valid lines have valid IP addresses
        -And then get all "Failed Password" attempts
-       -Get the IP address with most failed passwords and then get its last two digits
-       -Find the number of times theyve tried to attempt
-       -Gte the token {LAST TWO DIGITS OF THE IP ADDRESS}{NUMBER OF TIMES TRIED}
+       -Group the first three octets(/subnet) of all the IP addresses
+       -Out of which we need to find the most frequent subnet and find all the IP addresses of this subnet
+       -Choose the IP that occured most frequently and get its last octet{L}
+       -Find the number of times that IP address tried to attempt {COUNT}
+       -Get the token {L}{COUNT}
        -Send the token and other counts to the transcripts
         """
         ip_pattern = re.compile(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b')
+        subnet_count = {}
+        subnet_ips = {}
 
         try: # we use a try catch to open the file
             # open the auth.log file
@@ -41,14 +45,13 @@ class SocRoom(BaseRoom):
                     # this is to filter only the failed password attempts
                     if "Failed password" not in line:
                         skipped_lines_count += 1
-                        continue
+                        continue # this is to skip tje current line
 
                     # try to find an IP address in this line
                     match = ip_pattern.search(line)
 
                     if match:
                         ip = match.group(1)
-                        # print(ip)
                         parts = ip.split('.')
 
                         is_valid = True
@@ -61,6 +64,37 @@ class SocRoom(BaseRoom):
                             except:
                                 is_valid = False
                                 break
+
+                        if is_valid:
+                            # Get the /24 subnet (first 3 numbers)
+                            # "198.19.0.42" -> "198.19.0"
+                            subnet = parts[0] + "." + parts[1] + "." + parts[2]
+
+                            # Count this failure for the subnet
+                            if subnet in subnet_count:
+                                subnet_count[subnet] += 1
+                            else:
+                                subnet_count[subnet] = 1
+
+
+                            # Add this IP to the list of IPs in this subnet
+                            if subnet in subnet_ips:
+                                subnet_ips[subnet].append(ip)
+                            else:
+                                subnet_ips[subnet] = [ip]
+
+                        else:
+
+                            malformed_lines_count += 1
+
+                    else:
+                        # Couldn't find any IP in this line
+                        malformed_lines_count += 1
+
+                max_subnet = max(subnet_count, key=subnet_count.get)
+                print(max_subnet)
+
+                print(subnet_ips[max_subnet])
 
 
         except FileNotFoundError:
