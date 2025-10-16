@@ -1,7 +1,6 @@
 import datetime
 
 from escaperoom.rooms.currentroom import CurrentRoom
-from escaperoom.utils import Utils
 
 
 class Transcript:
@@ -42,6 +41,7 @@ class Transcript:
         self.append_log(str(message))
 
     def save_transcript(self):
+        from escaperoom.utils import Utils
         try:
             with Utils.open_file("data", "transcript_crono.txt", "w") as transcript_file:
                 transcript_file.write(self.transcript_crono_order)
