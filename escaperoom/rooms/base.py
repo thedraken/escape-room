@@ -4,6 +4,9 @@ from abc import ABC, abstractmethod
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
 
+from escaperoom import transcript
+from escaperoom.rooms.currentroom import CurrentRoom
+
 
 class BaseRoom(ABC):
     def __init__(self, transcript: Transcript, current_room: CurrentRoom):
