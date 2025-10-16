@@ -1,7 +1,10 @@
+"""
+Main escape room module, executes the game and creates the base classes
+"""
 import escaperoom.engine
 import escaperoom.transcript
 
-run_game = True
+RUN_GAME = True
 transcript = escaperoom.transcript.Transcript()
 transcript.print_message("Welcome to the escape room game")
 transcript.print_message(r"""
@@ -18,7 +21,7 @@ transcript.print_message("Type hint for assistance")
 
 engine = escaperoom.engine.Engine(transcript)
 
-while run_game:
+while RUN_GAME:
     next_step = input("What would you like to do?")
     transcript.append_log("What would you like to do?")
-    run_game = engine.command(next_step)
+    RUN_GAME = engine.command(next_step)

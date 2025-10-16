@@ -1,9 +1,15 @@
+"""
+TODO add module docstring
+"""
 from escaperoom.inventory import Inventory, Item
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.utils import Utils
 
 
 class Engine:
+    """
+    TODO Add missing class docstring
+    """
     def __init__(self, transcript):
         self.current_location = CurrentRoom.BASE
         self.transcript = transcript
@@ -11,7 +17,8 @@ class Engine:
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
-        :param command: A user can pass possible commands, depending on what they do, the engine game state will update. Possible commands are:
+        :param command: A user can pass possible commands, depending on what they do, the engine game state will update.
+        Possible commands are:
         look
         move <room>
         quit
@@ -34,7 +41,7 @@ class Engine:
             case inspect if inspect.startswith("inspect"):
                 self.__do_inspect(inspect)
             case use if use.startswith("use"):
-                self.__do_use(use)
+                self.__do_use()
             case "inventory":
                 self.__do_inventory()
             case "hint":
@@ -165,10 +172,9 @@ class Engine:
                 self.transcript.print_message(
                     "The final gate stands before you, have you collected all the pieces to exit the gate?")
 
-    def __do_use(self, use):
+    def __do_use(self):
         """
-
-        :param use:
+        TODO TM Add details
         :return:
         """
         if self.inventory.is_inventory_complete():
@@ -210,7 +216,6 @@ class Engine:
         else:
             self.transcript.print_message("You do not have all the items, you are missing:")
             self.inventory.print_missing_items()
-        pass
 
     def __do_inventory(self):
         """
