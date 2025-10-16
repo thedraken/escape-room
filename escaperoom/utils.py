@@ -38,6 +38,7 @@ class Utils:
         try:
             with open(os.sep.join(["data", "save.json"]), "r") as save_file:
                 json_file = json.load(save_file)
+                # TODO Validate the file format
                 self.transcript.transcript_dict = json_file
                 self.transcript.print_message("Progress loaded.")
                 return True

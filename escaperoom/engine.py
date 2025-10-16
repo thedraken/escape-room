@@ -7,7 +7,7 @@ class Engine:
         self.current_location = CurrentRoom.BASE
         self.transcript = transcript
 
-    def command(self, command):
+    def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
         :param command: A user can pass possible commands, depending on what they do, the engine game state will update. Possible commands are:
         look
@@ -41,6 +41,9 @@ class Engine:
                 self.__do_save()
             case "load":
                 self.__do_load()
+            case _:
+                self.transcript.print_message(
+                    "Unknown command: " + str(command) + ", type hint to see a list of available commands")
         return True
 
     def __do_quit(self) -> bool:
@@ -160,6 +163,7 @@ class Engine:
         :param use:
         :return:
         """
+        # TODO TM Implement
         pass
 
     def __do_inventory(self):
@@ -167,6 +171,7 @@ class Engine:
 
         :return:
         """
+        # TODO TM Implement
         pass
 
     def __do_hint(self):
@@ -177,8 +182,6 @@ class Engine:
         self.transcript.print_message("look: Allows you to look in the current room and see what is available")
         self.transcript.print_message(
             "move <room>: Allows you to move to a room to solve, rooms available are: dns, malware, soc, vault, gate, and lobby")
-
-
         self.transcript.print_message(
             "inspect <item>: Allows you to inspect an item in the room. You are currently in "
             + CurrentRoom.get_room_name(self.current_location)
@@ -199,8 +202,8 @@ class Engine:
 
     def __do_save(self):
         """
-
-        :return:
+        Saves the current state of the game
+        :return: Nothing
         """
         utils = Utils(self.transcript)
         if utils.save():
@@ -210,8 +213,8 @@ class Engine:
 
     def __do_load(self):
         """
-
-        :return:
+        Loads the current state of the game from a save.txt file
+        :return: Nothing
         """
         utils = Utils(self.transcript)
         if utils.load():
