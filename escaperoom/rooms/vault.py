@@ -21,7 +21,7 @@ class VaultRoom(BaseRoom):
             with self.open_file() as vault_file:
                 file_entry = vault_file.read()
                 p = re.compile(pattern="\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-\s*(\d+)\s*}\s*",
-                               flags=re.MULTILINE | re.IGNORECASE)
+                               flags=re.IGNORECASE | re.MULTILINE)
                 # https://regex101.com/r/AKN3hE/2
                 # As I have three matching groups, will return a tuple of 3 items
                 tuple_result = p.findall(file_entry)
@@ -51,9 +51,15 @@ class VaultRoom(BaseRoom):
                     self._transcript.print_message("The results of vault are: " + str(results))
                     for item in results:
                         self._add_log_to_transcript(f"TOKEN[SAFE]={item[0]}-{item[1]}-{item[2]}\n")
-                        self._add_log_to_transcript("EVIDENCE[SAFE].MATCH=SAFE{a-b-c}\n")
+                        self._add_log_to_transcript(f"EVIDENCE[SAFE].MATCH=SAFE{{{item[0]}-{item[1]}-{item[2]}}}\n")
                         self._add_log_to_transcript(f"EVIDENCE[SAFE].CHECK={item[0]}+{item[1]}={item[2]}\n")
-                    return results
+                    if len(results) == 1:
+                        token = "-".join(results[0])
+                        self._transcript.print_message(f"Returning token: {token}")
+                        return token
+                    else:
+                        self._transcript.print_message("Too many tokens found, not returning any data")
+                        return None
                 else:
                     self._transcript.print_message("Vault was not solved")
                     return None
