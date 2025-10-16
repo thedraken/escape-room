@@ -1,5 +1,6 @@
 import escaperoom.engine
 import escaperoom.transcript
+
 run_game = True
 transcript = escaperoom.transcript.Transcript()
 transcript.print_message("Welcome to the escape room game")
