@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class CurrentRoom(Enum):
     """
     The enum of the different rooms you can enter

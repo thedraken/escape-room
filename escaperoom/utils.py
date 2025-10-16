@@ -59,7 +59,6 @@ class Utils:
             self.transcript.print_message("Error loading save file: " + str(e))
         return False
 
-
     def convert_to_float(self, value: str) -> float | None:
         """
         Converts a string value into a float

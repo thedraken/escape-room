@@ -45,7 +45,7 @@ class VaultRoom(BaseRoom):
                         # else:
                         # self._transcript.print_message("The values " + str(tup) + " do not add up")
                     # else:
-                    #self._transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
+                    # self._transcript.print_message("The values " + str(tup) + " are invalid due to bad length")
                 if len(results) != 0:
                     # We have at least one result, let's handle it
                     self._transcript.print_message("The results of vault are: " + str(results))

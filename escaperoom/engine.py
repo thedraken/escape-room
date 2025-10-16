@@ -146,7 +146,7 @@ class Engine:
             case CurrentRoom.SOC:
                 self.transcript.print_message(
                     "You are in the SOC room, there is a triage desk with a large file of SSH logs, called auth.log, "
-                      "that show authentication attempts. Your task is to identify the most likely attacking subnet.")
+                    "that show authentication attempts. Your task is to identify the most likely attacking subnet.")
             case CurrentRoom.MALWARE:
                 self.transcript.print_message(
                     "You are in the Malware lab, there is a JSON-line file, called proc_tree.jsonl, that shows a process "
@@ -154,11 +154,11 @@ class Engine:
             case CurrentRoom.VAULT:
                 self.transcript.print_message(
                     "You are in the Vault, there is a text dump lying on the table. Inside, there should be a valid "
-                      "SAFE{a-b-c} code which satisfies a+b=c. Can you find it?")
+                    "SAFE{a-b-c} code which satisfies a+b=c. Can you find it?")
             case CurrentRoom.DNS:
                 self.transcript.print_message(
                     "You are in the DNS room, inside is a config file which stores items as a key value pair. "
-                      "Can you find the token_tag with the hintX value to get the correct key value pair?")
+                    "Can you find the token_tag with the hintX value to get the correct key value pair?")
             case CurrentRoom.FINAL_GATE:
                 self.transcript.print_message(
                     "The final gate stands before you, have you collected all the pieces to exit the gate?")
@@ -194,14 +194,14 @@ class Engine:
             + " and can inspect " + CurrentRoom.get_room_item(self.current_location).value)
         self.transcript.print_message(
             "use <item>: Depending on the room you are in, you can use an item to do an action. You are currently in "
-              + CurrentRoom.get_room_name(self.current_location)
-              + " and can use " + CurrentRoom.get_use_item(self.current_location))
+            + CurrentRoom.get_room_name(self.current_location)
+            + " and can use " + CurrentRoom.get_use_item(self.current_location))
         self.transcript.print_message("inventory: Prints a list of all items found your inventory")
         self.transcript.print_message(
             "save: Saves the progress of your current game to a file in the data folder, called save.txt")
         self.transcript.print_message(
             "load: If a save.txt file is found and it is valid, will load it and set that as your current progress. "
-              "Will overwrite any progress already done in this session")
+            "Will overwrite any progress already done in this session")
         self.transcript.print_message(
             "quit: Exits the game and prints currently collected evidence to a transcript file")
         self.transcript.print_message("hint: Gives a list of available commands")

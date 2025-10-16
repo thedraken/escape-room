@@ -27,7 +27,7 @@ class SocRoom(BaseRoom):
         subnet_count = {}
         subnet_ips = {}
 
-        try: # we use a try catch to open the file
+        try:  # we use a try catch to open the file
             # open the auth.log file
             with self.open_file() as auth_file:
                 malformed_lines_count = 0
@@ -45,7 +45,7 @@ class SocRoom(BaseRoom):
                     # this is to filter only the failed password attempts
                     if "Failed password" not in line:
                         skipped_lines_count += 1
-                        continue # this is to skip tje current line
+                        continue  # this is to skip tje current line
 
                     # try to find an IP address in this line
                     match = ip_pattern.search(line)
@@ -75,7 +75,6 @@ class SocRoom(BaseRoom):
                                 subnet_count[subnet] += 1
                             else:
                                 subnet_count[subnet] = 1
-
 
                             # Add this IP to the list of IPs in this subnet
                             if subnet in subnet_ips:

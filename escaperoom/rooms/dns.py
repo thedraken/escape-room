@@ -36,10 +36,10 @@ class DNSRoom(BaseRoom):
         - Ignores blank lines or lines without '='
         - Preserves value exactly after the first '=' (allowing '=' in values)
         """
-        no_comment = line.split("#", 1)[0].strip()  
+        no_comment = line.split("#", 1)[0].strip()
         if not no_comment or "=" not in no_comment:
             return None
-        key, value = no_comment.split("=", 1) 
+        key, value = no_comment.split("=", 1)
         key = key.strip()
         value = value.strip()
         if not key:
@@ -86,7 +86,7 @@ class DNSRoom(BaseRoom):
         """
         # entry message 
         self._transcript.print_message("You called solve on " + CurrentRoom.get_room_name(self._current_room))
-        self._marker() 
+        self._marker()
 
         try:
             cfg = self.open_file()  # BaseRoom.open_file opens data/dns.cfg if present
