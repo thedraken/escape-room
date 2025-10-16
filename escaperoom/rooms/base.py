@@ -16,7 +16,8 @@ class BaseRoom(ABC):
 
     def _add_log_to_transcript(self, log):
         """
-        Adds the official log to the run.txt transcript, this is what we will be graded on so check formatting!
+        Adds the official log to the run.txt transcript, this is what we will
+        be graded on so check formatting!
         :param log: The log to add
         :return: None
         """
@@ -28,7 +29,8 @@ class BaseRoom(ABC):
     def open_file(self):
         """
         Will open the file for the relevant room, if it exists
-        :return: A file stream for reading, if the room has a file to open, otherwise None
+        :return: A file stream for reading, if the room has a file to open,
+        otherwise None
         """
         item = CurrentRoom.get_room_item(self._current_room).value
         if item != "no item":

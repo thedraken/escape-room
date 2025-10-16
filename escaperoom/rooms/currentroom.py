@@ -58,7 +58,8 @@ class CurrentRoom(Enum):
     @staticmethod
     def get_use_item(current_room: Enum):
         """
-        Will tell you if you can use a function in the room, only applies to the final gate
+        Will tell you if you can use a function in the room, only applies
+        to the final gate
         :param current_room: The room you want to check the use of
         :return: Gate or nothing
         """

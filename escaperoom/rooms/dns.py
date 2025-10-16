@@ -10,8 +10,10 @@ from escaperoom.transcript import Transcript
 class DNSRoom(BaseRoom):
     """
     DNS puzzle:
-    - Read key=value pairs from data/dns.cfg (ignore blank lines and '#' comments).
-    - Base64-decode values for keys like hint1, hint2, ... (robust to missing padding).
+    - Read key=value pairs from data/dns.cfg (ignore blank lines and
+    '#' comments).
+    - Base64-decode values for keys like hint1, hint2, ... (robust to
+    missing padding).
     - Use the key named by 'token_tag' (e.g., token_tag=hint2).
     - The token is the LAST WORD of that decoded hint sentence.
     - Log to run.txt:
@@ -21,7 +23,8 @@ class DNSRoom(BaseRoom):
     """
 
     def __init__(self, transcript: Transcript):
-        # Call parent constructor, telling BaseRoom which room this is (CurrentRoom.DNS)
+        # Call parent constructor, telling BaseRoom which room this is
+        # (CurrentRoom.DNS)
         super().__init__(transcript, CurrentRoom.DNS)
 
     # shows in console so you know this code is actually loaded
@@ -55,11 +58,13 @@ class DNSRoom(BaseRoom):
         - Uses errors='replace' on decode so invalid bytes won't crash
         - Returns decoded string or None on failure
         """
-        compact = re.sub(r"\s+", "", s)  # remove spaces/newlines inside the value
+        compact = re.sub(r"\s+", "", s)  # remove spaces/newlines
+        # inside the value
         pad_needed = (-len(compact)) % 4  # how many '=' to add (0..3)
         compact += "=" * pad_needed
         try:
-            decoded = base64.b64decode(compact, validate=False)  # permissive decode
+            # permissive decode
+            decoded = base64.b64decode(compact, validate=False)
             return decoded.decode("utf-8", errors="replace")
         except Exception:
             return None
@@ -68,7 +73,8 @@ class DNSRoom(BaseRoom):
     def _last_word(s: str) -> str:
         """
         Extract the last 'word' from string s.
-        - Word defined as run of letters/digits/underscore (so punctuation ignored).
+        - Word defined as run of letters/digits/underscore
+        (so punctuation ignored).
         - Returns empty string if no word found.
         """
         words = re.findall(r"[A-Za-z0-9_]+", s)
@@ -81,15 +87,20 @@ class DNSRoom(BaseRoom):
          1. Ensure dns.cfg exists and open it.
          2. Parse every key=value into dict `raw`.
          3. Base64-decode all keys that match hintN into `decoded_hints`.
-         4. Read token_tag (must be 'hintX') and find the corresponding decoded hint.
-         5. Extract last word as token, print user messages, and write the required transcript lines.
+         4. Read token_tag (must be 'hintX') and find the corresponding
+         decoded hint.
+         5. Extract last word as token, print user messages, and write
+         the required transcript lines.
         """
         # entry message 
-        self._transcript.print_message("You called solve on " + CurrentRoom.get_room_name(self._current_room))
+        self._transcript.print_message("You called solve on "
+                                       + CurrentRoom.get_room_name(
+            self._current_room))
         self._marker()
 
         try:
-            cfg = self.open_file()  # BaseRoom.open_file opens data/dns.cfg if present
+            cfg = self.open_file()  # BaseRoom.open_file opens data/dns.cfg
+            # if present
             if cfg is None:
                 self._transcript.print_message("dns.cfg not found in data/.")
                 return None
@@ -105,7 +116,8 @@ class DNSRoom(BaseRoom):
                     raw[k] = v  # latest occurrence wins for duplicate keys
 
             if not raw:
-                self._transcript.print_message("dns.cfg contained no usable key=value entries.")
+                self._transcript.print_message("dns.cfg contained no usable "
+                                               "key=value entries.")
                 return None
 
             # 2) Decode hintN values
@@ -117,46 +129,61 @@ class DNSRoom(BaseRoom):
                         decoded_hints[k] = dec
 
             # 3) Find token_tag entry (several common names allowed)
-            token_key = raw.get("token_tag") or raw.get("tokenTag") or raw.get("token")
+            token_key = (raw.get("token_tag") or raw.get("tokenTag")
+                         or raw.get("token"))
             if not token_key:
-                self._transcript.print_message("token_tag not found in dns.cfg.")
+                self._transcript.print_message("token_tag not found in "
+                                               "dns.cfg.")
                 return None
 
             token_key = token_key.strip()
             # token_tag must literally name the hint key (example 'hint2')
-            if not re.fullmatch(r"hint\d+", token_key, flags=re.IGNORECASE):
-                self._transcript.print_message(f"token_tag points to an invalid key: {token_key}")
+            if not re.fullmatch(r"hint\d+", token_key,
+                                flags=re.IGNORECASE):
+                self._transcript.print_message(f"token_tag points to an "
+                                               f"invalid key: {token_key}")
                 return None
 
             # get the decoded sentence for the indicated hint
             decoded_sentence = decoded_hints.get(token_key)
             if not decoded_sentence:
                 # either the hint didn't exist or could not be decoded
-                self._transcript.print_message(f"Could not decode the value for {token_key} as base64.")
+                self._transcript.print_message(f"Could not decode the value "
+                                               f"for {token_key} as base64.")
                 return None
 
             # 4) Extract token as last word and validate
             token = self._last_word(decoded_sentence)
             if not token:
-                self._transcript.print_message(f"Decoded sentence for {token_key} had no valid last word.")
+                self._transcript.print_message(f"Decoded sentence for "
+                                               f"{token_key} "
+                                               f"had no valid last word.")
                 return None
 
-            # 5) Print user-facing messages and append the official grading logs
+            # 5) Print user-facing messages and append the official
+            # grading logs
             self._transcript.print_message("[Room DNS] Decoding hints...")
-            self._transcript.print_message(f"Decoded line: \"{decoded_sentence}\"")
+            self._transcript.print_message(f"Decoded line: "
+                                           f"\"{decoded_sentence}\"")
             self._transcript.print_message(f"Token formed: {token}")
 
-            # The lines below are what will be written to data/run.txt by Transcript.save_transcript()
+            # The lines below are what will be written to data/run.txt
+            # by Transcript.save_transcript()
             self._add_log_to_transcript(f"TOKEN[DNS]={token}\n")
             self._add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}\n")
-            self._add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}\n")
+            self._add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE="
+                                        f"{decoded_sentence}\n")
             return token
 
         except FileNotFoundError:
-            # defensive: open_file should return None, but handle file errors gracefully
-            self._transcript.print_message("dns.cfg not found (FileNotFoundError).")
+            # defensive: open_file should return None, but handle file
+            # errors gracefully
+            self._transcript.print_message("dns.cfg not found "
+                                           "(FileNotFoundError).")
             return None
         except Exception as e:
-            # catch-all to avoid crashing the engine; report to transcript for debugging
-            self._transcript.print_message("An error occurred in DNSRoom:\n" + str(e))
+            # catch-all to avoid crashing the engine; report to transcript
+            # for debugging
+            self._transcript.print_message("An error occurred in DNSRoom:\n"
+                                           + str(e))
             return None
