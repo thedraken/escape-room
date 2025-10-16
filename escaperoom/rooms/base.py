@@ -1,11 +1,8 @@
-import os
 from abc import ABC, abstractmethod
 
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
-
-from escaperoom import transcript
-from escaperoom.rooms.currentroom import CurrentRoom
+from escaperoom.utils import Utils
 
 
 class BaseRoom(ABC):
@@ -35,5 +32,5 @@ class BaseRoom(ABC):
         """
         item = CurrentRoom.get_room_item(self._current_room).value
         if item != "no item":
-            return open(os.sep.join(["data", item]), "r")
+            return Utils.open_file("data", item)
         return None

@@ -25,7 +25,7 @@ class Utils:
                 string_key = str(item)
                 new_dict[string_key] = transcript_dict[item]
                 count += 1
-            with open(os.sep.join(["data", "save.json"]), "w") as save_file:
+            with Utils.open_file("data", "save.json", "w") as save_file:
                 save_file.write(json.dumps(new_dict))
             self.transcript.print_message("Progress saved.")
             return True
@@ -41,7 +41,7 @@ class Utils:
         """
         self.transcript.print_message("Loading progress...")
         try:
-            with open(os.sep.join(["data", "save.json"]), "r") as save_file:
+            with Utils.open_file("data", "save.json", "r") as save_file:
                 data = json.load(save_file)
                 keys = [member.name for member in CurrentRoom]
                 for key in data.keys():
@@ -70,3 +70,7 @@ class Utils:
         except ValueError:
             self.transcript.print_message(value + " is not a valid number")
         return None
+
+    @staticmethod
+    def open_file(folder: str, filename: str, open_type: str = "r"):
+        return open(os.sep.join([folder, filename]), open_type)

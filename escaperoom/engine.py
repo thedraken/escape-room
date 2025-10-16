@@ -1,4 +1,4 @@
-from escaperoom.inventory import Inventory
+from escaperoom.inventory import Inventory, Item
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.utils import Utils
 
@@ -169,7 +169,45 @@ class Engine:
         :param use:
         :return:
         """
-        # TODO TM Implement
+        if self.inventory.is_inventory_complete():
+            with Utils.open_file("data", "final_gate.txt") as final_gate_file:
+                import re
+                group_id_pattern = re.compile("\s*group_id\s*=\s*([\w-]*)")
+                expected_hmac_pattern = re.compile("\s*expected_hmac\s*=\s*([\w]*)")
+                token_order_pattern = re.compile("\s*token_order\s*=\s*([\w]*),([\w]*),([\w]*),([\w]*)")
+                final_gate_data = final_gate_file.read()
+                group_id_tuple = group_id_pattern.findall(final_gate_data)
+                expected_hmac_tuple = expected_hmac_pattern.findall(final_gate_data)
+                token_order_tuple = token_order_pattern.findall(final_gate_data)
+                if group_id_tuple is None or len(group_id_tuple) != 0:
+                    self.transcript.print_message("Group ID is in an invalid format")
+                elif expected_hmac_tuple is None or len(expected_hmac_tuple) != 0:
+                    self.transcript.print_message("Expected HMAC is in an invalid format")
+                elif token_order_tuple is None or len(token_order_tuple) != 4:
+                    self.transcript.print_message("Token order is in an invalid format")
+                else:
+                    token_text = ""
+                    for token in token_order_tuple:
+                        if len(token_text) != 0:
+                            token_text += "-"
+                        match token:
+                            case "PID":
+                                token_text += self.inventory.inventory[Item.ITEM_MALWARE]
+                            case "DNS":
+                                token_text += self.inventory.inventory[Item.ITEM_DNS]
+                            case "KEYPAD":
+                                token_text += self.inventory.inventory[Item.ITEM_SOC]
+                            case "SAFE":
+                                token_text += self.inventory.inventory[Item.ITEM_VAULT]
+                            case _:
+                                self.transcript.print_message(f"Invalid token of type {token}")
+                                return
+                    final_gate_text = f"FINAL_GATE=PENDING\nMSG={group_id_tuple[0]}|{token_text}\nEXPECTED_HMAC={expected_hmac_tuple[0]}"
+                    self.transcript.transcript_dict[CurrentRoom.FINAL_GATE] = final_gate_text
+                    self.__do_quit()
+        else:
+            self.transcript.print_message("You do not have all the items, you are missing:")
+            self.inventory.print_missing_items()
         pass
 
     def __do_inventory(self):

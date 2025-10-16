@@ -31,3 +31,23 @@ class Inventory:
                 self.__transcript.print_message(":".join((key, self.inventory[key])))
         if count_of_items == 0:
             self.__transcript.print_message("Nothing in your inventory.")
+
+    def is_inventory_complete(self):
+        count_of_items = 0
+        for key in self.inventory.keys():
+            if self.inventory[key] is not None and self.inventory[key] != "":
+                count_of_items += 1
+        return count_of_items == 4
+
+    def print_missing_items(self):
+        count_of_items = 0
+        missing_items = ""
+        for key in self.inventory.keys():
+            if self.inventory[key] is None or self.inventory[key] != "":
+                if len(missing_items) >= 0:
+                    missing_items += ", "
+                missing_items += key
+        if count_of_items == 0:
+            self.__transcript.print_message("ALl items collected.")
+        else:
+            self.__transcript.print_message(missing_items)
