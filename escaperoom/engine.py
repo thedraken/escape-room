@@ -101,7 +101,6 @@ class Engine:
                 message += " and can inspect " + CurrentRoom.get_room_item(self.current_location).value
             self.transcript.print_message(message)
 
-
     def __do_move(self, move):
         """
         Allows the user to move to a room specified, if the room is invalid also reports on it
