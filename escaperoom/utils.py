@@ -1,6 +1,7 @@
 import json
 import os
 
+from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
 
 
@@ -16,10 +17,14 @@ class Utils:
         self.transcript.print_message("Saving progress...")
         try:
             transcript_dict = self.transcript.transcript_dict
-            new_dict = []
+            new_dict = {}
+            count = 0
             for item in transcript_dict:
+                # Because the current room key is not a string, this throws json.dumps off,
+                # we have to manually create a new dict type and convert it...
                 string_key = str(item)
-                new_dict.append([string_key, transcript_dict[item]])
+                new_dict[string_key] = transcript_dict[item]
+                count += 1
             with open(os.sep.join(["data", "save.json"]), "w") as save_file:
                 save_file.write(json.dumps(new_dict))
             self.transcript.print_message("Progress saved.")
@@ -37,9 +42,18 @@ class Utils:
         self.transcript.print_message("Loading progress...")
         try:
             with open(os.sep.join(["data", "save.json"]), "r") as save_file:
-                json_file = json.load(save_file)
+                data = json.load(save_file)
                 # TODO Validate the file format
-                self.transcript.transcript_dict = json_file
+                keys = [member.name for member in CurrentRoom]
+                for key in data.keys():
+                    string_value = data[key]
+                    new_key = key.replace("CurrentRoom.", "")
+                    if new_key in keys:
+                        current_room = CurrentRoom[new_key]
+                        self.transcript.transcript_dict[current_room] = string_value
+                    else:
+                        self.transcript.print_message("The key " + key + " is not a valid room")
+                self.transcript.transcript_dict = data
                 self.transcript.print_message("Progress loaded.")
                 return True
         except Exception as e:

@@ -171,7 +171,8 @@ class Engine:
 
         :return:
         """
-        # TODO TM Implement
+        self.transcript.print_message("You currently have the following items in your inventory:")
+
         pass
 
     def __do_hint(self):
