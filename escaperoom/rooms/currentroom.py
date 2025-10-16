@@ -49,8 +49,8 @@ class CurrentRoom(Enum):
                 return "pro_tree.jsonl"
             case CurrentRoom.SOC:
                 return "auth.log"
-            case CurrentRoom.FINAL_GATE:
-                return "final_gate.txt"
+            # case CurrentRoom.FINAL_GATE:
+            #    return "final_gate.txt"
         return "no item"
 
     @staticmethod
