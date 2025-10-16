@@ -20,7 +20,7 @@ class VaultRoom(BaseRoom):
         try:
             with self.open_file() as vault_file:
                 file_entry = vault_file.read()
-                p = re.compile(pattern="\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-\s*(\d+)\s*}\s*",
+                p = re.compile(pattern=r"\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-\s*(\d+)\s*}\s*",
                                flags=re.IGNORECASE | re.MULTILINE)
                 # https://regex101.com/r/AKN3hE/2
                 # As I have three matching groups, will return a tuple of 3 items

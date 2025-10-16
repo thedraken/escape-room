@@ -172,9 +172,9 @@ class Engine:
         if self.inventory.is_inventory_complete():
             with Utils.open_file("data", "final_gate.txt") as final_gate_file:
                 import re
-                group_id_pattern = re.compile("\s*group_id\s*=\s*([\w-]*)")
-                expected_hmac_pattern = re.compile("\s*expected_hmac\s*=\s*([\w]*)")
-                token_order_pattern = re.compile("\s*token_order\s*=\s*([\w]*),([\w]*),([\w]*),([\w]*)")
+                group_id_pattern = re.compile(r"\s*group_id\s*=\s*([\w-]*)")
+                expected_hmac_pattern = re.compile(r"\s*expected_hmac\s*=\s*([\w]*)")
+                token_order_pattern = re.compile(r"\s*token_order\s*=\s*([\w]*),([\w]*),([\w]*),([\w]*)")
                 final_gate_data = final_gate_file.read()
                 group_id_tuple = group_id_pattern.findall(final_gate_data)
                 expected_hmac_tuple = expected_hmac_pattern.findall(final_gate_data)
