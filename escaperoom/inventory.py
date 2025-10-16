@@ -8,6 +8,7 @@ class Item(Enum):
     ITEM_VAULT = "vault_dump.txt"
     ITEM_MALWARE = "pro_tree.jsonl"
     ITEM_SOC = "auth.log"
+    ITEM_NOTHING = "no item"
 
 
 class Inventory:
@@ -43,10 +44,11 @@ class Inventory:
         count_of_items = 0
         missing_items = ""
         for key in self.inventory.keys():
-            if self.inventory[key] is None or self.inventory[key] != "":
-                if len(missing_items) >= 0:
+            if self.inventory[key] is None or self.inventory[key] == "":
+                if len(missing_items) > 0:
                     missing_items += ", "
                 missing_items += key
+                count_of_items += 1
         if count_of_items == 0:
             self.__transcript.print_message("ALl items collected.")
         else:

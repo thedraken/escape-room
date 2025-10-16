@@ -93,11 +93,14 @@ class Engine:
                 self.transcript.print_message("An error occurred in solving the room:")
                 self.transcript.print_message(e)
         else:
-            self.transcript.print_message(
-                "Please enter an item with the inspect command, you are in "
-                + CurrentRoom.get_room_name(self.current_location)
-                + " and can inspect "
-                + CurrentRoom.get_room_item(self.current_location).value)
+            message = "Please enter an item with the inspect command, you are in " + CurrentRoom.get_room_name(
+                self.current_location)
+            if self.current_location == CurrentRoom.BASE:
+                message += " and there is nothing here"
+            else:
+                message += " and can inspect " + CurrentRoom.get_room_item(self.current_location).value
+            self.transcript.print_message(message)
+
 
     def __do_move(self, move):
         """

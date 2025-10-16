@@ -53,7 +53,7 @@ class CurrentRoom(Enum):
                 return Item.ITEM_SOC
             # case CurrentRoom.FINAL_GATE:
             #    return "final_gate.txt"
-        return "no item"
+        return Item.ITEM_NOTHING
 
     @staticmethod
     def get_use_item(current_room: Enum):
