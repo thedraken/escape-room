@@ -39,6 +39,7 @@ class Utils:
             with open(os.sep.join(["data", "save.json"]), "r") as save_file:
                 json_file = json.load(save_file)
                 self.transcript.transcript_dict = json_file
+                self.transcript.print_message("Progress loaded.")
                 return True
         except Exception as e:
             self.transcript.print_message("Error loading save file: " + str(e))
