@@ -18,7 +18,7 @@ class SocRoom(BaseRoom):
        -And then get all "Failed Password" attempts
        -Group the first three octets(/subnet) of all the IP addresses
        -Out of which we need to find the most frequent subnet and find all the IP addresses of this subnet
-       -Choose the IP that occured most frequently and get its last octet{L}
+       -Choose the IP that occurred most frequently and get its last octet{L}
        -Find the number of times that IP address tried to attempt {COUNT}
        -Get the token {L}{COUNT}
        -Send the token and other counts to the transcripts
