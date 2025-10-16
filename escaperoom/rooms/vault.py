@@ -53,7 +53,13 @@ class VaultRoom(BaseRoom):
                         self._add_log_to_transcript(f"TOKEN[SAFE]={item[0]}-{item[1]}-{item[2]}\n")
                         self._add_log_to_transcript(f"EVIDENCE[SAFE].MATCH=SAFE{{{item[0]}-{item[1]}-{item[2]}}}\n")
                         self._add_log_to_transcript(f"EVIDENCE[SAFE].CHECK={item[0]}+{item[1]}={item[2]}\n")
-                    return results
+                    if len(results) == 1:
+                        token = "-".join(results[0])
+                        self._transcript.print_message(f"Returning token: {token}")
+                        return token
+                    else:
+                        self._transcript.print_message("Too many tokens found, not returning any data")
+                        return None
                 else:
                     self._transcript.print_message("Vault was not solved")
                     return None

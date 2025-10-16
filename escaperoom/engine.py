@@ -1,3 +1,4 @@
+from escaperoom.inventory import Inventory
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.utils import Utils
 
@@ -6,6 +7,7 @@ class Engine:
     def __init__(self, transcript):
         self.current_location = CurrentRoom.BASE
         self.transcript = transcript
+        self.inventory = Inventory(transcript)
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
@@ -62,7 +64,7 @@ class Engine:
         commands = inspect.split(" ")
         if commands[0] == "inspect" and len(commands) > 1:
             item = commands[1]
-            if item == CurrentRoom.get_room_item(self.current_location):
+            if item == CurrentRoom.get_room_item(self.current_location).value:
                 is_valid = True
         if is_valid:
             try:
@@ -70,19 +72,23 @@ class Engine:
                     case CurrentRoom.SOC:
                         from escaperoom.rooms.soc import SocRoom
                         soc_room = SocRoom(self.transcript)
-                        soc_room.solve()
+                        self.inventory.update_inventory(CurrentRoom.get_room_item(self.current_location),
+                                                        soc_room.solve())
                     case CurrentRoom.DNS:
                         from escaperoom.rooms.dns import DNSRoom
                         dns_room = DNSRoom(self.transcript)
-                        dns_room.solve()
+                        self.inventory.update_inventory(CurrentRoom.get_room_item(self.current_location),
+                                                        dns_room.solve())
                     case CurrentRoom.MALWARE:
                         from escaperoom.rooms.malware import MalwareRoom
                         malware_room = MalwareRoom(self.transcript)
-                        malware_room.solve()
+                        self.inventory.update_inventory(CurrentRoom.get_room_item(self.current_location),
+                                                        malware_room.solve())
                     case CurrentRoom.VAULT:
                         from escaperoom.rooms.vault import VaultRoom
                         vault_room = VaultRoom(self.transcript)
-                        vault_room.solve()
+                        self.inventory.update_inventory(CurrentRoom.get_room_item(self.current_location),
+                                                        vault_room.solve())
             except Exception as e:
                 self.transcript.print_message("An error occurred in solving the room:")
                 self.transcript.print_message(e)
@@ -91,7 +97,7 @@ class Engine:
                 "Please enter an item with the inspect command, you are in "
                 + CurrentRoom.get_room_name(self.current_location)
                 + " and can inspect "
-                + CurrentRoom.get_room_item(self.current_location))
+                + CurrentRoom.get_room_item(self.current_location).value)
 
     def __do_move(self, move):
         """
@@ -168,12 +174,11 @@ class Engine:
 
     def __do_inventory(self):
         """
-
-        :return:
+        Prints a list of items you have in your inventory, these are tokens you have got for solving rooms
+        :return: Nothing
         """
-        # TODO TM Implement
         self.transcript.print_message("You currently have the following items in your inventory:")
-        pass
+        self.inventory.print_inventory()
 
     def __do_hint(self):
         """
@@ -186,7 +191,7 @@ class Engine:
         self.transcript.print_message(
             "inspect <item>: Allows you to inspect an item in the room. You are currently in "
             + CurrentRoom.get_room_name(self.current_location)
-            + " and can inspect " + CurrentRoom.get_room_item(self.current_location))
+            + " and can inspect " + CurrentRoom.get_room_item(self.current_location).value)
         self.transcript.print_message(
             "use <item>: Depending on the room you are in, you can use an item to do an action. You are currently in "
               + CurrentRoom.get_room_name(self.current_location)

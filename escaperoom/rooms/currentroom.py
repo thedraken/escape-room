@@ -40,15 +40,16 @@ class CurrentRoom(Enum):
         :param current_room: The room you want to know the item of
         :return: The item that can be inspected, or no item if none is found
         """
+        from escaperoom.inventory import Item
         match current_room:
             case CurrentRoom.DNS:
-                return "dns.cfg"
+                return Item.ITEM_DNS
             case CurrentRoom.VAULT:
-                return "vault_dump.txt"
+                return Item.ITEM_VAULT
             case CurrentRoom.MALWARE:
-                return "pro_tree.jsonl"
+                return Item.ITEM_MALWARE
             case CurrentRoom.SOC:
-                return "auth.log"
+                return Item.ITEM_SOC
             # case CurrentRoom.FINAL_GATE:
             #    return "final_gate.txt"
         return "no item"
