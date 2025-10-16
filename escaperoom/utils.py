@@ -43,7 +43,6 @@ class Utils:
         try:
             with open(os.sep.join(["data", "save.json"]), "r") as save_file:
                 data = json.load(save_file)
-                # TODO Validate the file format
                 keys = [member.name for member in CurrentRoom]
                 for key in data.keys():
                     string_value = data[key]
