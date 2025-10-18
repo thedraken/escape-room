@@ -1,5 +1,5 @@
 """
-TODO add docstring
+vault.py stores the VaultRoom class, for solving the vault code.
 """
 import re
 
@@ -10,7 +10,8 @@ from escaperoom.transcript import Transcript
 
 class VaultRoom(BaseRoom):
     """
-    TODO add docstring
+    Vault Room class, created for solving the vault room puzzle and returning the one correct string.
+    Inherits the BaseRoom class and implements the solve method.
     """
     def __init__(self, transcript: Transcript):
         super().__init__(transcript, CurrentRoom.VAULT)
@@ -20,9 +21,9 @@ class VaultRoom(BaseRoom):
         Takes the vault_dump.txt file and looks for the following pattern,
         ignoring any whitespace:
         SAFE{a-b-c}
-        where a + b = c and will return the list of values that match
+        where a + b == c and will return the list of values that match
         that amount
-        :return: the list of values that meet the expected rules for the room
+        :return: a single string result, if one is found. Otherwise, None
         """
         try:
             with self.open_file() as vault_file:
@@ -35,6 +36,12 @@ class VaultRoom(BaseRoom):
         return None
 
     def _extract_matching_items(self, file_entry: str) -> list[str]:
+        """
+        Takes the string extracted from the vault_dump.txt file and checks it against a regex that matches
+        the condition SAFE{a-b-c} with any whitespace. Also ignores case sensitivity.
+        :param file_entry: The string to check for the correct pattern
+        :return: A list of any entries of a, b, and c where the valid regex is matched
+        """
         p = re.compile(
             pattern=r"\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-"
                     r"\s*(\d+)\s*}\s*",
@@ -45,6 +52,11 @@ class VaultRoom(BaseRoom):
         return tuple_result
 
     def _check_items_match_rule(self, items: list[str]) -> list[str]:
+        """
+        For all items in the list, do a check if a + b == c, if so, return them
+        :param items: The list of strings to check, each item must have a length of 3
+        :return: The valid items where a + b = c, or item[0] + item[1] == item[3]
+        """
         # We will add all matching results to the list
         results = []
         for item in items:
@@ -75,6 +87,11 @@ class VaultRoom(BaseRoom):
         return results
 
     def _check_results(self, results) -> str | None:
+        """
+        If only one result is found, create the valid string to add to run.txt, otherwise do nothing.
+        :param results: The results to check and confirm only one data point has been found
+        :return: The single matching token, otherwise None
+        """
         if len(results) != 0:
             # We have at least one result, let's handle it
             self._transcript.print_message(

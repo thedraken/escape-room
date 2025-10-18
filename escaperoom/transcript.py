@@ -1,5 +1,5 @@
 """
-TODO TM
+transcript.py holds the Transcript class object
 """
 import datetime
 
@@ -8,7 +8,8 @@ from escaperoom.rooms.currentroom import CurrentRoom
 
 class Transcript:
     """
-    TODO TM
+    Transcript class involves methods for adding details to the logs, this can be both the chronological log
+    and the run.txt file, depending on the method called.
     """
     def __init__(self):
         self.transcript_dict = {
@@ -44,27 +45,27 @@ class Transcript:
 
     def print_message(self, message):
         """
-        TODO TM
-        :param message:
-        :return:
+        Prints a message to the console, will also add it to the chronological log
+        :param message: The message to print
+        :return: Nothing
         """
         print(str(message))
         self.append_log(str(message))
 
     def save_transcript(self):
         """
-        TODO TM
-        :return:
+        Will save both the run.txt and the chronological log to file, ready for a user to browse.
+        :return: Nothing
         """
         from escaperoom.utils import Utils
         try:
-            with Utils.open_file("data", "transcript_crono.txt", "w") as transcript_file:
+            with Utils.open_file("transcript_crono.txt", "data", "w") as transcript_file:
                 transcript_file.write(self.transcript_crono_order)
         except Exception as e:
             print("An error occurred writing the file:")
             print(e)
         try:
-            with Utils.open_file("data", "run.txt", "w") as transcript_file:
+            with Utils.open_file("run.txt", "data", "w") as transcript_file:
                 for item in self.transcript_dict:
                     transcript_file.write(str(self.transcript_dict.get(item)) + "\n")
         except Exception as e:

@@ -1,5 +1,5 @@
 """
-TODO TM
+inventory.py holds the Item enum, and Inventory class. For manging the player's inventory and items placed in it
 """
 from enum import Enum
 
@@ -8,7 +8,7 @@ from escaperoom.transcript import Transcript
 
 class Item(Enum):
     """
-    TODO TM
+    The enum of items that are possible to get during the game, the default is ITEM_NOTHING
     """
     ITEM_DNS = "dns.cfg"
     ITEM_VAULT = "vault_dump.txt"
@@ -19,7 +19,8 @@ class Item(Enum):
 
 class Inventory:
     """
-    TODO TM
+    The inventory class, where you can update the player's items. The class also manages checking if the player's
+    inventory is missing any items.
     """
     def __init__(self, transcript: Transcript):
         self.inventory = {
@@ -30,19 +31,19 @@ class Inventory:
         }
         self.__transcript = transcript
 
-    def update_inventory(self, item_type: Item, value: str):
+    def update_inventory(self, item_type: Item, value: str | None):
         """
-        TODO TM
-        :param item_type:
-        :param value:
-        :return:
+        Set the token received from the room the player just solved.
+        :param item_type: A value from the enum Item
+        :param value: The token for the value, can be empty or none as well
+        :return: Nothing
         """
         self.inventory[item_type.value] = value
 
     def print_inventory(self):
         """
-        TODO TM
-        :return:
+        Checks the player's inventory and prints out the tokens received from the room.
+        :return: Nothing
         """
         count_of_items = 0
         for key in self.inventory.keys():
@@ -54,8 +55,8 @@ class Inventory:
 
     def is_inventory_complete(self):
         """
-        TODO TM
-        :return:
+        Checks if the player's inventory is complete with all puzzles solved, not necessarily correctly.
+        :return: boolean if the player's inventory is complete
         """
         count_of_items = 0
         for key in self.inventory.keys():
@@ -65,8 +66,8 @@ class Inventory:
 
     def print_missing_items(self):
         """
-        TODO TM
-        :return:
+        Prints a statement of the items the player is currently missing to use the gate.
+        :return: Nothing
         """
         count_of_items = 0
         missing_items = ""

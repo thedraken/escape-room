@@ -1,5 +1,5 @@
 """
-TODO TM
+currentroom.py stores the CurrentRoom enum, and methods on what items or use objects are available for a room
 """
 from enum import Enum
 

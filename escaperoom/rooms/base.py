@@ -1,5 +1,6 @@
 """
-TODO TM
+base.py has the abstract class base room, with standard methods shared between rooms.
+This includes accessing the room's file, the abstract solve, and adding a log to the transcript
 """
 from abc import ABC, abstractmethod
 from typing import Any, IO
@@ -11,7 +12,7 @@ from escaperoom.utils import Utils
 
 class BaseRoom(ABC):
     """
-    TODO TM
+    The abstract base class that all solvable rooms must inherit from.
     """
     def __init__(self, transcript: Transcript, current_room: CurrentRoom):
         self._transcript = transcript
@@ -20,8 +21,8 @@ class BaseRoom(ABC):
     @abstractmethod
     def solve(self) -> str | None:
         """
-        TODO TM
-        :return:
+        The abstract method to solve the room.
+        :return: A string if a valid result is obtained, otherwise None
         """
         pass
 
@@ -45,5 +46,5 @@ class BaseRoom(ABC):
         """
         item = CurrentRoom.get_room_item(self._current_room).value
         if item != "no item":
-            return Utils.open_file("data", item)
+            return Utils.open_file(item, "data")
         return None

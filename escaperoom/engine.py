@@ -180,7 +180,7 @@ class Engine:
         :return: Nothing
         """
         if self.inventory.is_inventory_complete():
-            with Utils.open_file("data", "final_gate.txt") as final_gate_file:
+            with Utils.open_file("final_gate.txt", "data") as final_gate_file:
                 import re
                 group_id_pattern = re.compile(r"\s*group_id\s*=\s*([\w-]*)")
                 expected_hmac_pattern = re.compile(r"\s*expected_hmac\s*=\s*([\w]*)")
