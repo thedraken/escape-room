@@ -32,7 +32,7 @@ class VaultRoom(BaseRoom):
                 results = self._check_items_match_rule(tuple_result)
                 return self._check_results(results)
         except Exception as e:
-            self._transcript.print_message("An error occurred:\n" + str(e))
+            self.transcript.print_message("An error occurred:\n" + str(e))
         return None
 
     def _extract_matching_items(self, file_entry: str) -> list[str]:
@@ -62,7 +62,7 @@ class VaultRoom(BaseRoom):
         for item in items:
             if len(item) == 3:
                 from escaperoom.utils import Utils
-                utils = Utils(self._transcript)
+                utils = Utils(self.transcript)
                 value1 = utils.convert_to_float(item[0])
                 value2 = utils.convert_to_float(item[1])
                 value3 = utils.convert_to_float(item[2])
@@ -75,7 +75,7 @@ class VaultRoom(BaseRoom):
                 if value1 + value2 == value3:
                     # These values work for what we needed, add them
                     # to our results
-                    self._transcript.print_message(
+                    self.transcript.print_message(
                         "The values " + str(item) + " are valid")
                     results.append(item)
                 # else:
@@ -94,7 +94,7 @@ class VaultRoom(BaseRoom):
         """
         if len(results) != 0:
             # We have at least one result, let's handle it
-            self._transcript.print_message(
+            self.transcript.print_message(
                 "The results of vault are: " + str(results))
             if len(results) == 1:
                 item = results[0]
@@ -107,11 +107,11 @@ class VaultRoom(BaseRoom):
                     f"EVIDENCE[SAFE].CHECK={item[0]}+{item[1]}"
                     f"={item[2]}\n")
                 token = "-".join(item)
-                self._transcript.print_message(
+                self.transcript.print_message(
                     f"Returning token: {token}")
                 return token
-            self._transcript.print_message(
+            self.transcript.print_message(
                 "Too many tokens found, not returning any data")
             return None
-        self._transcript.print_message("Vault was not solved")
+        self.transcript.print_message("Vault was not solved")
         return None

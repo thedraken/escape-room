@@ -16,16 +16,16 @@ class Utils:
     save, load, convert_to_float, and open_file
     """
     def __init__(self, transcript: Transcript):
-        self.transcript = transcript
+        self._transcript = transcript
 
     def save(self) -> bool:
         """
         Saves the current progress of the game to a save.json file
         :return: Returns true if it successfully saved the current state
         """
-        self.transcript.print_message("Saving progress...")
+        self._transcript.print_message("Saving progress...")
         try:
-            transcript_dict = self.transcript.transcript_dict
+            transcript_dict = self._transcript.transcript_dict
             new_dict = {}
             count = 0
             for item in transcript_dict:
@@ -36,10 +36,10 @@ class Utils:
                 count += 1
             with Utils.open_file("save.json", "data", "w") as save_file:
                 save_file.write(json.dumps(new_dict))
-            self.transcript.print_message("Progress saved.")
+            self._transcript.print_message("Progress saved.")
             return True
         except Exception as e:
-            self.transcript.print_message("Error saving progress: " + str(e))
+            self._transcript.print_message("Error saving progress: " + str(e))
         return False
 
     def load(self) -> bool:
@@ -48,7 +48,7 @@ class Utils:
         Will overwrite the current state, with the data
         :return: Returns true if it successfully loaded the save file
         """
-        self.transcript.print_message("Loading progress...")
+        self._transcript.print_message("Loading progress...")
         try:
             with Utils.open_file("save.json", "data", "r") as save_file:
                 data = json.load(save_file)
@@ -58,14 +58,14 @@ class Utils:
                     new_key = key.replace("CurrentRoom.", "")
                     if new_key in keys:
                         current_room = CurrentRoom[new_key]
-                        self.transcript.transcript_dict[current_room] = string_value
+                        self._transcript.transcript_dict[current_room] = string_value
                     else:
-                        self.transcript.print_message("The key " + key + " is not a valid room")
-                self.transcript.transcript_dict = data
-                self.transcript.print_message("Progress loaded.")
+                        self._transcript.print_message("The key " + key + " is not a valid room")
+                self._transcript.transcript_dict = data
+                self._transcript.print_message("Progress loaded.")
                 return True
         except Exception as e:
-            self.transcript.print_message("Error loading save file: " + str(e))
+            self._transcript.print_message("Error loading save file: " + str(e))
         return False
 
     def convert_to_float(self, value: str) -> float | None:
@@ -77,7 +77,7 @@ class Utils:
         try:
             return float(value)
         except ValueError:
-            self.transcript.print_message(value + " is not a valid number")
+            self._transcript.print_message(value + " is not a valid number")
         return None
 
     @staticmethod

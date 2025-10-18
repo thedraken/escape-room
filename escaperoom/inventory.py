@@ -23,7 +23,7 @@ class Inventory:
     inventory is missing any items.
     """
     def __init__(self, transcript: Transcript):
-        self.inventory = {
+        self._inventory = {
             Item.ITEM_DNS.value: "",
             Item.ITEM_VAULT.value: "",
             Item.ITEM_MALWARE.value: "",
@@ -38,7 +38,7 @@ class Inventory:
         :param value: The token for the value, can be empty or none as well
         :return: Nothing
         """
-        self.inventory[item_type.value] = value
+        self._inventory[item_type.value] = value
 
     def print_inventory(self):
         """
@@ -46,10 +46,10 @@ class Inventory:
         :return: Nothing
         """
         count_of_items = 0
-        for key in self.inventory.keys():
-            if self.inventory[key] is not None and self.inventory[key] != "":
+        for key in self._inventory.keys():
+            if self._inventory[key] is not None and self._inventory[key] != "":
                 count_of_items += 1
-                self.__transcript.print_message(":".join((key, self.inventory[key])))
+                self.__transcript.print_message(":".join((key, self._inventory[key])))
         if count_of_items == 0:
             self.__transcript.print_message("Nothing in your inventory.")
 
@@ -59,8 +59,8 @@ class Inventory:
         :return: boolean if the player's inventory is complete
         """
         count_of_items = 0
-        for key in self.inventory.keys():
-            if self.inventory[key] is not None and self.inventory[key] != "":
+        for key in self._inventory.keys():
+            if self._inventory[key] is not None and self._inventory[key] != "":
                 count_of_items += 1
         return count_of_items == 4
 
@@ -71,8 +71,8 @@ class Inventory:
         """
         count_of_items = 0
         missing_items = ""
-        for key in self.inventory.keys():
-            if self.inventory[key] is None or self.inventory[key] == "":
+        for key in self._inventory.keys():
+            if self._inventory[key] is None or self._inventory[key] == "":
                 if len(missing_items) > 0:
                     missing_items += ", "
                 missing_items += key

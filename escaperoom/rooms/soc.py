@@ -97,7 +97,7 @@ class SocRoom(BaseRoom):
 
 
         except FileNotFoundError:
-            self._transcript.print_message("File not found!!!")
+            self.transcript.print_message("File not found!!!")
             return None
 
         self.add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")

@@ -15,8 +15,8 @@ class BaseRoom(ABC):
     The abstract base class that all solvable rooms must inherit from.
     """
     def __init__(self, transcript: Transcript, current_room: CurrentRoom):
-        self._transcript = transcript
-        self._current_room = current_room
+        self.transcript = transcript
+        self.current_room = current_room
 
     @abstractmethod
     def solve(self) -> str | None:
@@ -33,10 +33,10 @@ class BaseRoom(ABC):
         :param log: The log to add
         :return: None
         """
-        if not log or not self._current_room:
+        if not log or not self.current_room:
             return
         else:
-            self._transcript.append(log, self._current_room)
+            self.transcript.append(log, self.current_room)
 
     def open_file(self) -> None | IO[Any]:
         """
@@ -44,7 +44,7 @@ class BaseRoom(ABC):
         :return: A file stream for reading, if the room has a file to open,
         otherwise None
         """
-        item = CurrentRoom.get_room_item(self._current_room).value
+        item = CurrentRoom.get_room_item(self.current_room).value
         if item != "no item":
             return Utils.open_file(item, "data")
         return None

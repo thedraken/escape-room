@@ -21,6 +21,6 @@ class VaultTest(unittest.TestCase):
         transcript_mock = Mock()
         to_test_vault = VaultRoom(transcript_mock)
 
-        list = to_test_vault._extract_matching_items("SAFE{4-5-9}")
-        assert list == ["SAFE{4-5-9}"]
-        assert len(list) == 1
+        list_of_items = to_test_vault._extract_matching_items("SAFE{4-5-9}")
+        assert list_of_items == ["SAFE{4-5-9}"]
+        assert len(list_of_items) == 1
