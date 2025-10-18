@@ -1,39 +1,50 @@
-import os
+"""
+base.py has the abstract class base room, with standard methods shared between rooms.
+This includes accessing the room's file, the abstract solve, and adding a log to the transcript
+"""
 from abc import ABC, abstractmethod
+from typing import Any, IO
 
-from escaperoom.rooms.currentroom import CurrentRoom
+from escaperoom.location import CurrentRoom
 from escaperoom.transcript import Transcript
-
-from escaperoom import transcript
-from escaperoom.rooms.currentroom import CurrentRoom
+from escaperoom.utils import Utils
 
 
 class BaseRoom(ABC):
+    """
+    The abstract base class that all solvable rooms must inherit from.
+    """
     def __init__(self, transcript: Transcript, current_room: CurrentRoom):
-        self._transcript = transcript
-        self._current_room = current_room
+        self.transcript = transcript
+        self.current_room = current_room
 
     @abstractmethod
-    def solve(self) -> str:
+    def solve(self) -> str | None:
+        """
+        The abstract method to solve the room.
+        :return: A string if a valid result is obtained, otherwise None
+        """
         pass
 
-    def _add_log_to_transcript(self, log):
+    def add_log_to_transcript(self, log):
         """
-        Adds the official log to the run.txt transcript, this is what we will be graded on so check formatting!
+        Adds the official log to the run.txt transcript, this is what we will
+        be graded on so check formatting!
         :param log: The log to add
         :return: None
         """
-        if not log or not self._current_room:
+        if not log or not self.current_room:
             return
         else:
-            self._transcript.append(log, self._current_room)
+            self.transcript.append(log, self.current_room)
 
-    def open_file(self):
+    def open_file(self) -> None | IO[Any]:
         """
         Will open the file for the relevant room, if it exists
-        :return: A file stream for reading, if the room has a file to open, otherwise None
+        :return: A file stream for reading, if the room has a file to open,
+        otherwise None
         """
-        item = CurrentRoom.get_room_item(self._current_room).value
+        item = CurrentRoom.get_room_item(self.current_room).value
         if item != "no item":
-            return open(os.sep.join(["data", item]), "r")
+            return Utils.open_file(item, "data")
         return None

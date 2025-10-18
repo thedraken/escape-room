@@ -1,4 +1,18 @@
+"""
+location.py contains the Item and CurrentRoom enums
+"""
 from enum import Enum
+
+
+class Item(Enum):
+    """
+    The enum of items that are possible to get during the game, the default is ITEM_NOTHING
+    """
+    ITEM_DNS = "dns.cfg"
+    ITEM_VAULT = "vault_dump.txt"
+    ITEM_MALWARE = "pro_tree.jsonl"
+    ITEM_SOC = "auth.log"
+    ITEM_NOTHING = "no item"
 
 
 class CurrentRoom(Enum):
@@ -13,7 +27,7 @@ class CurrentRoom(Enum):
     FINAL_GATE = 6
 
     @staticmethod
-    def get_room_name(current_room: Enum):
+    def get_room_name(current_room: Enum) -> str | None:
         """
         Will get the nice printable version of the room enum passed in
         :param current_room: The room you want the name of
@@ -35,13 +49,12 @@ class CurrentRoom(Enum):
         return None
 
     @staticmethod
-    def get_room_item(current_room: Enum):
+    def get_room_item(current_room: Enum) -> Item:
         """
         Will tell you which item is inspectable in the current room
         :param current_room: The room you want to know the item of
         :return: The item that can be inspected, or no item if none is found
         """
-        from escaperoom.inventory import Item
         match current_room:
             case CurrentRoom.DNS:
                 return Item.ITEM_DNS
@@ -53,12 +66,13 @@ class CurrentRoom(Enum):
                 return Item.ITEM_SOC
             # case CurrentRoom.FINAL_GATE:
             #    return "final_gate.txt"
-        return "no item"
+        return Item.ITEM_NOTHING
 
     @staticmethod
-    def get_use_item(current_room: Enum):
+    def get_use_item(current_room: Enum) -> str:
         """
-        Will tell you if you can use a function in the room, only applies to the final gate
+        Will tell you if you can use a function in the room, only applies
+        to the final gate
         :param current_room: The room you want to check the use of
         :return: Gate or nothing
         """
