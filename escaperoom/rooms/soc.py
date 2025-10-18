@@ -103,11 +103,17 @@ class SocRoom(BaseRoom):
             self.transcript.print_message("File not found!!!")
             return None
         # TODO implement the following lines as well
-        self.add_log_to_transcript(f"TOKEN[KEYPAD]=")
-        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].TOP24=")
-        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].COUNT=")
-        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].SAMPLE=")
-        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
+        token = f"TOKEN[KEYPAD]="
+        top24 = f"EVIDENCE[KEYPAD].TOP24="
+        count = f"EVIDENCE[KEYPAD].COUNT="
+        sample = f"EVIDENCE[KEYPAD].SAMPLE="
+        malformed_skipped = f"EVIDENCE[KEYPAD].MALFORMED={malformed_lines_count}"
+
+        self.add_log_to_transcript(token)
+        self.add_log_to_transcript(top24)
+        self.add_log_to_transcript(count)
+        self.add_log_to_transcript(sample)
+        self.add_log_to_transcript(malformed_skipped)
 
         #TODO we should return something here....
-        return None
+        return "\n".join([token, top24, count, sample, malformed_skipped])
