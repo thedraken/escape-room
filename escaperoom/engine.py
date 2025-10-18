@@ -17,23 +17,28 @@ class Engine:
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
-        :param command: A user can pass possible commands, depending on what they do, the engine game state will update.
+        :param command: A user can pass possible commands, depending on what they do,
+        the engine game state will update.
         Possible commands are:
+        ========= ===============================================================
+        command   Additional mandatory parameter
+        --------- ---------------------------------------------------------------
         look
-        move <room>
+        move      <room>
         quit
-        inspect <item>
-        use <item>
+        inspect   <item>
+        use       <item>
         inventory
         hint
         save
         load
-        :return: returns if the game should carry on running, if false, the game will be ended by the escape CLI
+        :return: returns if the game should carry on running, if false, the quit has been called and
+        the game will be ended.
         """
         self._transcript.append_log("User called " + command)
         match command.lower():
             case "quit":
-                return self.__do_quit()
+                return self._do_quit()
             case "look":
                 self._do_look()
             case move if move.startswith("move"):
@@ -55,7 +60,7 @@ class Engine:
                     "Unknown command: " + str(command) + ", type hint to see a list of available commands")
         return True
 
-    def __do_quit(self) -> bool:
+    def _do_quit(self) -> bool:
         self._transcript.print_message("Thank you for playing")
         self._transcript.save_transcript()
         return False
@@ -216,7 +221,7 @@ class Engine:
                     final_gate_text = (f"FINAL_GATE=PENDING\nMSG={group_id_tuple[0]}|{token_text}\n"
                                        f"EXPECTED_HMAC={expected_hmac_tuple[0]}")
                     self._transcript.transcript_dict[CurrentRoom.FINAL_GATE] = final_gate_text
-                    self.__do_quit()
+                    self._do_quit()
         else:
             self._transcript.print_message("You do not have all the items, you are missing:")
             self._inventory.print_missing_items()
@@ -248,9 +253,10 @@ class Engine:
             + " and can use " + CurrentRoom.get_use_item(self._current_location))
         self._transcript.print_message("inventory: Prints a list of all items found your inventory")
         self._transcript.print_message(
-            "save: Saves the progress of your current game to a file in the data folder, called save.txt")
+            "save: Saves the progress of your current game to a file in the data folder, called save.json")
         self._transcript.print_message(
-            "load: If a save.txt file is found and it is valid, will load it and set that as your current progress. "
+            "load: If a save.json file is found, in the data folder and it is valid,"
+            "the system will load it and set that as your current progress. "
             "Will overwrite any progress already done in this session")
         self._transcript.print_message(
             "quit: Exits the game and prints currently collected evidence to a transcript file")
