@@ -1,3 +1,6 @@
+"""
+TODO Add comment about what file contains
+"""
 import re
 
 from escaperoom.location import CurrentRoom
@@ -99,7 +102,12 @@ class SocRoom(BaseRoom):
         except FileNotFoundError:
             self.transcript.print_message("File not found!!!")
             return None
-
+        # TODO implement the following lines as well
+        self.add_log_to_transcript(f"TOKEN[KEYPAD]=")
+        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].TOP24=")
+        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].COUNT=")
+        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].SAMPLE=")
         self.add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
 
+        #TODO we should return something here....
         return None
