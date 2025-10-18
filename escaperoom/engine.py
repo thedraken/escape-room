@@ -1,19 +1,19 @@
 """
 Stores the engine class and it's associated methods
 """
-from escaperoom.inventory import Inventory, Item
-from escaperoom.rooms.currentroom import CurrentRoom
-from escaperoom.utils import Utils
+from escaperoom.location import CurrentRoom, Item
 
 
 class Engine:
     """
     The engine class for the overall game, will check the commands passed and will execute the relevant command.
     """
-    def __init__(self, transcript):
+
+    def __init__(self, transcript, inventory, utils):
         self._current_location = CurrentRoom.BASE
         self._transcript = transcript
-        self._inventory = Inventory(transcript)
+        self._inventory = inventory
+        self._utils = utils
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
@@ -181,7 +181,7 @@ class Engine:
         :return: Nothing
         """
         if self._inventory.is_inventory_complete():
-            with Utils.open_file("final_gate.txt", "data") as final_gate_file:
+            with self._utils.open_file("final_gate.txt", "data") as final_gate_file:
                 import re
                 group_id_pattern = re.compile(r"\s*group_id\s*=\s*([\w-]*)")
                 expected_hmac_pattern = re.compile(r"\s*expected_hmac\s*=\s*(\w*)")
@@ -203,13 +203,13 @@ class Engine:
                             token_text += "-"
                         match token:
                             case "PID":
-                                token_text += self._inventory._inventory[Item.ITEM_MALWARE]
+                                token_text += self._inventory.inventory[Item.ITEM_MALWARE]
                             case "DNS":
-                                token_text += self._inventory._inventory[Item.ITEM_DNS]
+                                token_text += self._inventory.inventory[Item.ITEM_DNS]
                             case "KEYPAD":
-                                token_text += self._inventory._inventory[Item.ITEM_SOC]
+                                token_text += self._inventory.inventory[Item.ITEM_SOC]
                             case "SAFE":
-                                token_text += self._inventory._inventory[Item.ITEM_VAULT]
+                                token_text += self._inventory.inventory[Item.ITEM_VAULT]
                             case _:
                                 self._transcript.print_message(f"Invalid token of type {token}")
                                 return
@@ -261,8 +261,7 @@ class Engine:
         Saves the current state of the game
         :return: Nothing
         """
-        utils = Utils(self._transcript)
-        if utils.save():
+        if self._utils.save():
             self._transcript.print_message("You saved the current game successfully")
         else:
             self._transcript.print_message("You did not save the current game successfully")
@@ -272,8 +271,7 @@ class Engine:
         Loads the current state of the game from a save.txt file
         :return: Nothing
         """
-        utils = Utils(self._transcript)
-        if utils.load():
+        if self._utils.load():
             self._transcript.print_message("You loaded the current game successfully")
         else:
             self._transcript.print_message("You did not load the current game successfully")

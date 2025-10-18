@@ -3,7 +3,7 @@ transcript.py holds the Transcript class object
 """
 import datetime
 
-from escaperoom.rooms.currentroom import CurrentRoom
+from escaperoom.location import CurrentRoom
 
 
 class Transcript:
@@ -30,7 +30,7 @@ class Transcript:
         :return: NONE
         """
         transcript_value = self.transcript_dict.get(current_room)
-        transcript_value += transcript_text
+        transcript_value += transcript_text + "\n"
         self.transcript_dict.update({current_room: transcript_value})
         self.append_log(CurrentRoom.get_room_name(current_room) + ": " + transcript_text)
 

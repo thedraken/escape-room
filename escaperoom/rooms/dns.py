@@ -2,8 +2,8 @@ import base64
 import re
 from typing import Dict, Optional, Tuple
 
+from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
-from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
 
 

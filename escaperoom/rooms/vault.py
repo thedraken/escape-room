@@ -3,8 +3,8 @@ vault.py stores the VaultRoom class, for solving the vault code.
 """
 import re
 
+from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
-from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
 
 
@@ -100,13 +100,13 @@ class VaultRoom(BaseRoom):
             if len(results) == 1:
                 item = results[0]
                 self.add_log_to_transcript(
-                    f"TOKEN[SAFE]={item[0]}-{item[1]}-{item[2]}\n")
+                    f"TOKEN[SAFE]={item[0]}-{item[1]}-{item[2]}")
                 self.add_log_to_transcript(
                     f"EVIDENCE[SAFE].MATCH=SAFE{{{item[0]}-{item[1]}"
-                    f"-{item[2]}}}\n")
+                    f"-{item[2]}}}")
                 self.add_log_to_transcript(
                     f"EVIDENCE[SAFE].CHECK={item[0]}+{item[1]}"
-                    f"={item[2]}\n")
+                    f"={item[2]}")
                 token = "-".join(item)
                 self.transcript.print_message(
                     f"Returning token: {token}")

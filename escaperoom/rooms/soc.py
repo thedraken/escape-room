@@ -1,7 +1,7 @@
 import re
 
+from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
-from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
 
 

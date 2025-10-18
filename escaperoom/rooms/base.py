@@ -5,7 +5,7 @@ This includes accessing the room's file, the abstract solve, and adding a log to
 from abc import ABC, abstractmethod
 from typing import Any, IO
 
-from escaperoom.rooms.currentroom import CurrentRoom
+from escaperoom.location import CurrentRoom
 from escaperoom.transcript import Transcript
 from escaperoom.utils import Utils
 
