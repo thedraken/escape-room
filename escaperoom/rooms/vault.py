@@ -35,6 +35,7 @@ class VaultRoom(BaseRoom):
             self.transcript.print_message("An error occurred:\n" + str(e))
         return None
 
+    # noinspection PyMethodMayBeStatic
     def _extract_matching_items(self, file_entry: str) -> list[str]:
         """
         Takes the string extracted from the vault_dump.txt file and checks it against a regex that matches
