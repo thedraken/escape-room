@@ -169,9 +169,9 @@ class DNSRoom(BaseRoom):
 
             # The lines below are what will be written to data/run.txt
             # by Transcript.save_transcript()
-            self._add_log_to_transcript(f"TOKEN[DNS]={token}\n")
-            self._add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}\n")
-            self._add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE="
+            self.add_log_to_transcript(f"TOKEN[DNS]={token}\n")
+            self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}\n")
+            self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE="
                                         f"{decoded_sentence}\n")
             return token
 

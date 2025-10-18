@@ -1,9 +1,15 @@
+"""
+TODO TM
+"""
 import datetime
 
 from escaperoom.rooms.currentroom import CurrentRoom
 
 
 class Transcript:
+    """
+    TODO TM
+    """
     def __init__(self):
         self.transcript_dict = {
             CurrentRoom.BASE: "",
@@ -37,10 +43,19 @@ class Transcript:
         self.transcript_crono_order += str(datetime.datetime.now()) + " - " + log_text + "\n"
 
     def print_message(self, message):
+        """
+        TODO TM
+        :param message:
+        :return:
+        """
         print(str(message))
         self.append_log(str(message))
 
     def save_transcript(self):
+        """
+        TODO TM
+        :return:
+        """
         from escaperoom.utils import Utils
         try:
             with Utils.open_file("data", "transcript_crono.txt", "w") as transcript_file:

@@ -100,6 +100,6 @@ class SocRoom(BaseRoom):
             self._transcript.print_message("File not found!!!")
             return None
 
-        self._add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
+        self.add_log_to_transcript(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
 
         return None

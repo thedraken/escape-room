@@ -1,5 +1,5 @@
 """
-TODO add module docstring
+Stores the engine class and it's associated methods
 """
 from escaperoom.inventory import Inventory, Item
 from escaperoom.rooms.currentroom import CurrentRoom
@@ -8,7 +8,7 @@ from escaperoom.utils import Utils
 
 class Engine:
     """
-    TODO Add missing class docstring
+    The engine class for the overall game, will check the commands passed and will execute the relevant command.
     """
     def __init__(self, transcript):
         self.current_location = CurrentRoom.BASE
@@ -35,21 +35,21 @@ class Engine:
             case "quit":
                 return self.__do_quit()
             case "look":
-                self.__do_look()
+                self._do_look()
             case move if move.startswith("move"):
-                self.__do_move(move)
+                self._do_move(move)
             case inspect if inspect.startswith("inspect"):
-                self.__do_inspect(inspect)
+                self._do_inspect(inspect)
             case use if use.startswith("use"):
-                self.__do_use()
+                self._do_use()
             case "inventory":
-                self.__do_inventory()
+                self._do_inventory()
             case "hint":
-                self.__do_hint()
+                self._do_hint()
             case "save":
-                self.__do_save()
+                self._do_save()
             case "load":
-                self.__do_load()
+                self._do_load()
             case _:
                 self.transcript.print_message(
                     "Unknown command: " + str(command) + ", type hint to see a list of available commands")
@@ -60,7 +60,7 @@ class Engine:
         self.transcript.save_transcript()
         return False
 
-    def __do_inspect(self, inspect):
+    def _do_inspect(self, inspect):
         """
         If you are in a valid location and inspect the right item, this will attempt to solve the room
         Relies on the current_room set in the engine
@@ -108,7 +108,7 @@ class Engine:
                 message += " and can inspect " + CurrentRoom.get_room_item(self.current_location).value
             self.transcript.print_message(message)
 
-    def __do_move(self, move):
+    def _do_move(self, move):
         """
         Allows the user to move to a room specified, if the room is invalid also reports on it
         :param move:
@@ -139,11 +139,12 @@ class Engine:
                     is_valid = True
         if not is_valid:
             self.transcript.print_message(
-                "Please enter a room with the move command, possible rooms are dns, malware, soc, vault, gate, and lobby E.g. move dns")
+                "Please enter a room with the move command, possible rooms are dns, malware, soc, vault, gate, "
+                "and lobby E.g. move dns")
         else:
             self.transcript.print_message(f"You have entered into {self.current_location}")
 
-    def __do_look(self):
+    def _do_look(self):
         """
         Prints details about the current room the user is in
         :return: Nothing
@@ -158,7 +159,8 @@ class Engine:
                     "that show authentication attempts. Your task is to identify the most likely attacking subnet.")
             case CurrentRoom.MALWARE:
                 self.transcript.print_message(
-                    "You are in the Malware lab, there is a JSON-line file, called proc_tree.jsonl, that shows a process "
+                    "You are in the Malware lab, there is a JSON-line file, called proc_tree.jsonl, "
+                    "that shows a process "
                     "tree containing a malicious chain ending with an exfil command.")
             case CurrentRoom.VAULT:
                 self.transcript.print_message(
@@ -172,10 +174,10 @@ class Engine:
                 self.transcript.print_message(
                     "The final gate stands before you, have you collected all the pieces to exit the gate?")
 
-    def __do_use(self):
+    def _do_use(self):
         """
-        TODO TM Add details
-        :return:
+        This function will use an item in the room, in the current specs this is only for using the gate
+        :return: Nothing
         """
         if self.inventory.is_inventory_complete():
             with Utils.open_file("data", "final_gate.txt") as final_gate_file:
@@ -210,14 +212,15 @@ class Engine:
                             case _:
                                 self.transcript.print_message(f"Invalid token of type {token}")
                                 return
-                    final_gate_text = f"FINAL_GATE=PENDING\nMSG={group_id_tuple[0]}|{token_text}\nEXPECTED_HMAC={expected_hmac_tuple[0]}"
+                    final_gate_text = (f"FINAL_GATE=PENDING\nMSG={group_id_tuple[0]}|{token_text}\n"
+                                       f"EXPECTED_HMAC={expected_hmac_tuple[0]}")
                     self.transcript.transcript_dict[CurrentRoom.FINAL_GATE] = final_gate_text
                     self.__do_quit()
         else:
             self.transcript.print_message("You do not have all the items, you are missing:")
             self.inventory.print_missing_items()
 
-    def __do_inventory(self):
+    def _do_inventory(self):
         """
         Prints a list of items you have in your inventory, these are tokens you have got for solving rooms
         :return: Nothing
@@ -225,14 +228,15 @@ class Engine:
         self.transcript.print_message("You currently have the following items in your inventory:")
         self.inventory.print_inventory()
 
-    def __do_hint(self):
+    def _do_hint(self):
         """
         Prints a list of commands the user can currently do
         :return: Nothing
         """
         self.transcript.print_message("look: Allows you to look in the current room and see what is available")
         self.transcript.print_message(
-            "move <room>: Allows you to move to a room to solve, rooms available are: dns, malware, soc, vault, gate, and lobby")
+            "move <room>: Allows you to move to a room to solve, rooms available are: dns, malware, soc, vault, "
+            "gate, and lobby")
         self.transcript.print_message(
             "inspect <item>: Allows you to inspect an item in the room. You are currently in "
             + CurrentRoom.get_room_name(self.current_location)
@@ -251,7 +255,7 @@ class Engine:
             "quit: Exits the game and prints currently collected evidence to a transcript file")
         self.transcript.print_message("hint: Gives a list of available commands")
 
-    def __do_save(self):
+    def _do_save(self):
         """
         Saves the current state of the game
         :return: Nothing
@@ -262,7 +266,7 @@ class Engine:
         else:
             self.transcript.print_message("You did not save the current game successfully")
 
-    def __do_load(self):
+    def _do_load(self):
         """
         Loads the current state of the game from a save.txt file
         :return: Nothing

@@ -1,4 +1,9 @@
+"""
+TODO TM
+"""
 from enum import Enum
+
+import escaperoom.inventory
 
 
 class CurrentRoom(Enum):
@@ -13,7 +18,7 @@ class CurrentRoom(Enum):
     FINAL_GATE = 6
 
     @staticmethod
-    def get_room_name(current_room: Enum):
+    def get_room_name(current_room: Enum) -> str | None:
         """
         Will get the nice printable version of the room enum passed in
         :param current_room: The room you want the name of
@@ -35,7 +40,7 @@ class CurrentRoom(Enum):
         return None
 
     @staticmethod
-    def get_room_item(current_room: Enum):
+    def get_room_item(current_room: Enum) -> escaperoom.inventory.Item:
         """
         Will tell you which item is inspectable in the current room
         :param current_room: The room you want to know the item of
@@ -56,7 +61,7 @@ class CurrentRoom(Enum):
         return Item.ITEM_NOTHING
 
     @staticmethod
-    def get_use_item(current_room: Enum):
+    def get_use_item(current_room: Enum) -> str:
         """
         Will tell you if you can use a function in the room, only applies
         to the final gate

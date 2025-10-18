@@ -1,4 +1,8 @@
+"""
+TODO TM
+"""
 from abc import ABC, abstractmethod
+from typing import Any, IO
 
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
@@ -6,15 +10,22 @@ from escaperoom.utils import Utils
 
 
 class BaseRoom(ABC):
+    """
+    TODO TM
+    """
     def __init__(self, transcript: Transcript, current_room: CurrentRoom):
         self._transcript = transcript
         self._current_room = current_room
 
     @abstractmethod
-    def solve(self) -> str:
+    def solve(self) -> str | None:
+        """
+        TODO TM
+        :return:
+        """
         pass
 
-    def _add_log_to_transcript(self, log):
+    def add_log_to_transcript(self, log):
         """
         Adds the official log to the run.txt transcript, this is what we will
         be graded on so check formatting!
@@ -26,7 +37,7 @@ class BaseRoom(ABC):
         else:
             self._transcript.append(log, self._current_room)
 
-    def open_file(self):
+    def open_file(self) -> None | IO[Any]:
         """
         Will open the file for the relevant room, if it exists
         :return: A file stream for reading, if the room has a file to open,

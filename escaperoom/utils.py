@@ -1,15 +1,22 @@
+"""
+TODO TM
+"""
 import json
 import os
+from typing import Any, IO
 
 from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
 
 
 class Utils:
+    """
+    TODO TM
+    """
     def __init__(self, transcript: Transcript):
         self.transcript = transcript
 
-    def save(self):
+    def save(self) -> bool:
         """
         Saves the current progress of the game to a save.json file
         :return: Returns true if it successfully saved the current state
@@ -33,7 +40,7 @@ class Utils:
             self.transcript.print_message("Error saving progress: " + str(e))
         return False
 
-    def load(self):
+    def load(self) -> bool:
         """
         Loads the current state from the save.json file, if it exists
         Will overwrite the current state, with the data
@@ -72,5 +79,12 @@ class Utils:
         return None
 
     @staticmethod
-    def open_file(folder: str, filename: str, open_type: str = "r"):
+    def open_file(folder: str, filename: str, open_type: str = "r") -> IO[Any]:
+        """
+        TODO TM
+        :param folder:
+        :param filename:
+        :param open_type:
+        :return:
+        """
         return open(os.sep.join([folder, filename]), open_type)

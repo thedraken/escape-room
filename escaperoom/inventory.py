@@ -1,9 +1,15 @@
+"""
+TODO TM
+"""
 from enum import Enum
 
 from escaperoom.transcript import Transcript
 
 
 class Item(Enum):
+    """
+    TODO TM
+    """
     ITEM_DNS = "dns.cfg"
     ITEM_VAULT = "vault_dump.txt"
     ITEM_MALWARE = "pro_tree.jsonl"
@@ -12,6 +18,9 @@ class Item(Enum):
 
 
 class Inventory:
+    """
+    TODO TM
+    """
     def __init__(self, transcript: Transcript):
         self.inventory = {
             Item.ITEM_DNS.value: "",
@@ -22,9 +31,19 @@ class Inventory:
         self.__transcript = transcript
 
     def update_inventory(self, item_type: Item, value: str):
+        """
+        TODO TM
+        :param item_type:
+        :param value:
+        :return:
+        """
         self.inventory[item_type.value] = value
 
     def print_inventory(self):
+        """
+        TODO TM
+        :return:
+        """
         count_of_items = 0
         for key in self.inventory.keys():
             if self.inventory[key] is not None and self.inventory[key] != "":
@@ -34,6 +53,10 @@ class Inventory:
             self.__transcript.print_message("Nothing in your inventory.")
 
     def is_inventory_complete(self):
+        """
+        TODO TM
+        :return:
+        """
         count_of_items = 0
         for key in self.inventory.keys():
             if self.inventory[key] is not None and self.inventory[key] != "":
@@ -41,6 +64,10 @@ class Inventory:
         return count_of_items == 4
 
     def print_missing_items(self):
+        """
+        TODO TM
+        :return:
+        """
         count_of_items = 0
         missing_items = ""
         for key in self.inventory.keys():
