@@ -1,3 +1,6 @@
+"""
+location.py contains the Item and CurrentRoom enums
+"""
 from enum import Enum
 
 

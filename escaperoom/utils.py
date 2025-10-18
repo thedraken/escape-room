@@ -1,5 +1,5 @@
 """
-utils.py holds the Utils class and its associated methods.
+utils.py holds the Utils and inventory classes and their associated methods.
 """
 import json
 import os
