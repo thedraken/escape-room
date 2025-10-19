@@ -135,29 +135,38 @@ class SocRoom(BaseRoom):
 
         ips_list = subnet_ips[max_subnet]
 
+        for ip in ips_list:
+            if ip in ip_frequency:
+                ip_frequency[ip] += 1
+            else:
+                ip_frequency[ip] = 1
 
+        most_common_ip = None
+        max_appearances = 0
 
+        for ip, appearances in ip_frequency.items():
+            if appearances > max_appearances:
+                max_appearances = appearances
+                most_common_ip = ip
 
+        last_octet = most_common_ip.split('.')[-1]
 
-
-
-
-
+        # Combine: last_octet + total_count
+        token = last_octet + str(subnet_count[max_subnet])
 
         # TODO: need to remove these later;just for debugging
-        print(f"TOKEN[KEYPAD]=")
+        print(f"TOKEN[KEYPAD]={token}")
         print(f"EVIDENCE[KEYPAD].TOP24={max_subnet}")
         print(f"EVIDENCE[KEYPAD].SUBNET_COUNT={subnet_count[max_subnet]}")
-        print(f"EVIDENCE[KEYPAD].IP_COUNT=")
+        print(f"EVIDENCE[KEYPAD].IP_COUNT={ip_frequency[most_common_ip]}")
         print(f"EVIDENCE[KEYPAD].SAMPLE={sample_lines[max_subnet]}")
         print(f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={accepted_lines_count}")
         print(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
 
         token = f"TOKEN[KEYPAD]="
         top24 = f"EVIDENCE[KEYPAD].TOP24={max_subnet}"
-        # TODO: need to clarify whihc count we need to send
         sub_count = f"EVIDENCE[KEYPAD].SUBNET_COUNT={subnet_count[max_subnet]}"
-        ip_count = f"EVIDENCE[KEYPAD].IP_COUNT="
+        ip_count = f"EVIDENCE[KEYPAD].IP_COUNT={ip_frequency[most_common_ip]}"
         sample = f"EVIDENCE[KEYPAD].SAMPLE={sample_lines[max_subnet]}"
         accepted_count = f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={accepted_lines_count}"
         malformed_skipped = f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}"
