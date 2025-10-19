@@ -2,3 +2,10 @@
 /data/run.txt
 /data/save.json
 /data/transcript_crono.txt
+.idea/
+*.pyc
+__pycache__/
+data/run.txt
+data/transcript_crono.txt
+escaperoom/tempCodeRunnerFile.py
+data/transcript_crono.txt
