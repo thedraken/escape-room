@@ -11,20 +11,18 @@ from escaperoom.rooms.base import BaseRoom
 from escaperoom.transcript import Transcript
 
 
+def is_malformed_line(line):
+    if not line:
+        return True
+
+    if "Failed password" not in line and "Accepted password" not in line:
+        return True
+    return False
+
+
 class SocRoom(BaseRoom):
     def __init__(self, transcript: Transcript):
         super().__init__(transcript, CurrentRoom.SOC)
-
-
-    def is_malformed_line(self, line):
-
-        if not line:
-            return True
-
-        if "Failed password" not in line and "Accepted password" not in line:
-            return True
-        return False
-
 
     def solve(self):
         """
@@ -57,7 +55,7 @@ class SocRoom(BaseRoom):
                     line = line.strip()
 
                     # skip empty or null lines
-                    if self.is_malformed_line(line):
+                    if is_malformed_line(line):
                         malformed_lines_count += 1
                         continue
 
@@ -108,7 +106,7 @@ class SocRoom(BaseRoom):
                             # IP was invalid (like 999.999.999.999)
                             malformed_lines_count += 1
                             continue
-#
+                    #
                     else:
                         # Couldn't find any IP in this line
                         malformed_lines_count += 1
@@ -151,7 +149,7 @@ class SocRoom(BaseRoom):
 
         last_octet = most_common_ip.split('.')[-1]
 
-        # Combine: last_octet + total_count
+        # Combine: last_octet + total_count_of_the_max_subnet
         token = last_octet + str(subnet_count[max_subnet])
 
         # TODO: need to remove these later;just for debugging
@@ -163,7 +161,7 @@ class SocRoom(BaseRoom):
         print(f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={accepted_lines_count}")
         print(f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={malformed_lines_count}")
 
-        token = f"TOKEN[KEYPAD]="
+        token = f"TOKEN[KEYPAD]={token}"
         top24 = f"EVIDENCE[KEYPAD].TOP24={max_subnet}"
         sub_count = f"EVIDENCE[KEYPAD].SUBNET_COUNT={subnet_count[max_subnet]}"
         ip_count = f"EVIDENCE[KEYPAD].IP_COUNT={ip_frequency[most_common_ip]}"
@@ -180,4 +178,3 @@ class SocRoom(BaseRoom):
         self.add_log_to_transcript(malformed_skipped)
 
         return "\n".join([token, top24, sub_count, ip_count, sample, accepted_count, malformed_skipped])
-
