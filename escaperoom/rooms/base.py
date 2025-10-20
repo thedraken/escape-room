@@ -26,7 +26,7 @@ class BaseRoom(ABC):
         """
         pass
 
-    def add_log_to_transcript(self, log):
+    def add_log_to_transcript(self, log: str) -> None:
         """
         Adds the official log to the run.txt transcript, this is what we will
         be graded on so check formatting!

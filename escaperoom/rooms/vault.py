@@ -10,7 +10,8 @@ from escaperoom.transcript import Transcript
 
 class VaultRoom(BaseRoom):
     """
-    Vault Room class, created for solving the vault room puzzle and returning the one correct string.
+    Vault Room class, created for solving the vault room puzzle and returning
+    the one correct string.
     Inherits the BaseRoom class and implements the solve method.
     """
     def __init__(self, transcript: Transcript):
@@ -38,10 +39,13 @@ class VaultRoom(BaseRoom):
     # noinspection PyMethodMayBeStatic
     def _extract_matching_items(self, file_entry: str) -> list[str]:
         """
-        Takes the string extracted from the vault_dump.txt file and checks it against a regex that matches
-        the condition SAFE{a-b-c} with any whitespace. Also ignores case sensitivity.
+        Takes the string extracted from the vault_dump.txt file and checks
+        it against a regex that matches
+        the condition SAFE{a-b-c} with any whitespace.
+        Also ignores case sensitivity.
         :param file_entry: The string to check for the correct pattern
-        :return: A list of any entries of a, b, and c where the valid regex is matched
+        :return: A list of any entries of a, b, and c where
+        the valid regex is matched
         """
         p = re.compile(
             pattern=r"\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-"
@@ -54,9 +58,12 @@ class VaultRoom(BaseRoom):
 
     def _check_items_match_rule(self, items: list[str]) -> list[str]:
         """
-        For all items in the list, do a check if a + b == c, if so, return them
-        :param items: The list of strings to check, each item must have a length of 3
-        :return: The valid items where a + b = c, or item[0] + item[1] == item[3]
+        For all items in the list, do a check if a + b == c, if so,
+        return them
+        :param items: The list of strings to check, each item must have a
+        length of 3
+        :return: The valid items where a + b = c, or
+        item[0] + item[1] == item[3]
         """
         # We will add all matching results to the list
         results = []
