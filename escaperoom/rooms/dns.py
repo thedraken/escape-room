@@ -9,8 +9,8 @@ import base64
 import re
 from typing import Dict, Optional, Tuple
 
+from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
-from escaperoom.rooms.currentroom import CurrentRoom
 from escaperoom.transcript import Transcript
 
 
@@ -66,14 +66,15 @@ class DNSRoom(BaseRoom):
         Main solver for the DNS room.
         Called when user runs `inspect dns.cfg` in the game.
         """
-        self._transcript.print_message("You called solve on " +
-                                       CurrentRoom.get_room_name(self._current_room))
-        self._transcript.print_message("[DNSRoom] starting decode")
+        self.transcript.print_message("You called solve on " +
+                                      CurrentRoom.get_room_name(
+                                          self.current_room))
+        self.transcript.print_message("[DNSRoom] starting decode")
 
         try:
             cfg = self.open_file()
             if cfg is None:
-                self._transcript.print_message("dns.cfg not found in data/.")
+                self.transcript.print_message("dns.cfg not found in data/.")
                 return None
 
             # Step 1: parse the config file
@@ -86,7 +87,8 @@ class DNSRoom(BaseRoom):
                         raw[k] = v  # latest key wins (handles duplicates)
 
             if not raw:
-                self._transcript.print_message("dns.cfg contained no usable entries.")
+                self.transcript.print_message(
+                    "dns.cfg contained no usable entries.")
                 return None
 
             # Step 2: decode all hintN values
@@ -100,7 +102,8 @@ class DNSRoom(BaseRoom):
             # Step 3: get token_tag (may be base64-encoded)
             token_key_raw = raw.get("token_tag") or raw.get("tokenTag") or raw.get("token")
             if not token_key_raw:
-                self._transcript.print_message("token_tag not found in dns.cfg.")
+                self.transcript.print_message(
+                    "token_tag not found in dns.cfg.")
                 return None
 
             token_key_raw = token_key_raw.strip()
@@ -108,32 +111,37 @@ class DNSRoom(BaseRoom):
             token_key = decoded_token_tag.strip() if decoded_token_tag else token_key_raw
 
             if not re.fullmatch(r"hint\d+", token_key, flags=re.IGNORECASE):
-                self._transcript.print_message(f"token_tag invalid or not a hint key: {token_key}")
+                self.transcript.print_message(
+                    f"token_tag invalid or not a hint key: {token_key}")
                 return None
 
             # Step 4: decode the indicated hint
             decoded_sentence = decoded_hints.get(token_key)
             if not decoded_sentence:
-                self._transcript.print_message(f"Could not decode value for {token_key}.")
+                self.transcript.print_message(
+                    f"Could not decode value for {token_key}.")
                 return None
 
             # Step 5: extract the token
             token = self._last_word(decoded_sentence)
             if not token:
-                self._transcript.print_message(f"No valid last word in decoded line for {token_key}.")
+                self.transcript.print_message(
+                    f"No valid last word in decoded line for {token_key}.")
                 return None
 
             # Step 6: log everything and print confirmation
-            self._transcript.print_message("[Room DNS] Decoding hints...")
-            self._transcript.print_message(f"Decoded line: \"{decoded_sentence}\"")
-            self._transcript.print_message(f"Token formed: {token}")
+            self.transcript.print_message("[Room DNS] Decoding hints...")
+            self.transcript.print_message(
+                f"Decoded line: \"{decoded_sentence}\"")
+            self.transcript.print_message(f"Token formed: {token}")
 
-            self._add_log_to_transcript(f"TOKEN[DNS]={token}\n")
-            self._add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}\n")
-            self._add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}\n")
+            self.add_log_to_transcript(f"TOKEN[DNS]={token}\n")
+            self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}\n")
+            self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE"
+                                       f"={decoded_sentence}\n")
 
             return token
 
         except Exception as e:
-            self._transcript.print_message(f"Error in DNSRoom: {e}")
+            self.transcript.print_message(f"Error in DNSRoom: {e}")
             return None
