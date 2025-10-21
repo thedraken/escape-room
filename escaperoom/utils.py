@@ -29,12 +29,14 @@ class Utils:
             new_dict = {}
             count = 0
             for item in transcript_dict:
-                # Because the current room key is not a string, this throws json.dumps off,
+                # Because the current room key is not a string, this
+                # throws json.dumps off,
                 # we have to manually create a new dict type and convert it...
                 string_key = str(item)
                 new_dict[string_key] = transcript_dict[item]
                 count += 1
-            with Utils.open_file("save.json", "data", "w") as save_file:
+            with (Utils.open_file("save.json", "data", "w")
+                  as save_file):
                 save_file.write(json.dumps(new_dict))
             self._transcript.print_message("Progress saved.")
             return True
@@ -50,7 +52,8 @@ class Utils:
         """
         self._transcript.print_message("Loading progress...")
         try:
-            with Utils.open_file("save.json", "data", "r") as save_file:
+            with (Utils.open_file("save.json", "data", "r")
+                  as save_file):
                 data = json.load(save_file)
                 keys = [member.name for member in CurrentRoom]
                 for key in data.keys():
@@ -60,12 +63,14 @@ class Utils:
                         current_room = CurrentRoom[new_key]
                         self._transcript.transcript_dict[current_room] = string_value
                     else:
-                        self._transcript.print_message("The key " + key + " is not a valid room")
-                self._transcript.transcript_dict = data
+                        self._transcript.print_message("The key " + key
+                                                       + "is not a valid room")
+                # self._transcript.transcript_dict = data
                 self._transcript.print_message("Progress loaded.")
                 return True
         except Exception as e:
-            self._transcript.print_message("Error loading save file: " + str(e))
+            self._transcript.print_message("Error loading save file: "
+                                           + str(e))
         return False
 
     def convert_to_float(self, value: str) -> float | None:
@@ -81,34 +86,41 @@ class Utils:
         return None
 
     @staticmethod
-    def open_file(filename: str, folder: str = "data", mode: str = "r") -> IO[Any]:
+    def open_file(filename: str, folder: str = "data", mode: str = "r") \
+            -> IO[Any]:
         """
-        Opens a file on the device, it does assume the file is one folder deep from the current working directory
-        :param folder: The folder the file is in, the default is the data directory
+        Opens a file on the device, it does assume the file is one folder
+        deep from the current working directory
+        :param folder: The folder the file is in, the default is the
+        data directory
         :param filename: The name of the file to open
-        :param mode: The mode of how to open the file, for a list of valid parameters,
+        :param mode: The mode of how to open the file, for a list of
+        valid parameters,
         check method builtins.open.
         At time of writing, and for the current Python library used, they are:
-        ========= ===============================================================
+        ========= =============================================================
         Character Meaning
-        --------- ---------------------------------------------------------------
+        --------- -------------------------------------------------------------
         'r'       open for reading (default)
         'w'       open for writing, truncating the file first
         'x'       create a new file and open it for writing
-        'a'       open for writing, appending to the end of the file if it exists
+        'a'       open for writing, appending to the end of the file
+                    if it exists
         'b'       binary mode
         't'       text mode (default)
         '+'       open a disk file for updating (reading and writing)
         'U'       universal newline mode (deprecated)
-        ========= ===============================================================
-        :return: A file stream for various types, depending on the mode selected
+        ========= =============================================================
+        :return: A file stream for various types,
+                 depending on the mode selected
         """
         return open(os.sep.join([folder, filename]), mode)
 
 
 class Inventory:
     """
-    The inventory class, where you can update the player's items. The class also manages checking if the player's
+    The inventory class, where you can update the player's items.
+    The class also manages checking if the player's
     inventory is missing any items.
     """
 
@@ -132,20 +144,23 @@ class Inventory:
 
     def print_inventory(self):
         """
-        Checks the player's inventory and prints out the tokens received from the room.
+        Checks the player's inventory and prints out the tokens
+        received from the room.
         :return: Nothing
         """
         count_of_items = 0
         for key in self.inventory.keys():
             if self.inventory[key] is not None and self.inventory[key] != "":
                 count_of_items += 1
-                self.__transcript.print_message(":".join((key, self.inventory[key])))
+                self.__transcript.print_message(
+                    ":".join((key, self.inventory[key])))
         if count_of_items == 0:
             self.__transcript.print_message("Nothing in your inventory.")
 
     def is_inventory_complete(self):
         """
-        Checks if the player's inventory is complete with all puzzles solved, not necessarily correctly.
+        Checks if the player's inventory is complete with all puzzles solved,
+        not necessarily correctly.
         :return: boolean if the player's inventory is complete
         """
         count_of_items = 0
@@ -156,7 +171,8 @@ class Inventory:
 
     def print_missing_items(self):
         """
-        Prints a statement of the items the player is currently missing to use the gate.
+        Prints a statement of the items the player is currently missing
+        to use the gate.
         :return: Nothing
         """
         count_of_items = 0
