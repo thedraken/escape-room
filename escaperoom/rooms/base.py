@@ -7,7 +7,6 @@ from typing import Any, IO
 
 from escaperoom.location import CurrentRoom
 from escaperoom.transcript import Transcript
-from escaperoom.utils import Utils
 
 
 class BaseRoom(ABC):
@@ -46,5 +45,5 @@ class BaseRoom(ABC):
         """
         item = CurrentRoom.get_room_item(self.current_room).value
         if item != "no item":
-            return Utils.open_file(item, "data")
+            return Transcript.open_file(item, "data")
         return None

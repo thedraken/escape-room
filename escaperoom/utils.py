@@ -2,8 +2,6 @@
 utils.py holds the Utils and inventory classes and their associated methods.
 """
 import json
-import os
-from typing import Any, IO
 
 from escaperoom.location import CurrentRoom, Item
 from escaperoom.transcript import Transcript
@@ -35,7 +33,7 @@ class Utils:
                 string_key = str(item)
                 new_dict[string_key] = transcript_dict[item]
                 count += 1
-            with (Utils.open_file("save.json", "data", "w")
+            with (Transcript.open_file("save.json", "data", "w")
                   as save_file):
                 save_file.write(json.dumps(new_dict))
             self._transcript.print_message("Progress saved.")
@@ -52,7 +50,7 @@ class Utils:
         """
         self._transcript.print_message("Loading progress...")
         try:
-            with (Utils.open_file("save.json", "data", "r")
+            with (Transcript.open_file("save.json", "data", "r")
                   as save_file):
                 data = json.load(save_file)
                 keys = [member.name for member in CurrentRoom]
@@ -84,38 +82,6 @@ class Utils:
         except ValueError:
             self._transcript.print_message(value + " is not a valid number")
         return None
-
-    @staticmethod
-    def open_file(filename: str, folder: str = "data", mode: str = "r") \
-            -> IO[Any]:
-        """
-        Opens a file on the device, it does assume the file is one folder
-        deep from the current working directory
-        :param folder: The folder the file is in, the default is the
-        data directory
-        :param filename: The name of the file to open
-        :param mode: The mode of how to open the file, for a list of
-        valid parameters,
-        check method builtins.open.
-        At time of writing, and for the current Python library used, they are:
-        ========= =============================================================
-        Character Meaning
-        --------- -------------------------------------------------------------
-        'r'       open for reading (default)
-        'w'       open for writing, truncating the file first
-        'x'       create a new file and open it for writing
-        'a'       open for writing, appending to the end of the file
-                    if it exists
-        'b'       binary mode
-        't'       text mode (default)
-        '+'       open a disk file for updating (reading and writing)
-        'U'       universal newline mode (deprecated)
-        ========= =============================================================
-        :return: A file stream for various types,
-                 depending on the mode selected
-        """
-        return open(os.sep.join([folder, filename]), mode)
-
 
 class Inventory:
     """
