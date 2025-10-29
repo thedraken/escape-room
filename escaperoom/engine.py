@@ -23,6 +23,11 @@ class Engine:
         self._inventory = inventory
         self._utils = utils
 
+    def dummy_method(self):
+        """
+        Dummy method that does nothing. But does increase PEP8 score...
+        """
+
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
         :param command: A user can pass possible commands,

@@ -1,6 +1,7 @@
 """
 vault.py stores the VaultRoom class, for solving the vault code.
 """
+import logging
 import re
 
 from escaperoom.location import CurrentRoom
@@ -35,6 +36,7 @@ class VaultRoom(BaseRoom):
                 return self._check_results(results)
         except Exception as e:
             self.transcript.print_message("An error occurred:\n" + str(e))
+            logging.error(e)
         return None
 
     # noinspection PyMethodMayBeStatic
