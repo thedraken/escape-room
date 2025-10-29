@@ -36,7 +36,8 @@ class DNSRoom(BaseRoom):
         * strips whitespace/newlines
         * auto-adds '=' padding to a multiple of 4
         * doesn't crash if decoding fails (returns None)
-    - token_tag may itself be Base64 (e.g., "NA==" -> "4"); if it's a digit after decoding, we turn it into "hint4".
+    - token_tag may itself be Base64 (e.g., "NA==" -> "4");
+    if it's a digit after decoding, we turn it into "hint4".
     - Token is the last alphanumeric word in the decoded sentence.
     """
 
@@ -96,7 +97,7 @@ class DNSRoom(BaseRoom):
         words = re.findall(r"[A-Za-z0-9_]+", s)
         return words[-1] if words else ""
 
-    #  main solver 
+    #  main solver
 
     def solve(self) -> Optional[str]:
         """
@@ -141,7 +142,7 @@ class DNSRoom(BaseRoom):
             # 2) decode all hintN values into `decoded_hints`
             decoded_hints: Dict[str, str] = {}
             for k, v in raw.items():
-                # Only decode keys that match hint + digits 
+                # Only decode keys that match hint + digits
                 if re.fullmatch(r"hint\d+", k, flags=re.IGNORECASE):
                     decoded = self._b64_decode_loose(v)
                     if decoded:
@@ -149,7 +150,7 @@ class DNSRoom(BaseRoom):
                     # If decoding fails, simply don't include it, that's intentional:
                     # some hints are not good by design.
 
-            # 3)figuring out which hint to use via token_tag 
+            # 3)figuring out which hint to use via token_tag
             # token_tag may appear under a little different names
             token_tag_raw = raw.get("token_tag") or raw.get("tokenTag") or raw.get("token")
             if not token_tag_raw:
@@ -176,20 +177,23 @@ class DNSRoom(BaseRoom):
             decoded_sentence = decoded_hints.get(token_key)
             if not decoded_sentence:
                 # Either the hint line didn't exist or couldn't be decoded
-                self.transcript.print_message(f"Could not decode the value for {token_key}.")
+                self.transcript.print_message(f"Could not decode the value "
+                                              f"for {token_key}.")
                 return None
 
             token = self._last_word(decoded_sentence)
             if not token:
-                self.transcript.print_message(f"No valid last word found in decoded line for {token_key}.")
+                self.transcript.print_message(f"No valid last word found in "
+                                              f"decoded line for {token_key}.")
                 return None
 
-            # 5) user feedback &official grading logs 
+            # 5) user feedback &official grading logs
             self.transcript.print_message("[Room DNS] Decoding hints...")
             self.transcript.print_message(f'Decoded line: "{decoded_sentence}"')
             self.transcript.print_message(f"Token formed: {token}")
 
-            # hese lines get appended to run.txt when Transcript.save_transcript() runs
+            # These lines get appended to run.txt when
+            # Transcript.save_transcript() runs
             self.add_log_to_transcript(f"TOKEN[DNS]={token}")
             self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}")
             self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}")
