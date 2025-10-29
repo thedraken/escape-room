@@ -68,7 +68,8 @@ class Utils:
                 # self._transcript.transcript_dict = data
                 self._transcript.print_message("Progress loaded.")
                 return True
-        except (FileNotFoundError, Exception) as e:
+        # TODO  W0718: Catching too general exception Exception (broad-exception-caught)
+        except Exception as e:
             self._transcript.print_message("Error loading save file: "
                                            + str(e))
         return False
@@ -93,7 +94,7 @@ class Inventory:
     """
 
     def __init__(self, transcript: Transcript):
-        self.inventory = {
+        self._inventory = {
             Item.ITEM_DNS.value: "",
             Item.ITEM_VAULT.value: "",
             Item.ITEM_MALWARE.value: "",
@@ -108,7 +109,7 @@ class Inventory:
         :param value: The token for the value, can be empty or none as well
         :return: Nothing
         """
-        self.inventory[item_type.value] = value
+        self._inventory[item_type.value] = value
 
     def print_inventory(self):
         """
@@ -117,7 +118,7 @@ class Inventory:
         :return: Nothing
         """
         count_of_items = 0
-        for item in self.inventory.items():
+        for item in self._inventory.items():
             key = item[0]
             value = item[1]
             if value is not None and value != "":
@@ -127,6 +128,9 @@ class Inventory:
         if count_of_items == 0:
             self.__transcript.print_message("Nothing in your inventory.")
 
+    def get_inventory_item(self, item_type: Item) -> str:
+        return self._inventory[item_type.value]
+
     def is_inventory_complete(self):
         """
         Checks if the player's inventory is complete with all puzzles solved,
@@ -134,7 +138,7 @@ class Inventory:
         :return: boolean if the player's inventory is complete
         """
         count_of_items = 0
-        for item in self.inventory.items():
+        for item in self._inventory.items():
             if item[1] is not None and item[1] != "":
                 count_of_items += 1
         return count_of_items == 4
@@ -147,7 +151,7 @@ class Inventory:
         """
         count_of_items = 0
         missing_items = ""
-        for item in self.inventory.items():
+        for item in self._inventory.items():
             key = item[0]
             value = item[1]
             if value is None or value == "":

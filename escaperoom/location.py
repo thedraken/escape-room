@@ -33,20 +33,21 @@ class CurrentRoom(Enum):
         :param current_room: The room you want the name of
         :return: The name of the room, or none if the room type is invalid
         """
+        return_value = None
         match current_room:
             case CurrentRoom.BASE:
-                return "Lobby"
+                return_value = "Lobby"
             case CurrentRoom.SOC:
-                return "SOC"
+                return_value = "SOC"
             case CurrentRoom.DNS:
-                return "DNS"
+                return_value = "DNS"
             case CurrentRoom.VAULT:
-                return "Vault"
+                return_value = "Vault"
             case CurrentRoom.MALWARE:
-                return "Malware"
+                return_value = "Malware"
             case CurrentRoom.FINAL_GATE:
-                return "Final Gate"
-        return None
+                return_value = "Final Gate"
+        return return_value
 
     @staticmethod
     def get_room_item(current_room: Enum) -> Item:

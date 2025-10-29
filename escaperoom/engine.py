@@ -9,6 +9,7 @@ from escaperoom.rooms.malware import MalwareRoom
 from escaperoom.rooms.soc import SocRoom
 from escaperoom.rooms.vault import VaultRoom
 from escaperoom.transcript import Transcript
+from escaperoom.utils import Inventory, Utils
 
 
 class Engine:
@@ -17,7 +18,8 @@ class Engine:
     and will execute the relevant command.
     """
 
-    def __init__(self, transcript, inventory, utils):
+    def __init__(self, transcript: Transcript, inventory: Inventory,
+                 utils: Utils):
         self._current_location = CurrentRoom.BASE
         self._transcript = transcript
         self._inventory = inventory
@@ -59,7 +61,7 @@ class Engine:
             case inspect if inspect.startswith("inspect"):
                 self._do_inspect(inspect)
             case use if use.startswith("use"):
-                self._do_use()
+                return self._do_use()
             case "inventory":
                 self._do_inventory()
             case "hint":
@@ -116,6 +118,7 @@ class Engine:
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          vault_room.solve())
+            # TODO  W0718: Catching too general exception Exception (broad-exception-caught)
             except Exception as e:
                 self._transcript.print_message("An error occurred in "
                                                "solving the room:")
@@ -210,7 +213,7 @@ class Engine:
                     "The final gate stands before you, have you collected "
                     "all the pieces to exit the gate?")
 
-    def _do_use(self):
+    def _do_use(self) -> bool:
         """
         This function will use an item in the room, in the current specs
         this is only for using the gate
@@ -219,11 +222,12 @@ class Engine:
         if self._inventory.is_inventory_complete():
             with Transcript.open_file("final_gate.txt",
                                       "data") as final_gate_file:
-                self._do_final_gate_file(final_gate_file)
+                return self._do_final_gate_file(final_gate_file)
         else:
             self._transcript.print_message("You do not have all the items, "
                                            "you are missing:")
             self._inventory.print_missing_items()
+        return True
 
     def _do_inventory(self):
         """
@@ -275,7 +279,7 @@ class Engine:
         self._transcript.print_message("hint: Gives a list of available "
                                        "commands")
 
-    def _do_final_gate_file(self, final_gate_file):
+    def _do_final_gate_file(self, final_gate_file) -> bool:
         group_id_pattern = re.compile(r"\s*group_id\s*=\s*([\w-]*)")
         expected_hmac_pattern = re.compile(r"\s*expected_hmac\s*=\s*(\w*)")
         token_order_pattern = re.compile(
@@ -283,41 +287,47 @@ class Engine:
         final_gate_data = final_gate_file.read()
         group_id_tuple = group_id_pattern.findall(final_gate_data)
         expected_hmac_tuple = expected_hmac_pattern.findall(final_gate_data)
-        token_order_tuple = token_order_pattern.findall(final_gate_data)
-        if group_id_tuple is None or len(group_id_tuple) != 0:
+        toke_order_list = token_order_pattern.findall(final_gate_data)
+        if group_id_tuple is None or len(group_id_tuple) == 0:
             self._transcript.print_message("Group ID is in an invalid format")
-        elif expected_hmac_tuple is None or len(expected_hmac_tuple) != 0:
+        elif expected_hmac_tuple is None or len(expected_hmac_tuple) == 0:
             self._transcript.print_message(
                 "Expected HMAC is in an invalid format")
-        elif token_order_tuple is None or len(token_order_tuple) != 4:
+        elif toke_order_list is None or len(toke_order_list) == 0:
             self._transcript.print_message(
                 "Token order is in an invalid format")
         else:
             token_text = ""
+            token_order_tuple = toke_order_list[0]
             for token in token_order_tuple:
                 if len(token_text) != 0:
                     token_text += "-"
                 match token:
                     case "PID":
-                        token_text += self._inventory.inventory[
-                            Item.ITEM_MALWARE]
+                        token_text += self._inventory.get_inventory_item(
+                            Item.ITEM_MALWARE)
                     case "DNS":
-                        token_text += self._inventory.inventory[Item.ITEM_DNS]
+                        token_text += self._inventory.get_inventory_item(
+                            Item.ITEM_DNS)
                     case "KEYPAD":
-                        token_text += self._inventory.inventory[Item.ITEM_SOC]
+                        token_text += self._inventory.get_inventory_item(
+                            Item.ITEM_SOC)
                     case "SAFE":
-                        token_text += self._inventory.inventory[
-                            Item.ITEM_VAULT]
+                        token_text += self._inventory.get_inventory_item(
+                            Item.ITEM_VAULT)
                     case _:
                         self._transcript.print_message(
                             f"Invalid token of type {token}")
-                        return
+                        return True
             final_gate_text = (
                 f"FINAL_GATE=PENDING\nMSG={group_id_tuple[0]}|{token_text}\n"
                 f"EXPECTED_HMAC={expected_hmac_tuple[0]}")
             self._transcript.transcript_dict[
                 CurrentRoom.FINAL_GATE] = final_gate_text
-            self._do_quit()
+            self._transcript.print_message(f"Final gate was opened with: "
+                                           f"{final_gate_text}")
+            return self._do_quit()
+        return True
 
     def _do_save(self):
         """
