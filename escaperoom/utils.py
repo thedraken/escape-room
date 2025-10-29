@@ -115,13 +115,13 @@ class Inventory:
         :return: Nothing
         """
         count_of_items = 0
-        # TODO C0206: Consider iterating with .items() (
-        # consider-using-dict-items)
-        for key in self.inventory.keys():
-            if self.inventory[key] is not None and self.inventory[key] != "":
+        for item in self.inventory.items():
+            key = item[0]
+            value = item[1]
+            if value is not None and value != "":
                 count_of_items += 1
                 self.__transcript.print_message(
-                    ":".join((key, self.inventory[key])))
+                    ":".join((key, value)))
         if count_of_items == 0:
             self.__transcript.print_message("Nothing in your inventory.")
 
@@ -132,10 +132,8 @@ class Inventory:
         :return: boolean if the player's inventory is complete
         """
         count_of_items = 0
-        # TODO C0206: Consider iterating with .items() (
-        # consider-using-dict-items)
-        for key in self.inventory.keys():
-            if self.inventory[key] is not None and self.inventory[key] != "":
+        for item in self.inventory.items():
+            if item[1] is not None and item[1] != "":
                 count_of_items += 1
         return count_of_items == 4
 
@@ -147,10 +145,10 @@ class Inventory:
         """
         count_of_items = 0
         missing_items = ""
-        # TODO  C0206: Consider iterating with .items()
-        #  (consider-using-dict-items)
-        for key in self.inventory.keys():
-            if self.inventory[key] is None or self.inventory[key] == "":
+        for item in self.inventory.items():
+            key = item[0]
+            value = item[1]
+            if value is None or value == "":
                 if len(missing_items) > 0:
                     missing_items += ", "
                 missing_items += key

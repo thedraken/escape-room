@@ -84,7 +84,7 @@ class DNSRoom(BaseRoom):
             compact += "=" * ((4 - len(compact) % 4) % 4)
             decoded_bytes = base64.b64decode(compact, validate=False)
             return decoded_bytes.decode("utf-8", errors="replace")
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception as e:
             self.transcript.print_message(f"Error decoding data {e}")
             return None  # if truly undecodable, treat as absent
 
@@ -197,7 +197,7 @@ class DNSRoom(BaseRoom):
 
             return token
 
-        except Exception as e:  # pylint: disable=broad-except
+        except Exception as e:
             # don't crash the engine; report the error to the transcript for debugging
             self.transcript.print_message(f"An error occurred in DNSRoom:\n{e}")
             return None
