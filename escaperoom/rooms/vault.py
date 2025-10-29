@@ -6,11 +6,13 @@ import re
 from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
 from escaperoom.transcript import Transcript
+from escaperoom.utils import Utils
 
 
 class VaultRoom(BaseRoom):
     """
-    Vault Room class, created for solving the vault room puzzle and returning the one correct string.
+    Vault Room class, created for solving the vault room puzzle and returning
+    the one correct string.
     Inherits the BaseRoom class and implements the solve method.
     """
     def __init__(self, transcript: Transcript):
@@ -38,10 +40,13 @@ class VaultRoom(BaseRoom):
     # noinspection PyMethodMayBeStatic
     def _extract_matching_items(self, file_entry: str) -> list[str]:
         """
-        Takes the string extracted from the vault_dump.txt file and checks it against a regex that matches
-        the condition SAFE{a-b-c} with any whitespace. Also ignores case sensitivity.
+        Takes the string extracted from the vault_dump.txt file and checks
+        it against a regex that matches
+        the condition SAFE{a-b-c} with any whitespace.
+        Also ignores case sensitivity.
         :param file_entry: The string to check for the correct pattern
-        :return: A list of any entries of a, b, and c where the valid regex is matched
+        :return: A list of any entries of a, b, and c where
+        the valid regex is matched
         """
         p = re.compile(
             pattern=r"\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-"
@@ -54,15 +59,17 @@ class VaultRoom(BaseRoom):
 
     def _check_items_match_rule(self, items: list[str]) -> list[str]:
         """
-        For all items in the list, do a check if a + b == c, if so, return them
-        :param items: The list of strings to check, each item must have a length of 3
-        :return: The valid items where a + b = c, or item[0] + item[1] == item[3]
+        For all items in the list, do a check if a + b == c, if so,
+        return them
+        :param items: The list of strings to check, each item must have a
+        length of 3
+        :return: The valid items where a + b = c, or
+        item[0] + item[1] == item[3]
         """
         # We will add all matching results to the list
         results = []
         for item in items:
             if len(item) == 3:
-                from escaperoom.utils import Utils
                 utils = Utils(self.transcript)
                 value1 = utils.convert_to_float(item[0])
                 value2 = utils.convert_to_float(item[1])
@@ -89,8 +96,10 @@ class VaultRoom(BaseRoom):
 
     def _check_results(self, results) -> str | None:
         """
-        If only one result is found, create the valid string to add to run.txt, otherwise do nothing.
-        :param results: The results to check and confirm only one data point has been found
+        If only one result is found, create the valid string to add to run.txt,
+        otherwise do nothing.
+        :param results: The results to check and confirm only one data point
+        has been found
         :return: The single matching token, otherwise None
         """
         if len(results) != 0:

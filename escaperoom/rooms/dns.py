@@ -1,10 +1,24 @@
 """
-TODO Add comment about what file contains
+DNSRoom 
+
+WHAT THIS CLASS DOES:
+- Reads `data/dns.cfg` which is a messy "key = value" config file.
+- Lines may have extra spaces, comments (# ...), accidental line breaks, and duplicate keys.
+- Keys named `hint1`, `hint2`, ... contain Base64-encoded sentences.
+- The line `token_tag = <...>` tells us WHICH hint to use. Trick: <...> can itself be Base64,
+  e.g., "NA==" -> "4" -> so we actually want hint4.
+- The TOKEN we need to submit is the **last word** of the decoded sentence for that hint.
+- We must also write grading lines to run.txt via Transcript:
+      TOKEN[DNS]=<token>
+      EVIDENCE[DNS].KEY=<hintX>
+      EVIDENCE[DNS].DECODED_LINE=<the full decoded sentence>
 """
+
 import base64
 import re
 from typing import Dict, Optional, Tuple
 
+# project’s structure uses escaperoom.location
 from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
 from escaperoom.transcript import Transcript
@@ -12,182 +26,177 @@ from escaperoom.transcript import Transcript
 
 class DNSRoom(BaseRoom):
     """
-    DNS puzzle:
-    - Read key=value pairs from data/dns.cfg (ignore blank lines and
-    '#' comments).
-    - Base64-decode values for keys like hint1, hint2, ... (robust to
-    missing padding).
-    - Use the key named by 'token_tag' (e.g., token_tag=hint2).
-    - The token is the LAST WORD of that decoded hint sentence.
-    - Log to run.txt:
-        TOKEN[DNS]=<token>
-        EVIDENCE[DNS].KEY=<hintX>
-        EVIDENCE[DNS].DECODED_LINE=<full decoded sentence>
+    Implements the DNS room solver
+
+    Major robustness features:
+    - Ignores comments and blank lines
+    - Accepts "key = value" with arbitrary spacing; supports '=' inside the value
+    - Handles duplicate keys: the last one wins
+    - Tolerant Base64 decoding:
+        * strips whitespace/newlines
+        * auto-adds '=' padding to a multiple of 4
+        * doesn't crash if decoding fails (returns None)
+    - token_tag may itself be Base64 (e.g., "NA==" -> "4"); if it's a digit after decoding, we turn it into "hint4".
+    - Token is the last alphanumeric word in the decoded sentence.
     """
 
     def __init__(self, transcript: Transcript):
-        # Call parent constructor, telling BaseRoom which room this is
-        # (CurrentRoom.DNS)
+        # BaseRoom stores the transcript and which room this is
         super().__init__(transcript, CurrentRoom.DNS)
 
-    # shows in console so you know this code is actually loaded
-    def _marker(self):
-        self.transcript.print_message("[DNSRoom v2] starting decode")
+    # helper functions
 
     @staticmethod
     def _parse_kv_line(line: str) -> Optional[Tuple[str, str]]:
         """
-        Parse a single line into (key, value) or return None.
-        - Strips comments starting with '#'
-        - Ignores blank lines or lines without '='
-        - Preserves value exactly after the first '=' (allowing '=' in values)
+        Parse one config line into (key, value), or return None if the line is junk
+
+        Rules:
+        - Strip off anything after a '#' (comment)
+        - Ignore blank lines
+        - Require at least one '='; split only on the FIRST '=', so values can contain '='
+        - Trim spaces around key and value
         """
+        # removes trailing inline comment and surrounding spaces
         no_comment = line.split("#", 1)[0].strip()
         if not no_comment or "=" not in no_comment:
-            return None
-        key, value = no_comment.split("=", 1)
+            return None  # empty, comment-only, or invalid line
+
+        key, value = no_comment.split("=", 1)  # split on FIRST '=' only
         key = key.strip()
         value = value.strip()
-        if not key:
+        if not key:  # invalid if there’s no key
             return None
         return key, value
 
-    def _b64_decode_loose(self, s: str) -> Optional[str]:
+    @staticmethod
+    def _b64_decode_loose(s: str) -> Optional[str]:
         """
-        Try to base64-decode `s` tolerantly.
-        - Removes whitespace (helps with accidentally line-broken base64)
-        - Adds '=' padding to make length a multiple of 4
-        - Uses errors='replace' on decode so invalid bytes won't crash
-        - Returns decoded string or None on failure
+        Base64-decode, but be forg:
+        - Removes all whitespace (line wraps/backslashes in cfg)
+        - Adds '=' padding so length is a multiple of 4
+        - Returns decoded text as UTF-8 (replacing bad bytes), or None if decode fails completely
         """
-        compact = re.sub(r"\s+", "", s)  # remove spaces/newlines
-        # inside the value
-        pad_needed = (-len(compact)) % 4  # how many '=' to add (0..3)
-        compact += "=" * pad_needed
         try:
-            # permissive decode
-            decoded = base64.b64decode(compact, validate=False)
-            return decoded.decode("utf-8", errors="replace")
-        except Exception as e:
-            self.transcript.print_message("An error occurred:")
-            self.transcript.print_message(e)
-            return None
+            # Remove all whitespace (spaces, tabs, newlines, backslash-newline artifacts)
+            compact = re.sub(r"\s+", "", s)
+            # Add padding if needed to make len % 4 == 0
+            compact += "=" * ((4 - len(compact) % 4) % 4)
+            decoded_bytes = base64.b64decode(compact, validate=False)
+            return decoded_bytes.decode("utf-8", errors="replace")
+        except Exception:
+            return None  # if truly undecodable, treat as absent
 
     @staticmethod
     def _last_word(s: str) -> str:
         """
-        Extract the last 'word' from string s.
-        - Word defined as run of letters/digits/underscore
-        (so punctuation ignored).
-        - Returns empty string if no word found.
+        Return the LAST "word" in s, where a word = letters/digits/underscore.
+        Punctuation and spaces are ignored. If nothing matches, return ""
         """
         words = re.findall(r"[A-Za-z0-9_]+", s)
         return words[-1] if words else ""
 
-    def solve(self):
+    #  main solver 
+
+    def solve(self) -> Optional[str]:
         """
-        Main entry called by the engine when player does `inspect dns.cfg`.
+        Top-level entry point called by the engine when the player does `inspect dns.cfg`
+
         Steps:
-         1. Ensure dns.cfg exists and open it.
-         2. Parse every key=value into dict `raw`.
-         3. Base64-decode all keys that match hintN into `decoded_hints`.
-         4. Read token_tag (must be 'hintX') and find the corresponding
-         decoded hint.
-         5. Extract last word as token, print user messages, and write
-         the required transcript lines.
+          1) Open data/dns.cfg; parse into a dict (later duplicates overwrite earlier ones)
+          2) Base64-decode every key that looks like "hint<digits>"
+          3) Read token_tag. If token_tag itself looks base64 (e.g., "NA=="), decode it first
+             - If the decoded token_tag is a pure number (e.g., "4"), transform to "hint4"
+          4) Pull the decoded sentence for that hint and extract the last word as the token
+          5) Print user feedback and write the official grading lines to run.txt via Transcript
         """
-        # entry message 
-        self.transcript.print_message("You called solve on "
-                                      + CurrentRoom.get_room_name(
-            self.current_room))
-        self._marker()
+        #console markers so the player sees what’s happening.
+        self.transcript.print_message(
+            "You called solve on " + CurrentRoom.get_room_name(self.current_room)
+        )
+        self.transcript.print_message("[DNSRoom] starting decode")
 
         try:
-            cfg = self.open_file()  # BaseRoom.open_file opens data/dns.cfg
-            # if present
-            if cfg is None:
+            # BaseRoom.open_file() uses CurrentRoom.get_room_item(self.current_room).value
+            # which for DNS -> "dns.cfg". It returns an open file handle or None.
+            fh = self.open_file()
+            if fh is None:
                 self.transcript.print_message("dns.cfg not found in data/.")
                 return None
 
-            # 1) Parse the file into a dictionary of raw key->value
+            # 1) parse entire file into a dict `raw` (last key wins)
             raw: Dict[str, str] = {}
-            with cfg:
-                for raw_line in cfg:
+            with fh:
+                for raw_line in fh:
                     parsed = self._parse_kv_line(raw_line)
                     if parsed is None:
                         continue
                     k, v = parsed
-                    raw[k] = v  # latest occurrence wins for duplicate keys
+                    raw[k] = v  # overwrite duplicates by design (latest occurrence wins)
 
             if not raw:
-                self.transcript.print_message("dns.cfg contained no usable "
-                                               "key=value entries.")
+                self.transcript.print_message("dns.cfg contained no valid key=value lines.")
                 return None
 
-            # 2) Decode hintN values
+            # 2) decode all hintN values into `decoded_hints`
             decoded_hints: Dict[str, str] = {}
             for k, v in raw.items():
+                # Only decode keys that match hint + digits 
                 if re.fullmatch(r"hint\d+", k, flags=re.IGNORECASE):
-                    dec = self._b64_decode_loose(v)
-                    if dec is not None:
-                        decoded_hints[k] = dec
+                    decoded = self._b64_decode_loose(v)
+                    if decoded:
+                        decoded_hints[k] = decoded
+                    # If decoding fails, simply don't include it, that's intentional:
+                    # some hints are not good by design.
 
-            # 3) Find token_tag entry (several common names allowed)
-            token_key = (raw.get("token_tag") or raw.get("tokenTag")
-                         or raw.get("token"))
-            if not token_key:
-                self.transcript.print_message("token_tag not found in "
-                                               "dns.cfg.")
+            # 3)figuring out which hint to use via token_tag 
+            # token_tag may appear under a little different names
+            token_tag_raw = raw.get("token_tag") or raw.get("tokenTag") or raw.get("token")
+            if not token_tag_raw:
+                self.transcript.print_message("token_tag not found in dns.cfg.")
                 return None
 
-            token_key = token_key.strip()
-            # token_tag must literally name the hint key (example 'hint2')
-            if not re.fullmatch(r"hint\d+", token_key,
-                                flags=re.IGNORECASE):
-                self.transcript.print_message(f"token_tag points to an "
-                                               f"invalid key: {token_key}")
+            token_tag_raw = token_tag_raw.strip()
+
+            # Try to base64-decode token_tag in case it's like "NA==" (which: "4")
+            decoded_tag = self._b64_decode_loose(token_tag_raw)
+            token_key = decoded_tag.strip() if decoded_tag else token_tag_raw
+
+            # If token_key is purely digits, it means "use hint<digits>"
+            # example: "4" -> "hint4"
+            if token_key.isdigit():
+                token_key = f"hint{token_key}"
+
+            # here validates final token_key format
+            if not re.fullmatch(r"hint\d+", token_key, flags=re.IGNORECASE):
+                self.transcript.print_message(f"token_tag invalid or not a hint key: {token_key}")
                 return None
 
-            # get the decoded sentence for the indicated hint
+            #  4) get decoded sentence for chosen hint and extract token
             decoded_sentence = decoded_hints.get(token_key)
             if not decoded_sentence:
-                # either the hint didn't exist or could not be decoded
-                self.transcript.print_message(f"Could not decode the value "
-                                               f"for {token_key} as base64.")
+                # Either the hint line didn't exist or couldn't be decoded
+                self.transcript.print_message(f"Could not decode the value for {token_key}.")
                 return None
 
-            # 4) Extract token as last word and validate
             token = self._last_word(decoded_sentence)
             if not token:
-                self.transcript.print_message(f"Decoded sentence for "
-                                               f"{token_key} "
-                                               f"had no valid last word.")
+                self.transcript.print_message(f"No valid last word found in decoded line for {token_key}.")
                 return None
 
-            # 5) Print user-facing messages and append the official
-            # grading logs
+            # 5) user feedback &official grading logs 
             self.transcript.print_message("[Room DNS] Decoding hints...")
-            self.transcript.print_message(f"Decoded line: "
-                                           f"\"{decoded_sentence}\"")
+            self.transcript.print_message(f'Decoded line: "{decoded_sentence}"')
             self.transcript.print_message(f"Token formed: {token}")
 
-            # The lines below are what will be written to data/run.txt
-            # by Transcript.save_transcript()
-            self.add_log_to_transcript(f"TOKEN[DNS]={token}\n")
-            self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}\n")
-            self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE="
-                                        f"{decoded_sentence}\n")
+            # hese lines get appended to run.txt when Transcript.save_transcript() runs
+            self.add_log_to_transcript(f"TOKEN[DNS]={token}")
+            self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}")
+            self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}")
+
             return token
 
-        except FileNotFoundError:
-            # defensive: open_file should return None, but handle file
-            # errors gracefully
-            self.transcript.print_message("dns.cfg not found "
-                                           "(FileNotFoundError).")
-            return None
         except Exception as e:
-            # catch-all to avoid crashing the engine; report to transcript
-            # for debugging
-            self.transcript.print_message("An error occurred in DNSRoom:\n"
-                                          + str(e))
+            # don't crash the engine; report the error to the transcript for debugging
+            self.transcript.print_message(f"An error occurred in DNSRoom:\n{e}")
             return None

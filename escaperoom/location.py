@@ -10,7 +10,7 @@ class Item(Enum):
     """
     ITEM_DNS = "dns.cfg"
     ITEM_VAULT = "vault_dump.txt"
-    ITEM_MALWARE = "pro_tree.jsonl"
+    ITEM_MALWARE = "proc_tree.jsonl"
     ITEM_SOC = "auth.log"
     ITEM_NOTHING = "no item"
 

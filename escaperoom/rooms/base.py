@@ -7,7 +7,6 @@ from typing import Any, IO
 
 from escaperoom.location import CurrentRoom
 from escaperoom.transcript import Transcript
-from escaperoom.utils import Utils
 
 
 class BaseRoom(ABC):
@@ -24,9 +23,8 @@ class BaseRoom(ABC):
         The abstract method to solve the room.
         :return: A string if a valid result is obtained, otherwise None
         """
-        pass
 
-    def add_log_to_transcript(self, log):
+    def add_log_to_transcript(self, log: str) -> None:
         """
         Adds the official log to the run.txt transcript, this is what we will
         be graded on so check formatting!
@@ -35,8 +33,7 @@ class BaseRoom(ABC):
         """
         if not log or not self.current_room:
             return
-        else:
-            self.transcript.append(log, self.current_room)
+        self.transcript.append(log, self.current_room)
 
     def open_file(self) -> None | IO[Any]:
         """
@@ -46,5 +43,5 @@ class BaseRoom(ABC):
         """
         item = CurrentRoom.get_room_item(self.current_room).value
         if item != "no item":
-            return Utils.open_file(item, "data")
+            return Transcript.open_file(item, "data")
         return None

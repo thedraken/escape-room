@@ -2,13 +2,16 @@
 transcript.py holds the Transcript class object
 """
 import datetime
+import os
+from typing import IO, Any
 
 from escaperoom.location import CurrentRoom
 
 
 class Transcript:
     """
-    Transcript class involves methods for adding details to the logs, this can be both the chronological log
+    Transcript class involves methods for adding details to the logs,
+    this can be both the chronological log
     and the run.txt file, depending on the method called.
     """
     def __init__(self):
@@ -57,17 +60,49 @@ class Transcript:
         Will save both the run.txt and the chronological log to file, ready for a user to browse.
         :return: Nothing
         """
-        from escaperoom.utils import Utils
         try:
-            with Utils.open_file("transcript_crono.txt", "data", "w") as transcript_file:
+            with (self.open_file("transcript_crono.txt", "data", "w") as
+                  transcript_file):
                 transcript_file.write(self.transcript_crono_order)
         except Exception as e:
             print("An error occurred writing the file:")
             print(e)
         try:
-            with Utils.open_file("run.txt", "data", "w") as transcript_file:
+            with self.open_file("run.txt", "data", "w") as transcript_file:
                 for item in self.transcript_dict:
                     transcript_file.write(str(self.transcript_dict.get(item)) + "\n")
         except Exception as e:
             print("An error occurred writing the file:")
             print(e)
+
+    @staticmethod
+    def open_file(filename: str, folder: str = "data", mode: str = "r") \
+            -> IO[Any]:
+        """
+        Opens a file on the device, it does assume the file is one folder
+        deep from the current working directory
+        :param folder: The folder the file is in, the default is the
+        data directory
+        :param filename: The name of the file to open
+        :param mode: The mode of how to open the file, for a list of
+        valid parameters,
+        check method builtins.open.
+        At time of writing, and for the current Python library used, they are:
+        ========= =============================================================
+        Character Meaning
+        --------- -------------------------------------------------------------
+        'r'       open for reading (default)
+        'w'       open for writing, truncating the file first
+        'x'       create a new file and open it for writing
+        'a'       open for writing, appending to the end of the file
+                    if it exists
+        'b'       binary mode
+        't'       text mode (default)
+        '+'       open a disk file for updating (reading and writing)
+        'U'       universal newline mode (deprecated)
+        ========= =============================================================
+        :return: A file stream for various types,
+                 depending on the mode selected
+        """
+        return open(file=os.sep.join([folder, filename]), mode=mode,
+                    encoding="utf-8")
