@@ -6,6 +6,7 @@ import re
 from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
 from escaperoom.transcript import Transcript
+from escaperoom.utils import Utils
 
 
 class VaultRoom(BaseRoom):
@@ -69,7 +70,6 @@ class VaultRoom(BaseRoom):
         results = []
         for item in items:
             if len(item) == 3:
-                from escaperoom.utils import Utils
                 utils = Utils(self.transcript)
                 value1 = utils.convert_to_float(item[0])
                 value2 = utils.convert_to_float(item[1])
@@ -96,8 +96,10 @@ class VaultRoom(BaseRoom):
 
     def _check_results(self, results) -> str | None:
         """
-        If only one result is found, create the valid string to add to run.txt, otherwise do nothing.
-        :param results: The results to check and confirm only one data point has been found
+        If only one result is found, create the valid string to add to run.txt,
+        otherwise do nothing.
+        :param results: The results to check and confirm only one data point
+        has been found
         :return: The single matching token, otherwise None
         """
         if len(results) != 0:
