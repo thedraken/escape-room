@@ -71,7 +71,7 @@ class Transcript:
         try:
             with self.open_file("run.txt", "data", "w") as transcript_file:
                 for item in self.transcript_dict:
-                    transcript_file.write(str(self.transcript_dict.get(item)) + "\n")
+                    transcript_file.write(str(self.transcript_dict.get(item)))
         #TODO W0718: Catching too general exception Exception (broad-exception-caught)
         except Exception as e:
             print("An error occurred writing the file:")

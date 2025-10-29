@@ -5,6 +5,7 @@ This room identifies the most likely attacking subnet
 """
 import re
 from collections import Counter, defaultdict
+
 from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
 from escaperoom.transcript import Transcript
@@ -166,7 +167,7 @@ class SocRoom(BaseRoom):
             print(line)
             self.add_log_to_transcript(line)
 
-        return "\n".join(output_lines)
+        return results['token']
 
     def solve(self):
         """
