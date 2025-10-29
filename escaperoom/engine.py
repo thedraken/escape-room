@@ -4,6 +4,10 @@ Stores the engine class and it's associated methods
 import re
 
 from escaperoom.location import CurrentRoom, Item
+from escaperoom.rooms.dns import DNSRoom
+from escaperoom.rooms.malware import MalwareRoom
+from escaperoom.rooms.soc import SocRoom
+from escaperoom.rooms.vault import VaultRoom
 from escaperoom.transcript import Transcript
 
 
@@ -88,25 +92,21 @@ class Engine:
             try:
                 match self._current_location:
                     case CurrentRoom.SOC:
-                        from escaperoom.rooms.soc import SocRoom
                         soc_room = SocRoom(self._transcript)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          soc_room.solve())
                     case CurrentRoom.DNS:
-                        from escaperoom.rooms.dns import DNSRoom
                         dns_room = DNSRoom(self._transcript)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          dns_room.solve())
                     case CurrentRoom.MALWARE:
-                        from escaperoom.rooms.malware import MalwareRoom
                         malware_room = MalwareRoom(self._transcript)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          malware_room.solve())
                     case CurrentRoom.VAULT:
-                        from escaperoom.rooms.vault import VaultRoom
                         vault_room = VaultRoom(self._transcript)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
