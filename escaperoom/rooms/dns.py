@@ -70,8 +70,7 @@ class DNSRoom(BaseRoom):
             return None
         return key, value
 
-    @staticmethod
-    def _b64_decode_loose(s: str) -> Optional[str]:
+    def _b64_decode_loose(self, s: str) -> Optional[str]:
         """
         Base64-decode, but be forg:
         - Removes all whitespace (line wraps/backslashes in cfg)
@@ -85,7 +84,8 @@ class DNSRoom(BaseRoom):
             compact += "=" * ((4 - len(compact) % 4) % 4)
             decoded_bytes = base64.b64decode(compact, validate=False)
             return decoded_bytes.decode("utf-8", errors="replace")
-        except Exception:
+        except Exception as e:  # pylint: disable=broad-except
+            self.transcript.print_message(f"Error decoding data {e}")
             return None  # if truly undecodable, treat as absent
 
     @staticmethod
@@ -112,9 +112,6 @@ class DNSRoom(BaseRoom):
           5) Print user feedback and write the official grading lines to run.txt via Transcript
         """
         #console markers so the player sees what’s happening.
-        self.transcript.print_message(
-            "You called solve on " + CurrentRoom.get_room_name(self.current_room)
-        )
         self.transcript.print_message("[DNSRoom] starting decode")
 
         try:
@@ -200,7 +197,7 @@ class DNSRoom(BaseRoom):
 
             return token
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-except
             # don't crash the engine; report the error to the transcript for debugging
             self.transcript.print_message(f"An error occurred in DNSRoom:\n{e}")
             return None
