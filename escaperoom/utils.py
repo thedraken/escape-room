@@ -129,6 +129,9 @@ class Inventory:
             self.__transcript.print_message("Nothing in your inventory.")
 
     def get_inventory_item(self, item_type: Item) -> str:
+        """
+        Returns the value the item key stores from the inventory
+        """
         return self._inventory[item_type.value]
 
     def is_inventory_complete(self):
