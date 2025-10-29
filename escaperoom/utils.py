@@ -38,7 +38,9 @@ class Utils:
                 save_file.write(json.dumps(new_dict))
             self._transcript.print_message("Progress saved.")
             return True
-        except Exception as e:
+        except (FileNotFoundError, FileExistsError, EOFError, KeyError,
+                OSError, SystemError, TypeError, UnicodeError,
+                UnicodeEncodeError, ValueError) as e:
             self._transcript.print_message("Error saving progress: " + str(e))
         return False
 
@@ -66,7 +68,7 @@ class Utils:
                 # self._transcript.transcript_dict = data
                 self._transcript.print_message("Progress loaded.")
                 return True
-        except Exception as e:
+        except (FileNotFoundError, Exception) as e:
             self._transcript.print_message("Error loading save file: "
                                            + str(e))
         return False
