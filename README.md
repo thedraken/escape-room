@@ -2,7 +2,8 @@
 Created by Lejla Osmanovic, Sheema Ruzaik, and Thomas Mortimer<br>
 Implementation of the escape room project for Programming fundamentals, to show our understanding of python coding standards.<br>
 <br>
-To execute the program, put your data files into the folder data/ and then execute escape<br>
+To execute the program, put your data files into the folder data/ and then execute escape.py<br>
+Requires Python 3.12<br>
 
 # Table of files
 
@@ -36,6 +37,8 @@ float and opening a file
 ### inventory
 
 ### rooms
+
+Contains the room files, which all extend from the base.py room and implements the solve method
 
 #### base
 
