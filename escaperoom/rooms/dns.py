@@ -18,7 +18,7 @@ import base64
 import re
 from typing import Dict, Optional, Tuple
 
-#project’s structure uses escaperoom.location
+# project’s structure uses escaperoom.location
 from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
 from escaperoom.transcript import Transcript
