@@ -84,6 +84,7 @@ class DNSRoom(BaseRoom):
             compact += "=" * ((4 - len(compact) % 4) % 4)
             decoded_bytes = base64.b64decode(compact, validate=False)
             return decoded_bytes.decode("utf-8", errors="replace")
+        # TODO W0718: Catching too general exception Exception (broad-exception-caught)
         except Exception as e:
             self.transcript.print_message(f"Error decoding data {e}")
             return None  # if truly undecodable, treat as absent
@@ -98,7 +99,8 @@ class DNSRoom(BaseRoom):
         return words[-1] if words else ""
 
     #  main solver
-
+    # TODO R0911: Too many return statements (8/6) (too-many-return-statements)
+    #TODO R0912: Too many branches (13/12) (too-many-branches)
     def solve(self) -> Optional[str]:
         """
         Top-level entry point called by the engine when the player does `inspect dns.cfg`
@@ -196,7 +198,7 @@ class DNSRoom(BaseRoom):
             self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}")
 
             return token
-
+        #TODO W0718: Catching too general exception Exception (broad-exception-caught)
         except Exception as e:
             # don't crash the engine; report the error to the transcript for debugging
             self.transcript.print_message(f"An error occurred in DNSRoom:\n{e}")

@@ -68,7 +68,8 @@ class Utils:
                 # self._transcript.transcript_dict = data
                 self._transcript.print_message("Progress loaded.")
                 return True
-        except (FileNotFoundError, Exception) as e:
+        # TODO  W0718: Catching too general exception Exception (broad-exception-caught)
+        except Exception as e:
             self._transcript.print_message("Error loading save file: "
                                            + str(e))
         return False

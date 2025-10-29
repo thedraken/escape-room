@@ -34,6 +34,7 @@ class VaultRoom(BaseRoom):
                 tuple_result = self._extract_matching_items(file_entry)
                 results = self._check_items_match_rule(tuple_result)
                 return self._check_results(results)
+        # TODO W0718: Catching too general exception Exception (broad-exception-caught)
         except Exception as e:
             self.transcript.print_message("An error occurred:\n" + str(e))
             logging.error(e)
