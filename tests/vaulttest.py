@@ -22,5 +22,9 @@ class VaultTest(unittest.TestCase):
         to_test_vault = VaultRoom(transcript_mock)
 
         list_of_items = to_test_vault._extract_matching_items("SAFE{4-5-9}")
-        # assert list_of_items == ["SAFE{4-5-9}"]
-        # assert len(list_of_items) == 1
+        assert len(list_of_items) == 1
+        tuple_to_check = list_of_items[0]
+        assert len(tuple_to_check) == 3
+        assert tuple_to_check[0] == '4'
+        assert tuple_to_check[1] == '5'
+        assert tuple_to_check[2] == '9'
