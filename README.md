@@ -56,7 +56,10 @@ or use.
 #### malware
 
 #### soc
+Solves Room 2-SOC Triage Desk 
 
+Parses data\auth.log file and finds the subnet with the most failed login attempts and gets the count{COUNT}.  Amongst that subnet, finds the most common IP address and retrieves its last octet{L}.
+Generates token: TOKEN={L}{COUNT}
 #### vault
 
 Solves the data\vault_dump.txt file, looking for the single lone version of a string the matches the following condition
