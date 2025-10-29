@@ -10,7 +10,8 @@ from escaperoom.location import CurrentRoom
 
 class Transcript:
     """
-    Transcript class involves methods for adding details to the logs, this can be both the chronological log
+    Transcript class involves methods for adding details to the logs,
+    this can be both the chronological log
     and the run.txt file, depending on the method called.
     """
     def __init__(self):
