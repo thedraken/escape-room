@@ -2,6 +2,7 @@
 Stores the engine class and it's associated methods
 """
 import re
+from dataclasses import dataclass
 
 from escaperoom.location import CurrentRoom, Item
 from escaperoom.rooms.dns import DNSRoom
@@ -12,6 +13,7 @@ from escaperoom.transcript import Transcript
 from escaperoom.utils import Inventory, Utils
 
 
+@dataclass
 class Engine:
     """
     The engine class for the overall game, will check the commands passed
@@ -24,12 +26,6 @@ class Engine:
         self._transcript = transcript
         self._inventory = inventory
         self._utils = utils
-
-    def dummy_method(self):
-        """
-        Dummy method that does nothing. But does increase PEP8 score...
-        :return: Nothing
-        """
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
@@ -229,14 +225,18 @@ class Engine:
         this is only for using the gate
         :return: Nothing
         """
-        if self._inventory.is_inventory_complete():
-            with Transcript.open_file("final_gate.txt",
+        if self._current_location == CurrentRoom.FINAL_GATE:
+            if self._inventory.is_inventory_complete():
+                with Transcript.open_file("final_gate.txt",
                                       "data") as final_gate_file:
-                return self._do_final_gate_file(final_gate_file)
-        else:
-            self._transcript.print_message("You do not have all the items, "
+                    return self._do_final_gate_file(final_gate_file)
+            else:
+                self._transcript.print_message(
+                    "You do not have all the items, "
                                            "you are missing:")
-            self._inventory.print_missing_items()
+                self._inventory.print_missing_items()
+        else:
+            self._transcript.print_message("You are not in the final gate!")
         return True
 
     def _do_inventory(self):
