@@ -41,7 +41,11 @@ class BaseRoom(ABC):
         :return: A file stream for reading, if the room has a file to open,
         otherwise None
         """
-        item = CurrentRoom.get_room_item(self.current_room).value
-        if item != "no item":
-            return Transcript.open_file(item, "data")
+        try:
+            item = CurrentRoom.get_room_item(self.current_room).value
+            if item != "no item":
+                return Transcript.open_file(item, "data")
+        except (FileNotFoundError, EOFError, OSError) as e:
+            self.transcript.print_message("An error occurred opening the file"
+                                          ":\n" + str(e))
         return None

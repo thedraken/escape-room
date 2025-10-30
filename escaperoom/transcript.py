@@ -34,8 +34,11 @@ class Transcript:
         """
         transcript_value = self.transcript_dict.get(current_room)
         transcript_value += transcript_text + "\n"
-        self.transcript_dict.update({current_room: transcript_value})
-        self.append_log(CurrentRoom.get_room_name(current_room) + ": " + transcript_text)
+        self.transcript_dict.update({current_room: str(transcript_value)})
+        current_room_name = CurrentRoom.get_room_name(current_room)
+        if current_room_name is None:
+            current_room_name = "Unknown"
+        self.append_log(current_room_name + ": " + transcript_text)
 
     def append_log(self, log_text):
         """
@@ -64,18 +67,16 @@ class Transcript:
             with (self.open_file("transcript_crono.txt", "data", "w") as
                   transcript_file):
                 transcript_file.write(self.transcript_crono_order)
-        # TODO W0718: Catching too general exception Exception (broad-exception-caught)
-        except Exception as e:
-            print("An error occurred writing the file:")
-            print(e)
+        except (FileNotFoundError, OSError, EOFError, FileExistsError,
+                SystemError) as e:
+            print(f"An error occurred writing the file: {e}")
         try:
             with self.open_file("run.txt", "data", "w") as transcript_file:
                 for item in self.transcript_dict:
                     transcript_file.write(str(self.transcript_dict.get(item)))
-        #TODO W0718: Catching too general exception Exception (broad-exception-caught)
-        except Exception as e:
-            print("An error occurred writing the file:")
-            print(e)
+        except (FileNotFoundError, OSError, EOFError, FileExistsError,
+                SystemError) as e:
+            print(f"An error occurred writing the file: {e}")
 
     @staticmethod
     def open_file(filename: str, folder: str = "data", mode: str = "r") \
