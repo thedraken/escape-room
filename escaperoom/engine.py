@@ -28,6 +28,7 @@ class Engine:
     def dummy_method(self):
         """
         Dummy method that does nothing. But does increase PEP8 score...
+        :return: Nothing
         """
 
     def command(self, command) -> bool:
@@ -77,6 +78,10 @@ class Engine:
         return True
 
     def _do_quit(self) -> bool:
+        """
+        Saves the current transcript and then returns a false to quit the game
+        :return: boolean of false to quit the game
+        """
         self._transcript.print_message("Thank you for playing")
         self._transcript.save_transcript()
         return False
@@ -139,12 +144,12 @@ class Engine:
                 message += " and can inspect " + str(item_from_room.value)
             self._transcript.print_message(message)
 
-    def _do_move(self, move):
+    def _do_move(self, move: str):
         """
         Allows the user to move to a room specified, if the room is
         invalid also reports on it
-        :param move:
-        :return:
+        :param move: The location to move to, a str value of expected types
+        :return: Nothing
         """
         is_valid = False
         commands = move.split(" ")
@@ -288,6 +293,13 @@ class Engine:
                                        "commands")
 
     def _do_final_gate_file(self, final_gate_file) -> bool:
+        """
+        Will attempt to solve the final gate and use the dictionary values
+        to fill the run.txt file
+        :param final_gate_file: The final gate file read from final_gate.txt
+        :return: boolean of false to say the game can be quit, if final gate
+        was solved, if it was not solved, returns true to keep the game running
+        """
         group_id_pattern = re.compile(r"\s*group_id\s*=\s*([\w-]*)")
         expected_hmac_pattern = re.compile(r"\s*expected_hmac\s*=\s*(\w*)")
         token_order_pattern = re.compile(
