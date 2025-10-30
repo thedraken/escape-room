@@ -1,21 +1,11 @@
-************* Module escaperoom.utils
-escaperoom/utils.py:71:9: W0511: TODO  W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
-escaperoom/utils.py:72:15: W0718: Catching too general exception Exception (broad-exception-caught)
-escaperoom/utils.py:131:4: C0116: Missing function or method docstring (missing-function-docstring)
 ************* Module escaperoom.engine
-escaperoom/engine.py:121:13: W0511: TODO  W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
-escaperoom/engine.py:122:19: W0718: Catching too general exception Exception (broad-exception-caught)
-************* Module escaperoom.transcript
-escaperoom/transcript.py:67:9: W0511: TODO W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
-escaperoom/transcript.py:75:9: W0511: TODO W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
-escaperoom/transcript.py:68:15: W0718: Catching too general exception Exception (broad-exception-caught)
-escaperoom/transcript.py:76:15: W0718: Catching too general exception Exception (broad-exception-caught)
+escaperoom/engine.py:123:19: W0718: Catching too general exception Exception (broad-exception-caught)
 ************* Module escaperoom.rooms.malware
 escaperoom/rooms/malware.py:39:9: W0511: TODO W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
 escaperoom/rooms/malware.py:167:5: W0511: TODO R0911: Too many return statements (7/6) (too-many-return-statements) (fixme)
-escaperoom/rooms/malware.py:233:9: W0511: TODO W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
+escaperoom/rooms/malware.py:230:9: W0511: TODO W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
 escaperoom/rooms/malware.py:40:15: W0718: Catching too general exception Exception (broad-exception-caught)
-escaperoom/rooms/malware.py:234:15: W0718: Catching too general exception Exception (broad-exception-caught)
+escaperoom/rooms/malware.py:231:15: W0718: Catching too general exception Exception (broad-exception-caught)
 escaperoom/rooms/malware.py:168:4: R0911: Too many return statements (7/6) (too-many-return-statements)
 ************* Module escaperoom.rooms.dns
 escaperoom/rooms/dns.py:87:9: W0511: TODO W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
@@ -26,9 +16,6 @@ escaperoom/rooms/dns.py:88:15: W0718: Catching too general exception Exception (
 escaperoom/rooms/dns.py:202:15: W0718: Catching too general exception Exception (broad-exception-caught)
 escaperoom/rooms/dns.py:104:4: R0911: Too many return statements (8/6) (too-many-return-statements)
 escaperoom/rooms/dns.py:104:4: R0912: Too many branches (13/12) (too-many-branches)
-************* Module escaperoom.rooms.vault
-escaperoom/rooms/vault.py:37:9: W0511: TODO W0718: Catching too general exception Exception (broad-exception-caught) (fixme)
-escaperoom/rooms/vault.py:38:15: W0718: Catching too general exception Exception (broad-exception-caught)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.64/10 (previous run: 9.63/10, +0.01)
+Your code has been rated at 9.79/10 (previous run: 9.79/10, +0.00)
