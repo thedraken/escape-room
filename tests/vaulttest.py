@@ -19,8 +19,7 @@ class VaultTest(unittest.TestCase):
         where spaces are allowed in between any character and a+b=c
         :return: None
         """
-        transcript_mock = Mock()
-        to_test_vault = VaultRoom(transcript_mock)
+        to_test_vault = self.create_test_vault()
 
         list_of_items = to_test_vault._extract_matching_items("SAFE{4-5-9}")
         self.check_items_are_valid(list_of_items, 1,
@@ -34,7 +33,32 @@ class VaultTest(unittest.TestCase):
         self.check_items_are_valid(second_list_of_items, 1,
                                    '1', '2', '3')
 
-    def check_items_are_valid(self, list_of_items: list[str],
+    def test_check_items_match_rule(self):
+        to_test_vault = self.create_test_vault()
+
+        list_of_items_to_check = [('4', '2', '3'),
+                                  ('4', '4', '5'),
+                                  ('4', '4', '10'),
+                                  ('4', '6', '10')]
+
+        results = to_test_vault._check_items_match_rule(list_of_items_to_check)
+        assert len(results) == 1
+        tuple_result = results[0]
+        assert len(tuple_result) == 3
+        assert tuple_result[0] == '4'
+        assert tuple_result[1] == '6'
+        assert tuple_result[2] == '10'
+        assert float(tuple_result[0]) + float(tuple_result[1]) == float(
+            tuple_result[2])
+
+    @staticmethod
+    def create_test_vault() -> VaultRoom:
+        transcript_mock = Mock()
+        to_test_vault = VaultRoom(transcript_mock)
+        return to_test_vault
+
+    @staticmethod
+    def check_items_are_valid(list_of_items: list[tuple],
                               length_of_list: int, result_a: str,
                               result_b: str,
                               result_c: str) -> None:

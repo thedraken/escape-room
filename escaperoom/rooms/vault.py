@@ -40,7 +40,7 @@ class VaultRoom(BaseRoom):
         return None
 
     # noinspection PyMethodMayBeStatic
-    def _extract_matching_items(self, file_entry: str) -> list[str]:
+    def _extract_matching_items(self, file_entry: str) -> list[tuple]:
         """
         Takes the string extracted from the vault_dump.txt file and checks
         it against a regex that matches
@@ -59,7 +59,7 @@ class VaultRoom(BaseRoom):
         tuple_result = p.findall(file_entry)
         return tuple_result
 
-    def _check_items_match_rule(self, items: list[str]) -> list[str]:
+    def _check_items_match_rule(self, items: list[tuple]) -> list[str]:
         """
         For all items in the list, do a check if a + b == c, if so,
         return them
