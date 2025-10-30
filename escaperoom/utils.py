@@ -68,8 +68,9 @@ class Utils:
                 # self._transcript.transcript_dict = data
                 self._transcript.print_message("Progress loaded.")
                 return True
-        # TODO  W0718: Catching too general exception Exception (broad-exception-caught)
-        except Exception as e:
+        except (FileExistsError, FileNotFoundError, SystemError,
+                OSError, EOFError, UnicodeDecodeError, UnicodeEncodeError,
+                UnicodeError) as e:
             self._transcript.print_message("Error loading save file: "
                                            + str(e))
         return False
@@ -109,7 +110,10 @@ class Inventory:
         :param value: The token for the value, can be empty or none as well
         :return: Nothing
         """
-        self._inventory[item_type.value] = value
+        if value is not None:
+            self._inventory[item_type.value] = value
+        else:
+            self._inventory[item_type.value] = ""
 
     def print_inventory(self):
         """

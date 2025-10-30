@@ -118,7 +118,8 @@ class Engine:
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          vault_room.solve())
-            # TODO  W0718: Catching too general exception Exception (broad-exception-caught)
+            # I want to keep the general exception here, as I do not know
+            # what will happen during other people's rooms...
             except Exception as e:
                 self._transcript.print_message("An error occurred in "
                                                "solving the room:")
