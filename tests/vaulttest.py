@@ -1,3 +1,7 @@
+# pylint: disable=protected-access
+# We disable this check in unit test classes, we want to access protected
+#  methods to test them, but do not want them to be made public for others
+# to use incorrectly
 """
 Contains the VaultTest class
 """
@@ -34,6 +38,12 @@ class VaultTest(unittest.TestCase):
                                    '1', '2', '3')
 
     def test_check_items_match_rule(self):
+        """
+        Test method for validating the behaviour of the
+        `_check_items_match_rule` method.
+        Checks the values that pass the rule also add up a+b=c
+        Returns: Nothing
+        """
         to_test_vault = self.create_test_vault()
 
         list_of_items_to_check = [('4', '2', '3'),
@@ -53,6 +63,10 @@ class VaultTest(unittest.TestCase):
         assert tuple_result[2] == '10'
 
     def test_check_results(self):
+        """
+        Test method for the _check_results, confirms the data only accepts
+        one result and returns it as the correct format a-b-c
+        """
         vault_to_test = self.create_test_vault()
 
         list_of_items_to_check = [('4', '2', '3'),
@@ -68,15 +82,32 @@ class VaultTest(unittest.TestCase):
 
     @staticmethod
     def create_test_vault() -> VaultRoom:
+        """
+        Creates an instance of the Vault with a mocked transcript file
+        :return: The Vault instance
+        """
         transcript_mock = Mock()
         to_test_vault = VaultRoom(transcript_mock)
         return to_test_vault
 
     @staticmethod
-    def check_items_are_valid(list_of_items: list[tuple],
-                              length_of_list: int, result_a: str,
+    def check_items_are_valid(list_of_items: list[tuple[str, str, str]],
+                              length_of_list: int,
+                              result_a: str,
                               result_b: str,
                               result_c: str) -> None:
+        """
+        Will check the list of tuples has the correct values in,
+        needs improving to check multiple tuples though, as it currently
+        only checks the first tuple in the list
+        :param list_of_items: A list of tuples, which should have 3 items
+        in each tuple
+        :param length_of_list: The number of items expected in the list
+        :param result_a: The expected value of a in the first tuple
+        :param result_b: The expected value of b in the first tuple
+        :param result_c: The expected value of c in the first tuple
+        :return: Nothing
+        """
         assert len(list_of_items) == length_of_list
         tuple_to_check = list_of_items[0]
         assert len(tuple_to_check) == 3

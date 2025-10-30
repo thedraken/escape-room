@@ -2,6 +2,7 @@
 Stores the engine class and it's associated methods
 """
 import re
+from dataclasses import dataclass
 
 from escaperoom.location import CurrentRoom, Item
 from escaperoom.rooms.dns import DNSRoom
@@ -12,6 +13,7 @@ from escaperoom.transcript import Transcript
 from escaperoom.utils import Inventory, Utils
 
 
+@dataclass
 class Engine:
     """
     The engine class for the overall game, will check the commands passed
@@ -24,11 +26,6 @@ class Engine:
         self._transcript = transcript
         self._inventory = inventory
         self._utils = utils
-
-    def dummy_method(self):
-        """
-        Dummy method that does nothing. But does increase PEP8 score...
-        """
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
@@ -77,6 +74,10 @@ class Engine:
         return True
 
     def _do_quit(self) -> bool:
+        """
+        Saves the current transcript and then returns a false to quit the game
+        :return: boolean of false to quit the game
+        """
         self._transcript.print_message("Thank you for playing")
         self._transcript.save_transcript()
         return False
@@ -139,12 +140,12 @@ class Engine:
                 message += " and can inspect " + str(item_from_room.value)
             self._transcript.print_message(message)
 
-    def _do_move(self, move):
+    def _do_move(self, move: str):
         """
         Allows the user to move to a room specified, if the room is
         invalid also reports on it
-        :param move:
-        :return:
+        :param move: The location to move to, a str value of expected types
+        :return: Nothing
         """
         is_valid = False
         commands = move.split(" ")
@@ -224,14 +225,17 @@ class Engine:
         this is only for using the gate
         :return: Nothing
         """
-        if self._inventory.is_inventory_complete():
-            with Transcript.open_file("final_gate.txt",
+        if self._current_location == CurrentRoom.FINAL_GATE:
+            if self._inventory.is_inventory_complete():
+                with Transcript.open_file("final_gate.txt",
                                       "data") as final_gate_file:
-                return self._do_final_gate_file(final_gate_file)
+                    return self._do_final_gate_file(final_gate_file)
+            else:
+                self._transcript.print_message(
+                    "You do not have all the items, you are missing:")
+                self._inventory.print_missing_items()
         else:
-            self._transcript.print_message("You do not have all the items, "
-                                           "you are missing:")
-            self._inventory.print_missing_items()
+            self._transcript.print_message("You are not in the final gate!")
         return True
 
     def _do_inventory(self):
@@ -288,6 +292,13 @@ class Engine:
                                        "commands")
 
     def _do_final_gate_file(self, final_gate_file) -> bool:
+        """
+        Will attempt to solve the final gate and use the dictionary values
+        to fill the run.txt file
+        :param final_gate_file: The final gate file read from final_gate.txt
+        :return: boolean of false to say the game can be quit, if final gate
+        was solved, if it was not solved, returns true to keep the game running
+        """
         group_id_pattern = re.compile(r"\s*group_id\s*=\s*([\w-]*)")
         expected_hmac_pattern = re.compile(r"\s*expected_hmac\s*=\s*(\w*)")
         token_order_pattern = re.compile(
