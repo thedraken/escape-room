@@ -124,9 +124,13 @@ class Engine:
                                                "solving the room:")
                 self._transcript.print_message(e)
         else:
-            message = ("Please enter an item with the inspect command, "
-                       "you are in ") + CurrentRoom.get_room_name(
+            current_room_for_user = CurrentRoom.get_room_name(
                 self._current_location)
+            if current_room_for_user is None:
+                message = "Please enter an item with the inspect command"
+            else:
+                message = (f"Please enter an item with the inspect command, "
+                           f"you are in {current_room_for_user}")
             item_from_room = CurrentRoom.get_room_item(self._current_location)
             if item_from_room == Item.ITEM_NOTHING:
                 message += " and there is nothing here"
@@ -251,16 +255,19 @@ class Engine:
             "move <room>: Allows you to move to a room to solve, rooms "
             "available are: dns, malware, soc, vault, "
             "gate, and lobby")
+        current_room_name = CurrentRoom.get_room_name(self._current_location)
+        if current_room_name is None:
+            current_room_name = "nowhere"
         self._transcript.print_message(
             "inspect <item>: Allows you to inspect an item in the room. "
             "You are currently in "
-            + CurrentRoom.get_room_name(self._current_location)
+            + current_room_name
             + " and can inspect "
             + CurrentRoom.get_room_item(self._current_location).value)
         self._transcript.print_message(
             "use <item>: Depending on the room you are in, you can use "
             "an item to do an action. You are currently in "
-            + CurrentRoom.get_room_name(self._current_location)
+            + current_room_name
             + " and can use "
             + CurrentRoom.get_use_item(self._current_location))
         self._transcript.print_message("inventory: Prints a list of all items "
