@@ -45,11 +45,26 @@ class VaultTest(unittest.TestCase):
         assert len(results) == 1
         tuple_result = results[0]
         assert len(tuple_result) == 3
+        assert (float(tuple_result[0])
+                + float(tuple_result[1])
+                == float(tuple_result[2]))
         assert tuple_result[0] == '4'
         assert tuple_result[1] == '6'
         assert tuple_result[2] == '10'
-        assert float(tuple_result[0]) + float(tuple_result[1]) == float(
-            tuple_result[2])
+
+    def test_check_results(self):
+        vault_to_test = self.create_test_vault()
+
+        list_of_items_to_check = [('4', '2', '3'),
+                                  ('4', '4', '5'),
+                                  ('4', '4', '10'),
+                                  ('4', '6', '10')]
+
+        result_1 = vault_to_test._check_results(list_of_items_to_check)
+        assert result_1 is None
+        list_of_items_to_check_2 = [('4', '6', '10')]
+        result_2 = vault_to_test._check_results(list_of_items_to_check_2)
+        assert result_2 == '4-6-10'
 
     @staticmethod
     def create_test_vault() -> VaultRoom:

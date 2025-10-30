@@ -40,7 +40,8 @@ class VaultRoom(BaseRoom):
         return None
 
     # noinspection PyMethodMayBeStatic
-    def _extract_matching_items(self, file_entry: str) -> list[tuple]:
+    def _extract_matching_items(self, file_entry: str) -> list[
+        tuple[str, str, str]]:
         """
         Takes the string extracted from the vault_dump.txt file and checks
         it against a regex that matches
@@ -59,7 +60,9 @@ class VaultRoom(BaseRoom):
         tuple_result = p.findall(file_entry)
         return tuple_result
 
-    def _check_items_match_rule(self, items: list[tuple]) -> list[str]:
+    def _check_items_match_rule(self,
+                                items: list[tuple[str, str, str]]) \
+            -> list[tuple[str, str, str]]:
         """
         For all items in the list, do a check if a + b == c, if so,
         return them
@@ -96,7 +99,8 @@ class VaultRoom(BaseRoom):
             # str(item) + " are invalid due to bad length")
         return results
 
-    def _check_results(self, results) -> str | None:
+    def _check_results(self, results: list[tuple[str, str, str]]) -> (str |
+                                                                      None):
         """
         If only one result is found, create the valid string to add to run.txt,
         otherwise do nothing.
