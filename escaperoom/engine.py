@@ -232,8 +232,7 @@ class Engine:
                     return self._do_final_gate_file(final_gate_file)
             else:
                 self._transcript.print_message(
-                    "You do not have all the items, "
-                                           "you are missing:")
+                    "You do not have all the items, you are missing:")
                 self._inventory.print_missing_items()
         else:
             self._transcript.print_message("You are not in the final gate!")
