@@ -83,7 +83,7 @@ class Utils:
         """
         try:
             return float(value)
-        except ValueError:
+        except (ValueError, FloatingPointError):
             self._transcript.print_message(value + " is not a valid number")
         return None
 
