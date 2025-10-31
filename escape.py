@@ -7,8 +7,8 @@ from escaperoom.utils import Inventory, Utils
 
 RUN_GAME = True
 transcript = Transcript()
-utils = Utils(transcript)
 inventory = Inventory(transcript)
+utils = Utils(transcript, inventory)
 transcript.print_message("Welcome to the escape room game")
 transcript.print_message(r"""
 ___________                                    __________                                                             
