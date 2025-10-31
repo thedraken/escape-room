@@ -15,8 +15,9 @@ class VaultRoom(BaseRoom):
     the one correct string.
     Inherits the BaseRoom class and implements the solve method.
     """
-    def __init__(self, transcript: Transcript):
+    def __init__(self, transcript: Transcript, utils: Utils):
         super().__init__(transcript, CurrentRoom.VAULT)
+        self._utils = utils
 
     def solve(self) -> str | None:
         """
@@ -75,10 +76,9 @@ class VaultRoom(BaseRoom):
         results = []
         for item in items:
             if len(item) == 3:
-                utils = Utils(self.transcript)
-                value1 = utils.convert_to_float(item[0])
-                value2 = utils.convert_to_float(item[1])
-                value3 = utils.convert_to_float(item[2])
+                value1 = self._utils.convert_to_float(item[0])
+                value2 = self._utils.convert_to_float(item[1])
+                value3 = self._utils.convert_to_float(item[2])
                 if value1 is None or value2 is None or value3 is None:
                     # self._transcript.print_message("The provided
                     # values are not a float: " + str(item))

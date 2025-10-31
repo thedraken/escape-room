@@ -115,7 +115,7 @@ class Engine:
                             CurrentRoom.get_room_item(self._current_location),
                                                          malware_room.solve())
                     case CurrentRoom.VAULT:
-                        vault_room = VaultRoom(self._transcript)
+                        vault_room = VaultRoom(self._transcript, self._utils)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          vault_room.solve())
