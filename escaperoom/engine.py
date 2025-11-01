@@ -21,11 +21,12 @@ class Engine:
     """
 
     def __init__(self, transcript: Transcript, inventory: Inventory,
-                 utils: Utils):
+                 utils: Utils, save_file_name: str):
         self._current_location = CurrentRoom.BASE
         self._transcript = transcript
         self._inventory = inventory
         self._utils = utils
+        self.__save_file_name__ = save_file_name
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
@@ -50,7 +51,7 @@ class Engine:
         self._transcript.append_log("User called " + command)
         match command.lower():
             case "quit":
-                return self._do_quit()
+                return self._do_quit(self.__save_file_name__)
             case "look":
                 self._do_look()
             case move if move.startswith("move"):
@@ -73,13 +74,13 @@ class Engine:
                     + ", type hint to see a list of available commands")
         return True
 
-    def _do_quit(self) -> bool:
+    def _do_quit(self, save_file_name : str) -> bool:
         """
         Saves the current transcript and then returns a false to quit the game
         :return: boolean of false to quit the game
         """
         self._transcript.print_message("Thank you for playing")
-        self._transcript.save_transcript()
+        self._transcript.save_transcript(save_file_name)
         return False
 
     def _do_inspect(self, inspect):
@@ -187,9 +188,13 @@ class Engine:
         match self._current_location:
             case CurrentRoom.BASE:
                 self._transcript.print_message(
-                    "You are in the lobby, "
-                    "you can move to any room from here. "
-                    "Where would you like to go?")
+                    "You are in the Intro lobby.")
+                self._transcript.print_message("A terminal blinks in the "
+                                               "corner. Doors lead to: soc, "
+                                               "dns, vault, malware, final.")
+                self._transcript.print_message("You can move to any room from "
+                                               "here. Where would you like "
+                                               "to go?")
             case CurrentRoom.SOC:
                 self._transcript.print_message(
                     "You are in the SOC room, there is a triage desk with a "
@@ -345,7 +350,7 @@ class Engine:
                 CurrentRoom.FINAL_GATE] = final_gate_text
             self._transcript.print_message(f"Final gate was opened with: "
                                            f"{final_gate_text}")
-            return self._do_quit()
+            return self._do_quit(self.__save_file_name__)
         return True
 
     def _do_save(self):

@@ -58,9 +58,10 @@ class Transcript:
         print(str(message))
         self.append_log(str(message))
 
-    def save_transcript(self):
+    def save_transcript(self, save_file_name: str):
         """
-        Will save both the run.txt and the chronological log to file, ready for a user to browse.
+        Will save both the specified transcript file and the chronological
+        log to file, ready for a user to browse.
         :return: Nothing
         """
         try:
@@ -71,7 +72,7 @@ class Transcript:
                 SystemError) as e:
             print(f"An error occurred writing the file: {e}")
         try:
-            with self.open_file("run.txt", "data", "w") as transcript_file:
+            with self.open_file(save_file_name, "data", "w") as transcript_file:
                 for item in self.transcript_dict:
                     transcript_file.write(str(self.transcript_dict.get(item)))
         except (FileNotFoundError, OSError, EOFError, FileExistsError,
