@@ -13,9 +13,11 @@ class BaseRoom(ABC):
     """
     The abstract base class that all solvable rooms must inherit from.
     """
-    def __init__(self, transcript: Transcript, current_room: CurrentRoom):
+    def __init__(self, transcript: Transcript, current_room: CurrentRoom,
+                 save_file_path: str) -> None:
         self.transcript = transcript
         self.current_room = current_room
+        self.__save_file_path__ = save_file_path
 
     @abstractmethod
     def solve(self) -> str | None:
@@ -44,7 +46,7 @@ class BaseRoom(ABC):
         try:
             item = CurrentRoom.get_room_item(self.current_room).value
             if item != "no item":
-                return Transcript.open_file(item, "data")
+                return Transcript.open_file(item, self.__save_file_path__)
         except (FileNotFoundError, EOFError, OSError) as e:
             self.transcript.print_message("An error occurred opening the file"
                                           ":\n" + str(e))

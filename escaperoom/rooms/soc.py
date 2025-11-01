@@ -62,8 +62,8 @@ def extract_subnet(ip_address):
 class SocRoom(BaseRoom):
     """SOC Room for analyzing authentication logs and detecting attack patterns."""
 
-    def __init__(self, transcript: Transcript):
-        super().__init__(transcript, CurrentRoom.SOC)
+    def __init__(self, transcript: Transcript, save_file_path: str):
+        super().__init__(transcript, CurrentRoom.SOC, save_file_path)
         self.ip_pattern = re.compile(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b')
 
     def _parse_log_file(self):

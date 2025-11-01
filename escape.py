@@ -27,13 +27,23 @@ parser.add_argument("--auto_run",
                     help="If set to true, will automatically run through all "
                          "rooms and try and solve them with no user input ",
                     default=False)
+parser.add_argument("--data_folder_location",
+                    type=str,
+                    help="Where to find and save the data to, "
+                         "the default is data",
+                    default="data")
 
 args = parser.parse_args()
 
+DATA_FOLDER_LOCATION = args.data_folder_location
+if DATA_FOLDER_LOCATION is not None:
+    DATA_FOLDER_LOCATION = DATA_FOLDER_LOCATION.lower().strip()
+else:
+    DATA_FOLDER_LOCATION = "data"
 
-transcript = Transcript()
+transcript = Transcript(DATA_FOLDER_LOCATION)
 inventory = Inventory(transcript)
-utils = Utils(transcript, inventory)
+utils = Utils(transcript, inventory, DATA_FOLDER_LOCATION)
 start_room = args.start
 if start_room is not None:
     start_room = start_room.lower().strip()
@@ -59,7 +69,8 @@ if SAVE_FILE_NAME is not None:
 if SAVE_FILE_NAME is None or SAVE_FILE_NAME == "":
     SAVE_FILE_NAME = "run.txt"
 
-engine = Engine(transcript, inventory, utils, SAVE_FILE_NAME)
+engine = Engine(transcript, inventory, utils,
+                SAVE_FILE_NAME, DATA_FOLDER_LOCATION)
 
 while RUN_GAME:
     if args.auto_run:

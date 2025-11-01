@@ -14,7 +14,7 @@ class Transcript:
     this can be both the chronological log
     and the run.txt file, depending on the method called.
     """
-    def __init__(self):
+    def __init__(self, folder_path: str):
         self.transcript_dict = {
             CurrentRoom.BASE: "",
             CurrentRoom.SOC: "",
@@ -24,6 +24,7 @@ class Transcript:
             CurrentRoom.FINAL_GATE: ""
         }
         self.transcript_crono_order = ""
+        self.__folder_path__ = folder_path
 
     def append(self, transcript_text, current_room: CurrentRoom):
         """
@@ -65,14 +66,14 @@ class Transcript:
         :return: Nothing
         """
         try:
-            with (self.open_file("transcript_crono.txt", "data", "w") as
+            with (self.open_file("transcript_crono.txt", self.__folder_path__, "w") as
                   transcript_file):
                 transcript_file.write(self.transcript_crono_order)
         except (FileNotFoundError, OSError, EOFError, FileExistsError,
                 SystemError) as e:
             print(f"An error occurred writing the file: {e}")
         try:
-            with self.open_file(save_file_name, "data", "w") as transcript_file:
+            with self.open_file(save_file_name, self.__folder_path__, "w") as transcript_file:
                 for item in self.transcript_dict:
                     transcript_file.write(str(self.transcript_dict.get(item)))
         except (FileNotFoundError, OSError, EOFError, FileExistsError,

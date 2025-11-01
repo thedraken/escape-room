@@ -116,9 +116,12 @@ class Utils:
     The current list are:
     save, load, convert_to_float, and open_file
     """
-    def __init__(self, transcript: Transcript, inventory_to_create : Inventory):
+    def __init__(self, transcript: Transcript,
+                 inventory_to_create : Inventory,
+                 save_file_path: str) -> None:
         self._transcript = transcript
         self._inventory = inventory_to_create
+        self.__save_file_path__ = save_file_path
 
     def save(self) -> bool:
         """
@@ -140,7 +143,7 @@ class Utils:
                 string_invt_key = str(item)
                 new_item_dict[string_invt_key] = self._inventory.inventory_dict[item]
             save_dict = {"transcript": new_transcript_dict, "item": new_item_dict}
-            with (Transcript.open_file("save.json", "data", "w")
+            with (Transcript.open_file("save.json", self.__save_file_path__, "w")
                   as save_file):
                 save_file.write(json.dumps(save_dict))
             self._transcript.print_message("Progress saved.")
@@ -159,7 +162,7 @@ class Utils:
         """
         self._transcript.print_message("Loading progress...")
         try:
-            with (Transcript.open_file("save.json", "data", "r")
+            with (Transcript.open_file("save.json", self.__save_file_path__, "r")
                   as save_file):
                 data = json.load(save_file)
                 success_load = True

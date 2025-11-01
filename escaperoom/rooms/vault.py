@@ -15,8 +15,9 @@ class VaultRoom(BaseRoom):
     the one correct string.
     Inherits the BaseRoom class and implements the solve method.
     """
-    def __init__(self, transcript: Transcript, utils: Utils):
-        super().__init__(transcript, CurrentRoom.VAULT)
+    def __init__(self, transcript: Transcript,
+                 utils: Utils, save_file_path: str):
+        super().__init__(transcript, CurrentRoom.VAULT, save_file_path)
         self._utils = utils
 
     def solve(self) -> str | None:

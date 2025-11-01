@@ -41,9 +41,9 @@ class DNSRoom(BaseRoom):
     - Token is the last alphanumeric word in the decoded sentence.
     """
 
-    def __init__(self, transcript: Transcript):
+    def __init__(self, transcript: Transcript, save_file_path: str):
         # BaseRoom stores the transcript and which room this is
-        super().__init__(transcript, CurrentRoom.DNS)
+        super().__init__(transcript, CurrentRoom.DNS, save_file_path)
 
     # helper functions
 
