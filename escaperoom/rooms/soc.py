@@ -155,7 +155,7 @@ class SocRoom(BaseRoom):
         output_lines = [
             f"TOKEN[KEYPAD]={results['token']}",
             f"EVIDENCE[KEYPAD].TOP24={results['max_subnet']}/24",
-            f"EVIDENCE[KEYPAD].SUBNET_COUNT={results['subnet_count']}",
+            f"EVIDENCE[KEYPAD].COUNT={results['subnet_count']}",
             #f"EVIDENCE[KEYPAD].IP_COUNT={results['ip_count']}",
             f"EVIDENCE[KEYPAD].SAMPLE={results['sample']}",
             #f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={results['accepted_count']}",
