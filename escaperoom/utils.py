@@ -36,6 +36,19 @@ class Inventory:
         else:
             self.inventory_dict[item_type] = ""
 
+    def get_token_name_from_item(self, item_type: Item) -> str:
+        return_value = "None"
+        match item_type:
+            case Item.ITEM_DNS:
+                return_value = "DNS"
+            case Item.ITEM_VAULT:
+                return_value = "SAFE"
+            case Item.ITEM_MALWARE:
+                return_value = "PID"
+            case Item.ITEM_SOC:
+                return_value = "KEYPAD"
+        return return_value
+
     def print_inventory(self):
         """
         Checks the player's inventory and prints out the tokens
@@ -49,7 +62,7 @@ class Inventory:
             if value is not None and value != "":
                 count_of_items += 1
                 self.__transcript.print_message(
-                    ":".join((key.value, value)))
+                    ":".join((self.get_token_name_from_item(key), value)))
         if count_of_items == 0:
             self.__transcript.print_message("Nothing in your inventory.")
 
@@ -85,7 +98,7 @@ class Inventory:
             if value is None or value == "":
                 if len(missing_items) > 0:
                     missing_items += ", "
-                missing_items += key.value
+                missing_items += self.get_token_name_from_item(key)
                 count_of_items += 1
         if count_of_items == 0:
             self.__transcript.print_message("ALl items collected.")
