@@ -2,7 +2,6 @@
 utils.py holds the Utils and inventory classes and their associated methods.
 """
 import json
-from enum import Enum
 
 from escaperoom.location import CurrentRoom, Item
 from escaperoom.transcript import Transcript
@@ -37,6 +36,11 @@ class Inventory:
             self.inventory_dict[item_type] = ""
 
     def get_token_name_from_item(self, item_type: Item) -> str:
+        """
+        Will convert the item type enum into a human-readable token name
+        :param item_type: The item_type enum to convert to the token name
+        :return: Returns the token name, if not valid then None is returned.
+        """
         return_value = "None"
         match item_type:
             case Item.ITEM_DNS:
