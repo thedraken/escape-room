@@ -22,6 +22,11 @@ parser.add_argument("--transcript",
                     help="Where to save the result to, "
                          "if not set will use run.txt",
                     default="run.txt")
+parser.add_argument("--auto_run",
+                    type=bool,
+                    help="If set to true, will automatically run through all "
+                         "rooms and try and solve them with no user input ",
+                    default=False)
 
 args = parser.parse_args()
 
@@ -57,19 +62,32 @@ if SAVE_FILE_NAME is None or SAVE_FILE_NAME == "":
 engine = Engine(transcript, inventory, utils, SAVE_FILE_NAME)
 
 while RUN_GAME:
-    if start_room is not None and start_room != "":
-        match start_room:
-            case "dns":
-                engine.command("move dns")
-            case "malware":
-                engine.command("move malware")
-            case "soc":
-                engine.command("move soc")
-            case "vault":
-                engine.command("move vault")
-            case "gate":
-                engine.command("move gate")
+    if args.auto_run:
+        engine.command("move soc")
+        engine.command("inspect auth.log")
+        engine.command("move dns")
+        engine.command("inspect dns.cfg")
+        engine.command("move vault")
+        engine.command("inspect vault_dump.txt")
+        engine.command("move malware")
+        engine.command("inspect proc_tree.jsonl")
+        engine.command("move gate")
+        engine.command("use final_gate")
+        RUN_GAME = False
+    else:
+        if start_room is not None and start_room != "":
+            match start_room:
+                case "dns":
+                    engine.command("move dns")
+                case "malware":
+                    engine.command("move malware")
+                case "soc":
+                    engine.command("move soc")
+                case "vault":
+                    engine.command("move vault")
+                case "gate":
+                    engine.command("move gate")
 
-    next_step = input("What would you like to do?")
-    transcript.append_log("What would you like to do?")
-    RUN_GAME = engine.command(next_step)
+        next_step = input("What would you like to do?")
+        transcript.append_log("What would you like to do?")
+        RUN_GAME = engine.command(next_step)
