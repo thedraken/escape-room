@@ -1,6 +1,6 @@
 # pylint: disable=protected-access
 # We disable this check in unit test classes, we want to access protected
-#  methods to test them, but do not want them to be made public for others
+# methods to test them, but do not want them to be made public for others
 # to use incorrectly
 """
 Contains the VaultTest class
@@ -89,8 +89,8 @@ class VaultTest(unittest.TestCase):
         """
         transcript_mock = Mock()
         inventory_mock = Mock()
-        utils = Utils(transcript_mock, inventory_mock)
-        to_test_vault = VaultRoom(transcript_mock, utils)
+        utils = Utils(transcript_mock, inventory_mock, "mock")
+        to_test_vault = VaultRoom(transcript_mock, utils, "mock")
         return to_test_vault
 
     @staticmethod
