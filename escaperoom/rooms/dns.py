@@ -14,15 +14,9 @@ Transcript (grader) lines we must write:
     EVIDENCE[DNS].DECODED_LINE=<decoded sentence>
 """
 
-# - The solver has several early returns for clarity (Pylint hates >6 returns / many branches),
-#   but that’s deliberate to keep the logic readable in a puzzle context.
-# - The final broad exception is a last-resort guard so the CLI never crashes.
-# pylint: disable=too-many-return-statements, too-many-branches
-
 import base64
 import re
 from typing import Dict, Optional, Tuple
-
 
 from escaperoom.location import CurrentRoom
 from escaperoom.rooms.base import BaseRoom
