@@ -2,8 +2,9 @@
 transcript.py holds the Transcript class object
 """
 import datetime
+import locale
 import os
-from typing import IO, Any
+from typing import Any, IO
 
 from escaperoom.location import CurrentRoom
 
@@ -48,7 +49,11 @@ class Transcript:
         :param log_text: The log text to add
         :return: NONE
         """
-        self.transcript_crono_order += str(datetime.datetime.now()) + " - " + log_text + "\n"
+        # Set correct format, otherwise we get American dates...
+        locale.setlocale(locale.LC_ALL, "en_GB.UTF-8")
+        self.transcript_crono_order += (datetime.datetime.now().strftime("%x %X")
+                                        + " - "
+                                        + log_text + "\n")
 
     def print_message(self, message):
         """
