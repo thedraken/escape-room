@@ -2,6 +2,7 @@
 Main escape room module, executes the game and creates the base classes
 """
 import argparse
+
 from escaperoom.engine import Engine
 from escaperoom.transcript import Transcript
 from escaperoom.utils import Inventory, Utils
@@ -38,7 +39,7 @@ args = parser.parse_args()
 DATA_FOLDER_LOCATION = args.data_folder_location
 if DATA_FOLDER_LOCATION is not None:
     DATA_FOLDER_LOCATION = DATA_FOLDER_LOCATION.lower().strip()
-else:
+if DATA_FOLDER_LOCATION is None or DATA_FOLDER_LOCATION == "":
     DATA_FOLDER_LOCATION = "data"
 
 transcript = Transcript(DATA_FOLDER_LOCATION)
@@ -83,8 +84,7 @@ while RUN_GAME:
         engine.command("move malware")
         engine.command("inspect proc_tree.jsonl")
         engine.command("move gate")
-        engine.command("use final_gate")
-        RUN_GAME = False
+        RUN_GAME = engine.command("use final_gate")
     else:
         if start_room is not None and start_room != "":
             match start_room:
