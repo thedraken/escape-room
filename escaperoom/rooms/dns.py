@@ -108,6 +108,7 @@ class DNSRoom(BaseRoom):
             # validate=False -> accept non canonical alphabets/padding quietly
             decoded_bytes = base64.b64decode(compact, validate=False)
             return decoded_bytes.decode("utf-8", errors="replace")
+        # TODO What is a base64.binascii.Error? Where does it come from?
         except (ValueError, base64.binascii.Error) as err:
             # some hints are intentionally bad/noise
             self.transcript.print_message(f"Base64 decode error: {err}")
