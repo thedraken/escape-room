@@ -63,8 +63,10 @@ An enum class for handling making it easier to show which room you are in and wh
 or use.
 
 #### dns
+Reads and cleans up the messy dns.cfg file, decodes the Base64 hints, figures out which hint to use based on the token_tag, and extracts the last word of that decoded hint as the DNS token. It handles duplicates, comments, and broken Base64 formatting while logging the decoded line and token for grading.
 
 #### malware
+This room reads a proc_tree.jsonl file that lists processes (each has a PID, PPID, and a command). It builds the parent→child process tree, searches that tree for any command that runs curl or scp (these are exfiltration commands), and returns the final PID in that chain as the token, while logging the full path and the matched command for grading.
 
 #### soc
 
