@@ -47,7 +47,7 @@ class DNSRoom(BaseRoom):
 
         Args:
             transcript: Shared transcript/logger object used by the engine.
-            save_file_path: project’s BaseRoom expects a save path; we pass it through
+            save_file_path: project’s BaseRoom expects a save path; pass it through
 
         Side effects:
             - Calls BaseRoom ctor with (transcript, CurrentRoom.DNS, save_file_path)
@@ -102,7 +102,7 @@ class DNSRoom(BaseRoom):
             Decoded string on success, or None if decoding fails
 
         Notes:
-            We catch specific decode errors (ValueError, binascii.Error) so pylint
+            atch specific decode errors (ValueError, binascii.Error) so pylint
             doesn’t flag a broad exception here
         """
         try:
@@ -115,7 +115,7 @@ class DNSRoom(BaseRoom):
             decoded_bytes = base64.b64decode(compact, validate=False)
             return decoded_bytes.decode("utf-8", errors="replace")
         except (ValueError, base64.binascii.Error) as err:
-            # Not fatal for the game; some hints are intentionally bad/noise
+            # some hints are intentionally bad/noise
             self.transcript.print_message(f"Base64 decode error: {err}")
             return None
 
@@ -128,7 +128,7 @@ class DNSRoom(BaseRoom):
         Example
           "Look at the right phrase." -> "phrase"
         Returns:
-            The last word, or "" if none found.
+            The last word, or "" if none found
         """
         words = re.findall(r"[A-Za-z0-9_]+", s)
         return words[-1] if words else ""
@@ -140,12 +140,12 @@ class DNSRoom(BaseRoom):
         Entry point when the player runs `inspect dns.cfg`.
 
         High-level steps:
-          1) Read and parse the config into a dict; later duplicates overwrite earlier ones.
-          2) Base64-decode all hintN entries into `decoded_hints`.
-          3) Determine the right hint via `token_tag` (may itself be Base64).
-             - If token_tag decodes to digits (e.g., "4"), we turn it into "hint4".
-          4) Look up the decoded sentence for that hint and extract the token (last word).
-          5) Print progress for the player and write grading lines via Transcript.
+          1) Read and parse the config into a dict; later duplicates overwrite earlier ones
+          2) Base64-decode all hintN entries into `decoded_hints`
+          3) Determine the right hint via `token_tag` (may itself be Base64)
+             - If token_tag decodes to digits (e.g., "4"), we turn it into "hint4"
+          4) Look up the decoded sentence for that hint and extract the token (last word)
+          5) Print progress for the player and write grading lines via Transcript
 
         Returns:
             The token string if successful, otherwise None.
@@ -185,7 +185,7 @@ class DNSRoom(BaseRoom):
                         decoded_hints[key] = decoded
                     # If a hint fails to decode, we just skip it ( some are intentional noise)
 
-            #  Determine which hint to use via token_tag
+            # Determine which hint to use via token_tag
             # naming in case the file uses tokenTag or token
             token_tag_raw = raw.get("token_tag") or raw.get("tokenTag") or raw.get("token")
             if not token_tag_raw:
@@ -226,7 +226,7 @@ class DNSRoom(BaseRoom):
             self.transcript.print_message(f'Decoded line: "{decoded_sentence}"')
             self.transcript.print_message(f"Token formed: {token}")
 
-            #  lines are expected in run.txt
+            # lines are expected in run.txt
             self.add_log_to_transcript(f"TOKEN[DNS]={token}")
             self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}")
             self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}")
@@ -238,7 +238,7 @@ class DNSRoom(BaseRoom):
             self.transcript.print_message("dns.cfg not found (FileNotFoundError).")
             return None
         except Exception as err:  # pylint: disable=broad-exception-caught
-
             # error to the transcript, keep the engine alive
             self.transcript.print_message(f"Error in DNSRoom: {err}")
             return None
+        
