@@ -15,6 +15,7 @@ Transcript (grader) lines we must write:
 """
 
 import base64
+import binascii
 import re
 from typing import Dict, Optional, Tuple
 
@@ -108,8 +109,7 @@ class DNSRoom(BaseRoom):
             # validate=False -> accept non canonical alphabets/padding quietly
             decoded_bytes = base64.b64decode(compact, validate=False)
             return decoded_bytes.decode("utf-8", errors="replace")
-        # TODO What is a base64.binascii.Error? Where does it come from?
-        except (ValueError, base64.binascii.Error) as err:
+        except (ValueError, binascii.Error) as err:
             # some hints are intentionally bad/noise
             self.transcript.print_message(f"Base64 decode error: {err}")
             return None
@@ -154,85 +154,90 @@ class DNSRoom(BaseRoom):
             fh = self.open_file()
             if fh is None:
                 self.transcript.print_message("dns.cfg not found in data/.")
-                return None
+            else:
+                # Build dict of key/value pairs from the file
+                # NOTE: If a key appears multiple times, the *last* value wins!!!
+                raw: Dict[str, str] = {}
+                with fh:
+                    for line in fh:
+                        parsed = self._parse_kv_line(line)
+                        if parsed:
+                            key, value = parsed
+                            raw[key] = value  # overwrite earlier duplicates by design
 
-            # Build dict of key/value pairs from the file
-            # NOTE: If a key appears multiple times, the *last* value wins!!!
-            raw: Dict[str, str] = {}
-            with fh:
-                for line in fh:
-                    parsed = self._parse_kv_line(line)
-                    if parsed:
-                        key, value = parsed
-                        raw[key] = value  # overwrite earlier duplicates by design
+                if not raw:
+                    self.transcript.print_message("dns.cfg contained no valid entries.")
+                    return None
 
-            if not raw:
-                self.transcript.print_message("dns.cfg contained no valid entries.")
-                return None
+                decoded_hints = self.decode_hints(raw)
 
-            # Base64-decode all hintN values
-            # only attempt to decode keys named 'hint<digits>'
-            decoded_hints: Dict[str, str] = {}
-            for key, val in raw.items():
-                if re.fullmatch(r"hint\d+", key, flags=re.IGNORECASE):
-                    decoded = self._b64_decode_loose(val)
-                    if decoded:
-                        decoded_hints[key] = decoded
-                    # If a hint fails to decode, we just skip it ( some are intentional noise)
+                # Determine which hint to use via token_tag
+                # naming in case the file uses tokenTag or token
+                token_tag_raw = raw.get("token_tag") or raw.get("tokenTag") or raw.get("token")
+                if not token_tag_raw:
+                    self.transcript.print_message("token_tag not found in dns.cfg.")
+                    return None
 
-            # Determine which hint to use via token_tag
-            # naming in case the file uses tokenTag or token
-            token_tag_raw = raw.get("token_tag") or raw.get("tokenTag") or raw.get("token")
-            if not token_tag_raw:
-                self.transcript.print_message("token_tag not found in dns.cfg.")
-                return None
+                token_tag_raw = token_tag_raw.strip()
 
-            token_tag_raw = token_tag_raw.strip()
+                # Try to Base64-decode token_tag itself, example: NA== -> 4
+                token_key = (self._b64_decode_loose(token_tag_raw) or token_tag_raw).strip()
 
-            # Try to Base64-decode token_tag itself, example: NA== -> 4
-            token_key = (self._b64_decode_loose(token_tag_raw) or token_tag_raw).strip()
+                # If token_key is just digits, we interpret it as "hint<digits>"
+                # e.g., "4" -> "hint4"
+                if token_key.isdigit():
+                    token_key = f"hint{token_key}"
 
-            # If token_key is just digits, we interpret it as "hint<digits>"
-            # e.g., "4" -> "hint4"
-            if token_key.isdigit():
-                token_key = f"hint{token_key}"
+                # Validate that we ended up with something like "hint4"
+                if not re.fullmatch(r"hint\d+", token_key, flags=re.IGNORECASE):
+                    self.transcript.print_message(f"token_tag invalid or "
+                                                  f"not a hint key: {token_key}")
+                    return None
 
-            # Validate that we ended up with something like "hint4"
-            if not re.fullmatch(r"hint\d+", token_key, flags=re.IGNORECASE):
-                self.transcript.print_message(f"token_tag invalid or not a hint key: {token_key}")
-                return None
+                # Get the decoded sentence and extract the token
+                decoded_sentence = decoded_hints.get(token_key)
+                if not decoded_sentence:
+                    # Either the hint key didn't exist or it couldn't be decoded.
+                    self.transcript.print_message(f"Could not decode the value for {token_key}.")
+                    return None
 
-            # Get the decoded sentence and extract the token
-            decoded_sentence = decoded_hints.get(token_key)
-            if not decoded_sentence:
-                # Either the hint key didn't exist or it couldn't be decoded.
-                self.transcript.print_message(f"Could not decode the value for {token_key}.")
-                return None
+                token = self._last_word(decoded_sentence)
+                if token:
+                    # messages are for the console
+                    self.transcript.print_message("[Room DNS] Decoding hints...")
+                    self.transcript.print_message(f'Decoded line: "{decoded_sentence}"')
+                    self.transcript.print_message(f"Token formed: {token}")
 
-            token = self._last_word(decoded_sentence)
-            if not token:
+                    # lines are expected in run.txt
+                    self.add_log_to_transcript(f"TOKEN[DNS]={token}")
+                    self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}")
+                    self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}")
+
+                    return token
                 self.transcript.print_message(
                     f"No valid last word found in decoded line for {token_key}."
                 )
-                return None
-
-            # messages are for the console
-            self.transcript.print_message("[Room DNS] Decoding hints...")
-            self.transcript.print_message(f'Decoded line: "{decoded_sentence}"')
-            self.transcript.print_message(f"Token formed: {token}")
-
-            # lines are expected in run.txt
-            self.add_log_to_transcript(f"TOKEN[DNS]={token}")
-            self.add_log_to_transcript(f"EVIDENCE[DNS].KEY={token_key}")
-            self.add_log_to_transcript(f"EVIDENCE[DNS].DECODED_LINE={decoded_sentence}")
-
-            return token
-
         except FileNotFoundError:
             # defensive: open_file() normally returns None if missing (handles direct errors too)
             self.transcript.print_message("dns.cfg not found (FileNotFoundError).")
-            return None
         except Exception as err:  # pylint: disable=broad-exception-caught
             # error to the transcript, keep the engine alive
             self.transcript.print_message(f"Error in DNSRoom: {err}")
-            return None
+        return None
+
+    def decode_hints(self, raw: dict[str, str]) -> dict[str, str]:
+        """
+        Will take the items and try to find the hint and decode them
+        :param raw: raw data
+        :return: decoded hints
+        """
+        # Base64-decode all hintN values
+        # only attempt to decode keys named 'hint<digits>'
+        decoded_hints: Dict[str, str] = {}
+        for key, val in raw.items():
+            if re.fullmatch(r"hint\d+", key, flags=re.IGNORECASE):
+                decoded = self._b64_decode_loose(val)
+                if decoded:
+                    decoded_hints[key] = decoded
+                # If a hint fails to decode, we just skip it ( some are intentional noise)
+        return decoded_hints
