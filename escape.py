@@ -42,9 +42,15 @@ if DATA_FOLDER_LOCATION is not None:
 if DATA_FOLDER_LOCATION is None or DATA_FOLDER_LOCATION == "":
     DATA_FOLDER_LOCATION = "data"
 
+SAVE_FILE_NAME = args.transcript
+if SAVE_FILE_NAME is not None:
+    SAVE_FILE_NAME = SAVE_FILE_NAME.lower().strip()
+if SAVE_FILE_NAME is None or SAVE_FILE_NAME == "":
+    SAVE_FILE_NAME = "run.txt"
+
 transcript = Transcript(DATA_FOLDER_LOCATION)
 inventory = Inventory(transcript)
-utils = Utils(transcript, inventory, DATA_FOLDER_LOCATION)
+utils = Utils(transcript, inventory, DATA_FOLDER_LOCATION, SAVE_FILE_NAME)
 start_room = args.start
 if start_room is not None:
     start_room = start_room.lower().strip()
@@ -64,17 +70,12 @@ if start_room is None or start_room == "" or start_room == "intro":
     transcript.print_message("Type quit to quit")
     transcript.print_message("Type hint for assistance")
 
-SAVE_FILE_NAME = args.transcript
-if SAVE_FILE_NAME is not None:
-    SAVE_FILE_NAME = SAVE_FILE_NAME.lower().strip()
-if SAVE_FILE_NAME is None or SAVE_FILE_NAME == "":
-    SAVE_FILE_NAME = "run.txt"
+engine = Engine(transcript, inventory, utils)
+AUTO_RUN = args.auto_run
 
-engine = Engine(transcript, inventory, utils,
-                SAVE_FILE_NAME, DATA_FOLDER_LOCATION)
 
 while RUN_GAME:
-    if args.auto_run:
+    if AUTO_RUN:
         engine.command("move soc")
         engine.command("inspect auth.log")
         engine.command("move dns")
@@ -85,6 +86,7 @@ while RUN_GAME:
         engine.command("inspect proc_tree.jsonl")
         engine.command("move gate")
         RUN_GAME = engine.command("use final_gate")
+        AUTO_RUN = False
     else:
         if start_room is not None and start_room != "":
             match start_room:

@@ -236,4 +236,3 @@ class DNSRoom(BaseRoom):
             # error to the transcript, keep the engine alive
             self.transcript.print_message(f"Error in DNSRoom: {err}")
             return None
-        

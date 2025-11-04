@@ -21,13 +21,11 @@ class Engine:
     """
 
     def __init__(self, transcript: Transcript, inventory: Inventory,
-                 utils: Utils, save_file_name: str, save_file_path: str):
+                 utils: Utils):
         self._current_location = CurrentRoom.BASE
         self._transcript = transcript
         self._inventory = inventory
         self._utils = utils
-        self.__save_file_name__ = save_file_name
-        self.__save_file_path__ = save_file_path
 
     def command(self, command) -> bool:
         """Checks the command passed by the user and if valid will execute it.
@@ -52,7 +50,7 @@ class Engine:
         self._transcript.append_log("User called " + command)
         match command.lower():
             case "quit":
-                return self._do_quit(self.__save_file_name__)
+                return self._do_quit(self._utils.save_file_name)
             case "look":
                 self._do_look()
             case move if move.startswith("move"):
@@ -103,25 +101,25 @@ class Engine:
                 match self._current_location:
                     case CurrentRoom.SOC:
                         soc_room = SocRoom(self._transcript,
-                                           self.__save_file_path__)
+                                           self._utils.save_file_path)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          soc_room.solve())
                     case CurrentRoom.DNS:
                         dns_room = DNSRoom(self._transcript,
-                                           self.__save_file_path__)
+                                           self._utils.save_file_path)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          dns_room.solve())
                     case CurrentRoom.MALWARE:
                         malware_room = MalwareRoom(self._transcript,
-                                                   self.__save_file_path__)
+                                                   self._utils.save_file_path)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          malware_room.solve())
                     case CurrentRoom.VAULT:
                         vault_room = VaultRoom(self._transcript, self._utils,
-                                               self.__save_file_path__)
+                                               self._utils.save_file_path)
                         self._inventory.update_inventory(
                             CurrentRoom.get_room_item(self._current_location),
                                                          vault_room.solve())
@@ -238,7 +236,7 @@ class Engine:
         if self._current_location == CurrentRoom.FINAL_GATE:
             if self._inventory.is_inventory_complete():
                 with Transcript.open_file("final_gate.txt",
-                                      self.__save_file_path__) as final_gate_file:
+                                      self._utils.save_file_path) as final_gate_file:
                     return self._do_final_gate_file(final_gate_file)
             else:
                 self._transcript.print_message(
@@ -355,7 +353,7 @@ class Engine:
                 CurrentRoom.FINAL_GATE] = final_gate_text
             self._transcript.print_message(f"Final gate was opened with: "
                                            f"{final_gate_text}")
-            return self._do_quit(self.__save_file_name__)
+            return self._do_quit(self._utils.save_file_name)
         return True
 
     def _do_save(self):
