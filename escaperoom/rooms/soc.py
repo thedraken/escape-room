@@ -200,6 +200,9 @@ class SocRoom(BaseRoom):
 
         # Find most common IP within that subnet
         most_common_ip, frequency = self._find_most_common_ip(subnet_ips[max_subnet])
+        new_max_subnet = str(max_subnet)
+        if new_max_subnet is not None:
+            new_max_subnet = new_max_subnet + ".0"
 
         # Generate token
         token = self._generate_token(most_common_ip, max_count)
@@ -207,7 +210,7 @@ class SocRoom(BaseRoom):
         # Prepare results
         results = {
             'token': token,
-            'max_subnet': max_subnet,
+            'max_subnet': new_max_subnet,
             'subnet_count': max_count,
             'ip_count': frequency,
             'sample': sample_lines[max_subnet],
