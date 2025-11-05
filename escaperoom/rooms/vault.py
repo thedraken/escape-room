@@ -42,7 +42,7 @@ class VaultRoom(BaseRoom):
         return None
 
     # noinspection PyMethodMayBeStatic
-    def _extract_matching_items(self, file_entry: str) -> list[
+    def _extract_matching_items(self, file_entry: str) -> dict[str,
         tuple[str, str, str]]:
         """
         Takes the string extracted from the vault_dump.txt file and checks
@@ -50,36 +50,45 @@ class VaultRoom(BaseRoom):
         the condition SAFE{a-b-c} with any whitespace.
         Also ignores case sensitivity.
         :param file_entry: The string to check for the correct pattern
-        :return: A list of any entries of a, b, and c where
-        the valid regex is matched
+        :return: A dictionary of any entries of a, b, and c where
+        the valid regex is matched and the key is the actual text pulled
+        from the file
         """
         p = re.compile(
-            pattern=r"\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-"
-                    r"\s*(\d+)\s*}\s*",
+            pattern=r"(\s*S\s*A\s*F\s*E\s*\{\s*(\d+)\s*-\s*(\d+)\s*-"
+                    r"\s*(\d+)\s*}\s*)",
             flags=re.IGNORECASE | re.MULTILINE)
         # https://regex101.com/r/AKN3hE/2
         # As I have three matching groups, will return a collection of 3 items
-        tuple_result = p.findall(file_entry)
-        return tuple_result
+        list_of_tuple_results = p.findall(file_entry)
+        dict_results = {}
+
+        for item in list_of_tuple_results:
+            if len(item) == 4:
+                dict_results[item[0]] = (item[1], item[2], item[3])
+            else:
+                self.transcript.print_message("The items in " + str(item) +
+                                              " do not have 4 parts to it")
+        return dict_results
 
     def _check_items_match_rule(self,
-                                items: list[tuple[str, str, str]]) \
-            -> list[tuple[str, str, str]]:
+                                dictionary: dict[str, tuple[str, str, str]]) \
+            -> dict[str, tuple[str, str, str]]:
         """
-        For all items in the list, do a check if a + b == c, if so,
-        return them
-        :param items: The list of strings to check, each item must have a
-        length of 3
-        :return: The valid items where a + b = c, or
-        item[0] + item[1] == item[3]
+        For all items in the dictionary, do a check against the tuple and
+        if a + b == c, if so, return them
+        :param dictionary: The dictionary of strings to check, each item must have a
+        key of the original string and a value tuple of length 3
+        :return: The dictionary of valid items where a + b = c, or
+        item[0] + item[1] == item[2] of the value tuple
         """
-        # We will add all matching results to the list
-        results = []
-        for item in items:
-            if len(item) == 3:
-                value1 = self._utils.convert_to_float(item[0])
-                value2 = self._utils.convert_to_float(item[1])
-                value3 = self._utils.convert_to_float(item[2])
+        # We will add all matching results to the dictionary
+        results = {}
+        for key, value in dictionary.items():
+            if len(value) == 3:
+                value1 = self._utils.convert_to_float(value[0])
+                value2 = self._utils.convert_to_float(value[1])
+                value3 = self._utils.convert_to_float(value[2])
                 if value1 is None or value2 is None or value3 is None:
                     # self._transcript.print_message("The provided
                     # values are not a float: " + str(item))
@@ -90,8 +99,8 @@ class VaultRoom(BaseRoom):
                     # These values work for what we needed, add them
                     # to our results
                     self.transcript.print_message(
-                        "The values " + str(item) + " are valid")
-                    results.append(item)
+                        "The values " + str(key) + " are valid")
+                    results[key] = value
                 # else:
                 # self._transcript.print_message("The values "
                 # + str(item) + " do not add up")
@@ -100,8 +109,8 @@ class VaultRoom(BaseRoom):
             # str(item) + " are invalid due to bad length")
         return results
 
-    def _check_results(self, results: list[tuple[str, str, str]]) -> (str |
-                                                                      None):
+    def _check_results(self, results: dict[str, tuple[str, str, str]]) \
+            -> (str |None):
         """
         If only one result is found, create the valid string to add to run.txt,
         otherwise do nothing.
@@ -114,16 +123,16 @@ class VaultRoom(BaseRoom):
             self.transcript.print_message(
                 "The results of vault are: " + str(results))
             if len(results) == 1:
-                item = results[0]
+                first_key = list(results.keys())[0]
+                first_value = results[first_key]
                 self.add_log_to_transcript(
-                    f"TOKEN[SAFE]={item[0]}-{item[1]}-{item[2]}")
+                    f"TOKEN[SAFE]={first_value[0]}-{first_value[1]}-{first_value[2]}")
                 self.add_log_to_transcript(
-                    f"EVIDENCE[SAFE].MATCH=SAFE{{{item[0]}-{item[1]}"
-                    f"-{item[2]}}}")
+                    f"EVIDENCE[SAFE].MATCH={first_key.strip()}")
                 self.add_log_to_transcript(
-                    f"EVIDENCE[SAFE].CHECK={item[0]}+{item[1]}"
-                    f"={item[2]}")
-                token = "-".join(item)
+                    f"EVIDENCE[SAFE].CHECK={first_value[0]}+{first_value[1]}"
+                    f"={first_value[2]}")
+                token = "-".join(first_value)
                 self.transcript.print_message(
                     f"Returning token: {token}")
                 return token
