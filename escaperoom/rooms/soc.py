@@ -64,7 +64,8 @@ class SocRoom(BaseRoom):
 
     def __init__(self, transcript: Transcript, save_file_path: str):
         super().__init__(transcript, CurrentRoom.SOC, save_file_path)
-        self.ip_pattern = re.compile(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b')
+        self.ip_pattern = re.compile(
+            r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b')
 
     def _parse_log_file(self):
         """
@@ -78,10 +79,10 @@ class SocRoom(BaseRoom):
         accepted_count = 0
         malformed_count = 0
 
-        try: # we use a try-except to handle exceptions with opening the file
-            with self.open_file() as auth_file: # open the auth.log file
+        try:  # we use a try-except to handle exceptions with opening the file
+            with self.open_file() as auth_file:  # open the auth.log file
                 for line in auth_file:
-                    line = line.strip() # remove extra spaces
+                    line = line.strip()  # remove extra spaces
 
                     if is_malformed_line(line):
                         malformed_count += 1
@@ -114,7 +115,6 @@ class SocRoom(BaseRoom):
             return None, None, None, 0, 0
 
         return subnet_count, subnet_ips, sample_lines, accepted_count, malformed_count
-
 
     def _find_most_common_ip(self, ip_list):
         """
@@ -156,9 +156,9 @@ class SocRoom(BaseRoom):
             f"TOKEN[KEYPAD]={results['token']}",
             f"EVIDENCE[KEYPAD].TOP24={results['max_subnet']}/24",
             f"EVIDENCE[KEYPAD].COUNT={results['subnet_count']}",
-            #f"EVIDENCE[KEYPAD].IP_COUNT={results['ip_count']}",
+            # f"EVIDENCE[KEYPAD].IP_COUNT={results['ip_count']}",
             f"EVIDENCE[KEYPAD].SAMPLE={results['sample']}",
-            #f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={results['accepted_count']}",
+            # f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={results['accepted_count']}",
             f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={results['malformed_count']}"
         ]
 
@@ -199,18 +199,15 @@ class SocRoom(BaseRoom):
                 max_subnet = subnet
 
         # Find most common IP within that subnet
-        most_common_ip, frequency = self._find_most_common_ip(subnet_ips[max_subnet])
-        new_max_subnet = str(max_subnet)
-        if new_max_subnet is not None:
-            new_max_subnet = new_max_subnet + ".0"
-
+        most_common_ip, frequency = self._find_most_common_ip(
+            subnet_ips[max_subnet])
         # Generate token
         token = self._generate_token(most_common_ip, max_count)
 
         # Prepare results
         results = {
             'token': token,
-            'max_subnet': new_max_subnet,
+            'max_subnet': str(max_subnet) + ".0",
             'subnet_count': max_count,
             'ip_count': frequency,
             'sample': sample_lines[max_subnet],
