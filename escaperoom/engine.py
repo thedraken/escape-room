@@ -97,38 +97,7 @@ class Engine:
             if item == CurrentRoom.get_room_item(self._current_location).value:
                 is_valid = True
         if is_valid:
-            try:
-                match self._current_location:
-                    case CurrentRoom.SOC:
-                        soc_room = SocRoom(self._transcript,
-                                           self._utils.save_file_path)
-                        self._inventory.update_inventory(
-                            CurrentRoom.get_room_item(self._current_location),
-                                                         soc_room.solve())
-                    case CurrentRoom.DNS:
-                        dns_room = DNSRoom(self._transcript,
-                                           self._utils.save_file_path)
-                        self._inventory.update_inventory(
-                            CurrentRoom.get_room_item(self._current_location),
-                                                         dns_room.solve())
-                    case CurrentRoom.MALWARE:
-                        malware_room = MalwareRoom(self._transcript,
-                                                   self._utils.save_file_path)
-                        self._inventory.update_inventory(
-                            CurrentRoom.get_room_item(self._current_location),
-                                                         malware_room.solve())
-                    case CurrentRoom.VAULT:
-                        vault_room = VaultRoom(self._transcript, self._utils,
-                                               self._utils.save_file_path)
-                        self._inventory.update_inventory(
-                            CurrentRoom.get_room_item(self._current_location),
-                                                         vault_room.solve())
-            # I want to keep the general exception here, as I do not know
-            # what will happen during other people's rooms...
-            except Exception as e:
-                self._transcript.print_message("An error occurred in "
-                                               "solving the room:")
-                self._transcript.print_message(e)
+            self._do_solve_room()
         else:
             current_room_for_user = CurrentRoom.get_room_name(
                 self._current_location)
@@ -143,6 +112,44 @@ class Engine:
             else:
                 message += " and can inspect " + str(item_from_room.value)
             self._transcript.print_message(message)
+
+    def _do_solve_room(self):
+        """
+        Will check the current location and solve the room, if the room is
+        valid. If not, does nothing
+        """
+        try:
+            match self._current_location:
+                case CurrentRoom.SOC:
+                    soc_room = SocRoom(self._transcript,
+                                       self._utils.save_file_path)
+                    self._inventory.update_inventory(
+                        CurrentRoom.get_room_item(self._current_location),
+                        soc_room.solve())
+                case CurrentRoom.DNS:
+                    dns_room = DNSRoom(self._transcript,
+                                       self._utils.save_file_path)
+                    self._inventory.update_inventory(
+                        CurrentRoom.get_room_item(self._current_location),
+                        dns_room.solve())
+                case CurrentRoom.MALWARE:
+                    malware_room = MalwareRoom(self._transcript,
+                                               self._utils.save_file_path)
+                    self._inventory.update_inventory(
+                        CurrentRoom.get_room_item(self._current_location),
+                        malware_room.solve())
+                case CurrentRoom.VAULT:
+                    vault_room = VaultRoom(self._transcript, self._utils,
+                                           self._utils.save_file_path)
+                    self._inventory.update_inventory(
+                        CurrentRoom.get_room_item(self._current_location),
+                        vault_room.solve())
+        # I want to keep the general exception here, as I do not know
+        # what will happen during other people's rooms...
+        except Exception as e:
+            self._transcript.print_message("An error occurred in "
+                                           "solving the room:")
+            self._transcript.print_message(e)
 
     def _do_move(self, move: str):
         """
