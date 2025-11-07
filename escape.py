@@ -120,3 +120,4 @@ parser.add_argument("--data_folder_location",
 
 args = parser.parse_args()
 escape = Escape(args)
+escape.run_game()
