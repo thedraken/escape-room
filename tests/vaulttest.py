@@ -27,7 +27,7 @@ class VaultTest(unittest.TestCase):
         to_test_vault = self.create_test_vault()
 
         list_of_items = to_test_vault._extract_matching_items("SAFE{4-5-9}")
-        self.check_items_are_valid(list_of_items, "SAFE{4-5-9}", 1,
+        self.check_items_are_valid(list_of_items, "SAFE{4-5-9}",
                                    '4', '5', '9')
 
         second_list_of_items = to_test_vault._extract_matching_items(
@@ -35,7 +35,7 @@ class VaultTest(unittest.TestCase):
             "SAF3{4-5-9}\n"
             "S A F E { 1 - 2 - 4")
         self.check_items_are_valid(second_list_of_items,
-                                   "S AF E{1 - 2- 3 } \n", 1,
+                                   "S AF E{1 - 2- 3 } \n",
                                    '1', '2', '3')
 
     def test_check_items_match_rule(self):
@@ -96,7 +96,6 @@ class VaultTest(unittest.TestCase):
     @staticmethod
     def check_items_are_valid(dict_of_items: dict[str, tuple[str, str, str]],
                               key: str,
-                              length_of_list: int,
                               result_a: str,
                               result_b: str,
                               result_c: str) -> None:
@@ -107,13 +106,11 @@ class VaultTest(unittest.TestCase):
         :param dict_of_items: A dictionary of tuples, which should have 3 items
         in each tuple. The key is the original string parsed
         :param key: The key of the dictionary that has the valid tuple to check
-        :param length_of_list: The number of items expected in the list
         :param result_a: The expected value of a in the first tuple
         :param result_b: The expected value of b in the first tuple
         :param result_c: The expected value of c in the first tuple
         :return: Nothing
         """
-        assert len(dict_of_items) == length_of_list
         tuple_to_check = dict_of_items[key]
         assert len(tuple_to_check) == 3
         assert tuple_to_check[0] == result_a
