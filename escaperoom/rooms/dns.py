@@ -114,8 +114,10 @@ class DNSRoom(BaseRoom):
             # validate=False -> accept non canonical alphabets/padding quietly
             decoded_bytes = base64.b64decode(compact, validate=False)
             return_value = decoded_bytes.decode("utf-8", errors="replace")
-            if not convert_to_rot_if_fail and " " not in return_value:
-                return self._b64_decode_loose(codecs.decode(s, "rot13"), True)
+            if convert_to_rot_if_fail and " " not in return_value:
+                #Would prefer a better check than for spaces, but not sure
+                # how to confirm original text could have had rot13 applied
+                return self._b64_decode_loose(codecs.decode(s, "rot13"), False)
             return return_value
         except (ValueError, binascii.Error) as err:
             # some hints are intentionally bad/noise
@@ -189,7 +191,7 @@ class DNSRoom(BaseRoom):
                 token_tag_raw = token_tag_raw.strip()
 
                 # Try to Base64-decode token_tag itself, example: NA== -> 4
-                token_key = (self._b64_decode_loose(token_tag_raw, True
+                token_key = (self._b64_decode_loose(token_tag_raw, False
                                                     ) or token_tag_raw).strip()
 
                 # If token_key is just digits, we interpret it as "hint<digits>"
@@ -245,7 +247,7 @@ class DNSRoom(BaseRoom):
         decoded_hints: Dict[str, str] = {}
         for key, val in raw.items():
             if re.fullmatch(r"hint\d+", key, flags=re.IGNORECASE):
-                decoded = self._b64_decode_loose(val, False)
+                decoded = self._b64_decode_loose(val, True)
                 if decoded:
                     decoded_hints[key] = decoded
                 # If a hint fails to decode, we just skip it ( some are intentional noise)
