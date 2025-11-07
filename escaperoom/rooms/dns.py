@@ -31,7 +31,7 @@ class DNSRoom(BaseRoom):
 
     Robustness highlights:
     - Safe parsing: comments stripped, blanks ignored, '=' inside values allowed
-    - Duplicate keys: later entries overwrite earlier ones ( config behavior)
+    - Duplicate keys: later entries overwrite earlier ones ( config behaviour)
     - Base64 decode is whitespace-tolerant and auto-pads '=' to avoid decode crashes
     - `token_tag` may be Base64 (e.g., "NA==" → "4" → we interpret as "hint4")
     - Token = last alphanumeric/underscore word in the decoded hint sentence

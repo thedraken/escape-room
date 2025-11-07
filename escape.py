@@ -16,6 +16,7 @@ class Escape:
     The main escape room class that launches the game, one of these will be
     created and parse the arguments and then run the game
     """
+
     def __init__(self, arguments):
         self.__args__ = arguments
 

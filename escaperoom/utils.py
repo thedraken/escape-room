@@ -143,8 +143,8 @@ class Utils:
                 new_transcript_dict[string_key] = transcript_dict[item]
             new_item_dict = {}
             for item in self._inventory.inventory_dict:
-                string_invt_key = str(item)
-                new_item_dict[string_invt_key] = self._inventory.inventory_dict[item]
+                string_inventory_key = str(item)
+                new_item_dict[string_inventory_key] = self._inventory.inventory_dict[item]
             save_dict = {"transcript": new_transcript_dict, "item": new_item_dict}
             with (Transcript.open_file("save.json", self.save_file_path, "w")
                   as save_file):

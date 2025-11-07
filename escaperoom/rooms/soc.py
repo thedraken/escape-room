@@ -60,7 +60,7 @@ def extract_subnet(ip_address):
 
 
 class SocRoom(BaseRoom):
-    """SOC Room for analyzing authentication logs and detecting attack patterns."""
+    """SOC Room for analysing authentication logs and detecting attack patterns."""
 
     def __init__(self, transcript: Transcript, save_file_path: str):
         super().__init__(transcript, CurrentRoom.SOC, save_file_path)
@@ -171,7 +171,7 @@ class SocRoom(BaseRoom):
 
     def solve(self):
         """
-        Find the most likely attacking subnet by analyzing auth.log.
+        Find the most likely attacking subnet by analysing auth.log.
         Returns:
             str: Formatted results with token and evidence
         """
