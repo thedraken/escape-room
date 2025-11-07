@@ -222,7 +222,8 @@ class Utils:
                                            + " is not a valid item")
 
 
-    def convert_to_float(self, value: str) -> float | None:
+    @staticmethod
+    def convert_to_float(value: str) -> float | None:
         """
         Converts a string value into a float
         :param value: The string value to convert
@@ -231,5 +232,4 @@ class Utils:
         try:
             return float(value)
         except (ValueError, FloatingPointError):
-            self._transcript.print_message(value + " is not a valid number")
-        return None
+            return None

@@ -9,7 +9,6 @@ import unittest
 from unittest.mock import Mock
 
 from escaperoom.rooms.vault import VaultRoom
-from escaperoom.utils import Utils
 
 
 class VaultTest(unittest.TestCase):
@@ -87,10 +86,7 @@ class VaultTest(unittest.TestCase):
         :return: The Vault instance
         """
         transcript_mock = Mock()
-        inventory_mock = Mock()
-        utils = Utils(transcript_mock, inventory_mock, "mock",
-                      "mock_file_name.txt")
-        to_test_vault = VaultRoom(transcript_mock, utils, "mock")
+        to_test_vault = VaultRoom(transcript_mock, "mock")
         return to_test_vault
 
     @staticmethod

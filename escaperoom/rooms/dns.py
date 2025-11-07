@@ -16,6 +16,7 @@ Transcript (grader) lines we must write:
 
 import base64
 import binascii
+import codecs
 import re
 from typing import Dict, Optional, Tuple
 
@@ -84,7 +85,7 @@ class DNSRoom(BaseRoom):
             return None
         return key, value
 
-    def _b64_decode_loose(self, s: str) -> Optional[str]:
+    def _b64_decode_loose(self, s: str, convert_to_rot_if_fail: bool) -> Optional[str]:
         """
         Tolerant Base64 decode.
 
@@ -92,12 +93,16 @@ class DNSRoom(BaseRoom):
         - The file can include whitespace/newlines/backslash continuations inside the encoded value
         - Some entries may be missing '=' padding; we add it so length % 4 == 0
         - We decode to UTF-8 and replace any weird bytes instead of crashing
+        
+        :param s: The base64 text to decode.
+        :param convert_to_rot_if_fail: If the initial convertion fails due
+        to missing spaces and this is set to true, will run a rot13
+        convertion on the base64 text before decoding.
 
-        Returns:
-            Decoded string on success, or None if decoding fails
+        :returns: Decoded string on success, or None if decoding fails
 
         Notes:
-            atch specific decode errors (ValueError, binascii.Error) so pylint
+            match specific decode errors (ValueError, binascii.Error) so pylint
             doesn’t flag a broad exception here
         """
         try:
@@ -108,7 +113,10 @@ class DNSRoom(BaseRoom):
             compact += "=" * ((4 - len(compact) % 4) % 4)
             # validate=False -> accept non canonical alphabets/padding quietly
             decoded_bytes = base64.b64decode(compact, validate=False)
-            return decoded_bytes.decode("utf-8", errors="replace")
+            return_value = decoded_bytes.decode("utf-8", errors="replace")
+            if not convert_to_rot_if_fail and " " not in return_value:
+                return self._b64_decode_loose(codecs.decode(s, "rot13"), True)
+            return return_value
         except (ValueError, binascii.Error) as err:
             # some hints are intentionally bad/noise
             self.transcript.print_message(f"Base64 decode error: {err}")
@@ -181,7 +189,8 @@ class DNSRoom(BaseRoom):
                 token_tag_raw = token_tag_raw.strip()
 
                 # Try to Base64-decode token_tag itself, example: NA== -> 4
-                token_key = (self._b64_decode_loose(token_tag_raw) or token_tag_raw).strip()
+                token_key = (self._b64_decode_loose(token_tag_raw, True
+                                                    ) or token_tag_raw).strip()
 
                 # If token_key is just digits, we interpret it as "hint<digits>"
                 # e.g., "4" -> "hint4"
@@ -236,7 +245,7 @@ class DNSRoom(BaseRoom):
         decoded_hints: Dict[str, str] = {}
         for key, val in raw.items():
             if re.fullmatch(r"hint\d+", key, flags=re.IGNORECASE):
-                decoded = self._b64_decode_loose(val)
+                decoded = self._b64_decode_loose(val, False)
                 if decoded:
                     decoded_hints[key] = decoded
                 # If a hint fails to decode, we just skip it ( some are intentional noise)
