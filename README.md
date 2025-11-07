@@ -6,6 +6,18 @@ to show our understanding of python coding standards.<br>
 To execute the program, put your data files into the folder data/ and then execute escape.py<br>
 Requires Python 3.12<br>
 
+Possible optional parameters to start the escape.py are:
+* --start: Allows you to set the first room you enter on running the game. Default is "intro" and possible values are:
+  * intro
+  * dns
+  * malware
+  * soc
+  * vault
+  * gate
+* --transcript: The file to save the results to, the default is run.txt
+* --auto_run: Will auto run the game, going to each room, calling inspect, and finally using the gate. If it succeeds, the code ends, otherwise will stay on the prompt to ask what to do next.
+* --data_folder_location: The folder where to read and save the data to, default is the folder "data"
+
 # Table of files
 * [escape](#escape)
 * [escaperoom](#escaperoom)
@@ -54,7 +66,7 @@ If the inventory is not complete, the final gate will not be tried.
 Contains the room files, which all extend from the base.py room and implements the solve method
 
 #### base
-An abstract class holding some functions that are common among rooms, including opening of the relevant file to be solve
+An abstract class holding some functions that are common among rooms, including opening of the relevant file to be solved
 in the room.
 Also manages the logging of data in a consistent way
 
@@ -66,7 +78,9 @@ or use.
 Reads and cleans up the messy dns.cfg file, decodes the Base64 hints, figures out which hint to use based on the token_tag, and extracts the last word of that decoded hint as the DNS token. It handles duplicates, comments, and broken Base64 formatting while logging the decoded line and token for grading.
 
 #### malware
-This room reads a proc_tree.jsonl file that lists processes (each has a PID, PPID, and a command). It builds the parent→child process tree, searches that tree for any command that runs curl or scp (these are exfiltration commands), and returns the final PID in that chain as the token, while logging the full path and the matched command for grading.
+This room reads a proc_tree.jsonl file that lists processes (each has a PID, PPID, and a command).
+It builds the parent→child process tree, searches that tree for any command that runs curl or scp (these are exfiltration commands), and returns the final PID in that chain as the token.
+It will also log the full path and the matched command for grading.
 
 #### soc
 
