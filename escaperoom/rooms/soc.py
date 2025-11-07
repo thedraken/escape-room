@@ -1,7 +1,7 @@
 """
 Room 2-SOC Triage Desk (file: auth.log )
 The SSH logs show repeated authentication failures.
-This room identifies the most likely attacking subnet
+This room identifies the most likely attacking subnet.
 """
 import re
 from collections import Counter, defaultdict
@@ -154,7 +154,7 @@ class SocRoom(BaseRoom):
         """
         output_lines = [
             f"TOKEN[KEYPAD]={results['token']}",
-            f"EVIDENCE[KEYPAD].TOP24={results['max_subnet']}/24",
+            f"EVIDENCE[KEYPAD].TOP24={results['max_subnet']}.0/24",
             f"EVIDENCE[KEYPAD].COUNT={results['subnet_count']}",
             #f"EVIDENCE[KEYPAD].IP_COUNT={results['ip_count']}",
             f"EVIDENCE[KEYPAD].SAMPLE={results['sample']}",
