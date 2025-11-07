@@ -103,7 +103,7 @@ class VaultTest(unittest.TestCase):
         Will check the list of tuples has the correct values in,
         needs improving to check multiple tuples though, as it currently
         only checks the first tuple in the list
-        :param dict_of_items: A dictionary of tuples, which should have 3 items
+        :param dict_of_items: A dictionary of tuples, which has 3 items
         in each tuple. The key is the original string parsed
         :param key: The key of the dictionary that has the valid tuple to check
         :param result_a: The expected value of a in the first tuple
