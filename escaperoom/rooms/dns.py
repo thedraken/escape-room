@@ -240,7 +240,7 @@ class DNSRoom(BaseRoom):
         """
         Will take the items and try to find the hint and decode them
         :param raw: raw data
-        :return: decoded hints
+        :returns: decoded hints
         """
         # Base64-decode all hintN values
         # only attempt to decode keys named 'hint<digits>'

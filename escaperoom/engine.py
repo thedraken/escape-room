@@ -44,7 +44,7 @@ class Engine:
         hint
         save
         load
-        :return: returns if the game should carry on running, if false,
+        :returns: returns if the game should carry on running, if false,
         the quit has been called and the game will be ended.
         """
         self._transcript.append_log("User called " + command)
@@ -76,7 +76,7 @@ class Engine:
     def _do_quit(self, save_file_name : str) -> bool:
         """
         Saves the current transcript and then returns a false to quit the game
-        :return: boolean of false to quit the game
+        :returns: boolean of false to quit the game
         """
         self._transcript.print_message("Thank you for playing")
         self._transcript.save_transcript(save_file_name)
@@ -88,7 +88,7 @@ class Engine:
         this will attempt to solve the room
         Relies on the current_room set in the engine
         :param inspect: The item to inspect
-        :return: Nothing
+        :returns: Nothing
         """
         is_valid = False
         commands = inspect.split(" ")
@@ -164,7 +164,7 @@ class Engine:
         Allows the user to move to a room specified, if the room is
         invalid also reports on it
         :param move: The location to move to, a str value of expected types
-        :return: Nothing
+        :returns: Nothing
         """
         is_valid = False
         commands = move.split(" ")
@@ -201,7 +201,7 @@ class Engine:
     def _do_look(self):
         """
         Prints details about the current room the user is in
-        :return: Nothing
+        :returns: Nothing
         """
         match self._current_location:
             case CurrentRoom.BASE:
@@ -246,7 +246,7 @@ class Engine:
         """
         This function will use an item in the room, in the current specs
         this is only for using the gate
-        :return: Nothing
+        :returns: Nothing
         """
         if self._current_location == CurrentRoom.FINAL_GATE:
             if self._inventory.is_inventory_complete():
@@ -265,7 +265,7 @@ class Engine:
         """
         Prints a list of items you have in your inventory, these are tokens
         you have got for solving rooms
-        :return: Nothing
+        :returns: Nothing
         """
         self._transcript.print_message("You currently have the following "
                                        "items in your inventory:")
@@ -274,7 +274,7 @@ class Engine:
     def _do_hint(self):
         """
         Prints a list of commands the user can currently do
-        :return: Nothing
+        :returns: Nothing
         """
         self._transcript.print_message("look: Allows you to look in the "
                                        "current room and see what is "
@@ -319,7 +319,7 @@ class Engine:
         Will attempt to solve the final gate and use the dictionary values
         to fill the run.txt file
         :param final_gate_file: The final gate file read from final_gate.txt
-        :return: boolean of false to say the game can be quit, if final gate
+        :returns: boolean of false to say the game can be quit, if final gate
         was solved, if it was not solved, returns true to keep the game running
         """
         group_id_pattern = re.compile(r"\s*group_id\s*=\s*([\w-]*)")
@@ -374,7 +374,7 @@ class Engine:
     def _do_save(self):
         """
         Saves the current state of the game
-        :return: Nothing
+        :returns: Nothing
         """
         if self._utils.save():
             self._transcript.print_message("You saved the current game "
@@ -386,7 +386,7 @@ class Engine:
     def _do_load(self):
         """
         Loads the current state of the game from a save.txt file
-        :return: Nothing
+        :returns: Nothing
         """
         if self._utils.load():
             self._transcript.print_message("You loaded the current game "

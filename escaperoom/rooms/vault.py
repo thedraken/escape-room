@@ -25,7 +25,7 @@ class VaultRoom(BaseRoom):
         SAFE{a-b-c}
         where a + b == c and will return the list of values that match
         that amount
-        :return: a single string result, if one is found. Otherwise, None
+        :returns: a single string result, if one is found. Otherwise, None
         """
         try:
             with self.open_file() as vault_file:
@@ -48,7 +48,7 @@ class VaultRoom(BaseRoom):
         the condition SAFE{a-b-c} with any whitespace.
         Also ignores case sensitivity.
         :param file_entry: The string to check for the correct pattern
-        :return: A dictionary of any entries of a, b, and c where
+        :returns: A dictionary of any entries of a, b, and c where
         the valid regex is matched and the key is the actual text pulled
         from the file
         """
@@ -77,7 +77,7 @@ class VaultRoom(BaseRoom):
         if a + b == c, if so, return them
         :param dictionary: The dictionary of strings to check, each item must have a
         key of the original string and a value tuple of length 3
-        :return: The dictionary of valid items where a + b = c, or
+        :returns: The dictionary of valid items where a + b = c, or
         item[0] + item[1] == item[2] of the value tuple
         """
         # We will add all matching results to the dictionary
@@ -114,7 +114,7 @@ class VaultRoom(BaseRoom):
         otherwise do nothing.
         :param results: The results to check and confirm only one data point
         has been found
-        :return: The single matching token, otherwise None
+        :returns: The single matching token, otherwise None
         """
         if len(results) != 0:
             # We have at least one result, let's handle it

@@ -31,7 +31,7 @@ class CurrentRoom(Enum):
         """
         Will get the nice printable version of the room enum passed in
         :param current_room: The room you want the name of
-        :return: The name of the room, or none if the room type is invalid
+        :returns: The name of the room, or none if the room type is invalid
         """
         return_value = None
         match current_room:
@@ -54,7 +54,7 @@ class CurrentRoom(Enum):
         """
         Will tell you which item is inspectable in the current room
         :param current_room: The room you want to know the item of
-        :return: The item that can be inspected, or no item if none is found
+        :returns: The item that can be inspected, or no item if none is found
         """
         match current_room:
             case CurrentRoom.DNS:
@@ -75,7 +75,7 @@ class CurrentRoom(Enum):
         Will tell you if you can use a function in the room, only applies
         to the final gate
         :param current_room: The room you want to check the use of
-        :return: Gate or nothing
+        :returns: Gate or nothing
         """
         match current_room:
             case CurrentRoom.FINAL_GATE:

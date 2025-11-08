@@ -23,7 +23,7 @@ class BaseRoom(ABC):
     def solve(self) -> str | None:
         """
         The abstract method to solve the room.
-        :return: A string if a valid result is obtained, otherwise None
+        :returns: A string if a valid result is obtained, otherwise None
         """
 
     def add_log_to_transcript(self, log: str) -> None:
@@ -31,7 +31,7 @@ class BaseRoom(ABC):
         Adds the official log to the run.txt transcript, this is what we will
         be graded on so check formatting!
         :param log: The log to add
-        :return: None
+        :returns: None
         """
         if not log or not self.current_room:
             return
@@ -40,7 +40,7 @@ class BaseRoom(ABC):
     def open_file(self) -> None | IO[Any]:
         """
         Will open the file for the relevant room, if it exists
-        :return: A file stream for reading, if the room has a file to open,
+        :returns: A file stream for reading, if the room has a file to open,
         otherwise None
         """
         try:

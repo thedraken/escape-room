@@ -32,7 +32,7 @@ class Transcript:
         Appends the transcript text to the transcript log file
         :param transcript_text: The log to append
         :param current_room: The room the transcript action was for
-        :return: NONE
+        :returns: NONE
         """
         transcript_value = self.transcript_dict.get(current_room)
         transcript_value += transcript_text + "\n"
@@ -47,7 +47,7 @@ class Transcript:
         Logs an action, but does not attach to the run.txt file for submission
         The log is appended with the current date time
         :param log_text: The log text to add
-        :return: NONE
+        :returns: NONE
         """
         # Set correct format, otherwise we get American dates...
         locale.setlocale(locale.LC_ALL, "en_GB.UTF-8")
@@ -59,7 +59,7 @@ class Transcript:
         """
         Prints a message to the console, will also add it to the chronological log
         :param message: The message to print
-        :return: Nothing
+        :returns: Nothing
         """
         print(str(message))
         self.append_log(str(message))
@@ -68,7 +68,7 @@ class Transcript:
         """
         Will save both the specified transcript file and the chronological
         log to file, ready for a user to browse.
-        :return: Nothing
+        :returns: Nothing
         """
         try:
             with (self.open_file("transcript_crono.txt", self.__folder_path__, "w") as
@@ -111,7 +111,7 @@ class Transcript:
         '+'       open a disk file for updating (reading and writing)
         'U'       universal newline mode (deprecated)
         ========= =============================================================
-        :return: A file stream for various types,
+        :returns: A file stream for various types,
                  depending on the mode selected
         """
         return open(file=os.sep.join([folder, filename]), mode=mode,

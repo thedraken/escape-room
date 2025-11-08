@@ -21,7 +21,7 @@ class VaultTest(unittest.TestCase):
         Tests the method _extract_matching_items found in the Vault Room.
         Looks for a matching item that follows the pattern SAFE{a-b-c}
         where spaces are allowed in between any character and a+b=c
-        :return: None
+        :returns: None
         """
         to_test_vault = self.create_test_vault()
 
@@ -83,7 +83,7 @@ class VaultTest(unittest.TestCase):
     def create_test_vault() -> VaultRoom:
         """
         Creates an instance of the Vault with a mocked transcript file
-        :return: The Vault instance
+        :returns: The Vault instance
         """
         transcript_mock = Mock()
         to_test_vault = VaultRoom(transcript_mock, "mock")
@@ -105,7 +105,7 @@ class VaultTest(unittest.TestCase):
         :param result_a: The expected value of a in the first tuple
         :param result_b: The expected value of b in the first tuple
         :param result_c: The expected value of c in the first tuple
-        :return: Nothing
+        :returns: Nothing
         """
         tuple_to_check = dict_of_items[key]
         assert len(tuple_to_check) == 3

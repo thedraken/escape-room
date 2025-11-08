@@ -28,7 +28,7 @@ class Inventory:
         Set the token received from the room the player just solved.
         :param item_type: A value from the enum Item
         :param value: The token for the value, can be empty or none as well
-        :return: Nothing
+        :returns: Nothing
         """
         if value is not None:
             self.inventory_dict[item_type] = value
@@ -39,7 +39,7 @@ class Inventory:
         """
         Will convert the item type enum into a human-readable token name
         :param item_type: The item_type enum to convert to the token name
-        :return: Returns the token name, if not valid then None is returned.
+        :returns: Returns the token name, if not valid then None is returned.
         """
         return_value = "None"
         match item_type:
@@ -57,7 +57,7 @@ class Inventory:
         """
         Checks the player's inventory and prints out the tokens
         received from the room.
-        :return: Nothing
+        :returns: Nothing
         """
         count_of_items = 0
         for item in self.inventory_dict.items():
@@ -80,7 +80,7 @@ class Inventory:
         """
         Checks if the player's inventory is complete with all puzzles solved,
         not necessarily correctly.
-        :return: boolean if the player's inventory is complete
+        :returns: boolean if the player's inventory is complete
         """
         count_of_items = 0
         for item in self.inventory_dict.items():
@@ -92,7 +92,7 @@ class Inventory:
         """
         Prints a statement of the items the player is currently missing
         to use the gate.
-        :return: Nothing
+        :returns: Nothing
         """
         count_of_items = 0
         missing_items = ""
@@ -129,7 +129,7 @@ class Utils:
     def save(self) -> bool:
         """
         Saves the current progress of the game to a save.json file
-        :return: Returns true if it successfully saved the current state
+        :returns: Returns true if it successfully saved the current state
         """
         self._transcript.print_message("Saving progress...")
         try:
@@ -161,7 +161,7 @@ class Utils:
         """
         Loads the current state from the save.json file, if it exists
         Will overwrite the current state, with the data
-        :return: Returns true if it successfully loaded the save file
+        :returns: Returns true if it successfully loaded the save file
         """
         self._transcript.print_message("Loading progress...")
         try:
@@ -227,7 +227,7 @@ class Utils:
         """
         Converts a string value into a float
         :param value: The string value to convert
-        :return: The float value, or none if not applicable
+        :returns: The float value, or none if not applicable
         """
         try:
             return float(value)

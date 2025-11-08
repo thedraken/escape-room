@@ -24,7 +24,7 @@ class Escape:
         """
         Uses the arguments provided to run the game, if invalid will stop
         the game
-        :return: Nothing
+        :returns: Nothing
         """
         data_folder_location, save_file_name = self._do_get_save_file_location_from_args()
 
@@ -76,7 +76,7 @@ class Escape:
     def _do_get_save_file_location_from_args(self) -> tuple[str, str]:
         """
         Parses the arguments and returns the valid data folder and save file names
-        :return: A tuple of the data folder location and the save file name
+        :returns: A tuple of the data folder location and the save file name
         """
         data_folder_location = self.__args__.data_folder_location
         if data_folder_location is not None:
@@ -98,7 +98,7 @@ class Escape:
         :param start_room: The starting room set in the arguments,
         will only run if the start_room is empty, or intro
         :param transcript: Allows printing the details of the intro to the log
-        :return: Nothing
+        :returns: Nothing
         """
         if start_room is None or start_room == "" or start_room == "intro":
             transcript.print_message("Welcome to the escape room game")
