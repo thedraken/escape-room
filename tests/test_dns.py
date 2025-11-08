@@ -12,6 +12,9 @@ from escaperoom.transcript import Transcript
 
 
 class DNSTest(unittest.TestCase):
+    """
+    Default unit test class for the DNS room
+    """
 
     def _room_log(self, t: Transcript, room: CurrentRoom) -> str:
         """
@@ -43,7 +46,7 @@ class DNSTest(unittest.TestCase):
     # end
     """
         # Create a DNSRoom instance for testing, the save path is irrelevant here
-        room, t = self._create_test_dns()
+        room = self._create_test_dns()
 
         # Replace open_file() so it reads from fake config instead of disk
         room.open_file = lambda: io.StringIO(cfg)
@@ -54,19 +57,19 @@ class DNSTest(unittest.TestCase):
         # The token extracted from the last word of hint4’s decoded line
         assert token == "phrase"
 
-        """
+
         # Retrieve what the solver wrote into the transcript log
-        log = self._room_log(t, CurrentRoom.DNS)
+        # log = self._room_log(t, CurrentRoom.DNS)
 
         # Check that the grader-required lines are logged correctly
-        assert "TOKEN[DNS]=phrase" in log
-        assert "EVIDENCE[DNS].KEY=hint4" in log
-        assert "Look inside the DNS switch for the right phrase." in log
-        """
+        # assert "TOKEN[DNS]=phrase" in log
+        # assert "EVIDENCE[DNS].KEY=hint4" in log
+        #assert "Look inside the DNS switch for the right phrase." in log
 
     def test_dns_handles_bad_hints_but_uses_correct_one(self):
         """
-        Even if other hints are broken base64, DNSRoom should still decode the one named by token_tag.
+        Even if other hints are broken base64,
+        DNSRoom should still decode the one named by token_tag.
         """
         cfg = """
     hint1 = !!!not_base64!!!
@@ -75,7 +78,7 @@ class DNSTest(unittest.TestCase):
     """
 
         # mock transcript + room setup
-        room, t = self._create_test_dns()
+        room = self._create_test_dns()
 
         # Fake file input with StringIO
         room.open_file = lambda: io.StringIO(cfg)
@@ -85,11 +88,11 @@ class DNSTest(unittest.TestCase):
         assert token == "phrase"
 
     @staticmethod
-    def _create_test_dns() -> tuple[DNSRoom, Transcript]:
+    def _create_test_dns() -> DNSRoom:
         """
         Creates an instance of the DNS with a mocked transcript file
         :returns: The DNS instance
         """
         transcript_mock = Mock()
         to_test_dns = DNSRoom(transcript_mock, "mock")
-        return to_test_dns, transcript_mock
+        return to_test_dns

@@ -40,6 +40,9 @@ class SocTest(unittest.TestCase):
         assert subnet_count["198.19.0"] == 3
         assert len(subnet_ips["198.19.0"]) == 3
         assert accepted == 0
+        assert sample_lines is not None
+        assert malformed is not None
+
 
     def test_parse_log_file_with_malformed_lines(self):
         """
@@ -59,6 +62,9 @@ class SocTest(unittest.TestCase):
 
         assert malformed == 2
         assert subnet_count["198.19.0"] == 1
+        assert sample_lines is not None
+        assert subnet_ips is not None
+        assert accepted is not None
 
     def test_find_most_common_ip(self):
         """
