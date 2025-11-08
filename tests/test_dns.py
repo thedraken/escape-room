@@ -4,9 +4,9 @@ expected.
 """
 import io
 
-from escaperoom.transcript import Transcript
-from escaperoom.rooms.dns import DNSRoom
 from escaperoom.location import CurrentRoom
+from escaperoom.rooms.dns import DNSRoom
+from escaperoom.transcript import Transcript
 
 
 def _room_log(t: Transcript, room: CurrentRoom) -> str:
