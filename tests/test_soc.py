@@ -6,8 +6,8 @@
 Contains the SocTest class for testing the SOC Triage Desk room
 """
 import unittest
-from unittest.mock import Mock, patch
 from io import StringIO
+from unittest.mock import Mock, patch
 
 from escaperoom.rooms.soc import SocRoom
 
