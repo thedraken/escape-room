@@ -1,5 +1,5 @@
 # pylint: disable=protected-access
-# We disable this check in unit test classes, we want to access protected
+# disable this check in unit test classes, we want to access protected
 # methods to test them, but do not want them to be made public for others
 # to use incorrectly
 """
@@ -21,11 +21,10 @@ class SocTest(unittest.TestCase):
     def test_parse_log_file_with_failed_passwords(self):
         """
         Test parsing a log file with multiple failed password attempts
-        from different subnets.
-        :return: None
+        from different subnets with one NULL/empty line at the beginning.
         """
         log_data = """
-        2025-08-09T12:00:25Z lab1 sshd[3234]: Failed password for root from 198.19.0.42 port 58191 protocol 2
+2025-08-09T12:00:25Z lab1 sshd[3234]: Failed password for root from 198.19.0.42 port 58191 protocol 2
 2025-08-09T12:00:26Z lab1 sshd[3234]: Failed password for root from 198.19.0.42 port 58192 protocol 2
 2025-08-09T12:00:27Z lab1 sshd[3234]: Failed password for admin from 198.19.0.50 port 58193 protocol 2
 2025-08-09T12:00:28Z lab1 sshd[3234]: Failed password for root from 203.0.113.10 port 58194 protocol 2
@@ -41,15 +40,14 @@ class SocTest(unittest.TestCase):
         assert len(subnet_ips["198.19.0"]) == 3
         assert accepted == 0
         assert sample_lines is not None
-        assert malformed is not None
+        assert malformed == 1
 
 
     def test_parse_log_file_with_malformed_lines(self):
         """
         Test that malformed lines are counted and skipped correctly.
-        :return: None
         """
-        log_data = """MALFORMED LINE WITHOUT PROPER FORMAT
+        log_data = """MALFORMED LINE
 2025-08-09T12:00:25Z lab1 sshd[3234]: Failed password for root from 198.19.0.42 port 58191 protocol 2
 2025-08-09T12:00:26Z lab1 sshd[3234]: Failed password for root from NOT_AN_IP port 58192 protocol 2
 """
@@ -64,12 +62,11 @@ class SocTest(unittest.TestCase):
         assert subnet_count["198.19.0"] == 1
         assert sample_lines is not None
         assert subnet_ips is not None
-        assert accepted is not None
+        assert accepted == 0
 
     def test_find_most_common_ip(self):
         """
         Test finding the most common IP among several different IPs.
-        :return: None
         """
         soc_room = self.create_test_soc_room()
         ip_list = [
@@ -88,7 +85,6 @@ class SocTest(unittest.TestCase):
     def test_generate_token(self):
         """
         Test token generation with IP and count.
-        :return: None
         """
         soc_room = self.create_test_soc_room()
         token = soc_room._generate_token("192.168.1.42", 17)
@@ -97,9 +93,7 @@ class SocTest(unittest.TestCase):
 
     def test_solve_complete_workflow(self):
         """
-        Integration test: Full solve workflow with realistic data.
-        Tests the entire flow from log parsing to token generation.
-        :return: None
+        Integration test: Test entire flow with sample data upto token generation.
         """
         log_data = """MALFORMED LINE
 2025-08-09T12:00:25Z lab1 sshd[3234]: Failed password for root from 198.19.0.42 port 58191 protocol 2
@@ -120,13 +114,8 @@ class SocTest(unittest.TestCase):
     def create_test_soc_room() -> SocRoom:
         """
         Creates an instance of SocRoom with mocked dependencies.
-        :return: The SocRoom instance for testing
+        Returns: The SocRoom instance for testing
         """
         transcript_mock = Mock()
         soc_room = SocRoom(transcript_mock, "mock")
         return soc_room
-
-
-
-if __name__ == '__main__':
-    unittest.main()
