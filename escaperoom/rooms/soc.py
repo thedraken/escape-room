@@ -1,7 +1,8 @@
 """
 Room 2-SOC Triage Desk (file: auth.log )
 The SSH logs show repeated authentication failures.
-This room identifies the most likely attacking subnet
+This room identifies the most likely attacking subnet.
+Check flowchart_soc_room.jpg for the Flow Chart of the SOC Room
 """
 import re
 from collections import Counter, defaultdict
@@ -13,11 +14,11 @@ from escaperoom.transcript import Transcript
 
 def is_malformed_line(line):
     """
-    Check if a log line is malformed or invalid.
-    Arguments:
-        line (str): The log line to check
-    Returns:
-        bool: True if malformed, False if valid
+    Check if a log line is malformed.
+    Checks:
+        - if the line is an empty string/NULL
+        - for keywords "Failed Password" or "Accepted Password"
+    Returns: True if malformed, False if valid
     """
     if not line:
         return True
@@ -27,10 +28,7 @@ def is_malformed_line(line):
 def is_valid_ip(ip_string):
     """
     Validate if an IP address has valid octets (0-255).
-    Arguments:
-        ip_string (str): The IP address to validate
-    Returns:
-        bool: True if valid, False otherwise
+    Returns: True if valid, False otherwise
     """
     parts = ip_string.split('.')
     # validating the length of ip to be exactly 4 numbers
@@ -50,10 +48,7 @@ def is_valid_ip(ip_string):
 def extract_subnet(ip_address):
     """
     Extract /24 subnet from IP address.
-    Arguments:
-        ip_address (str): Full IP address
-    Returns:
-        str: First three octets (e.g., '198.19.0')
+    Returns: First three octets (e.g., '198.19.0')
     """
     parts = ip_address.split('.')
     return '.'.join(parts[:3])
@@ -70,9 +65,9 @@ class SocRoom(BaseRoom):
     def _parse_log_file(self):
         """
         Parse auth.log file and extract relevant data.
-        Returns:
-            subnet_count, subnet_ips, sample_lines, accepted_count, malformed_count
+        Returns: subnet_count, subnet_ips, sample_lines, accepted_count, malformed_count
         """
+        #create variables
         subnet_count = Counter()
         subnet_ips = defaultdict(list)
         sample_lines = {}
@@ -84,16 +79,16 @@ class SocRoom(BaseRoom):
                 for line in auth_file:
                     line = line.strip()  # remove extra spaces
 
-                    if is_malformed_line(line):
+                    if is_malformed_line(line): #check if malformed
                         malformed_count += 1
                         continue
 
-                    match = self.ip_pattern.search(line)
+                    match = self.ip_pattern.search(line) #check if IP address is available
                     if not match:
                         malformed_count += 1
                         continue
 
-                    ip = match.group(1)
+                    ip = match.group(1) #checks if IP address is valid
                     if not is_valid_ip(ip):
                         malformed_count += 1
                         continue
@@ -116,13 +111,11 @@ class SocRoom(BaseRoom):
 
         return subnet_count, subnet_ips, sample_lines, accepted_count, malformed_count
 
+
     def _find_most_common_ip(self, ip_list):
         """
         Find the most frequently occurring IP in a list.
-        Arguments:
-            ip_list (list): List of IP addresses
-        Returns:
-            tuple: (most_common_ip, frequency)
+        Returns: (most_common_ip, frequency) as a tuple
         """
         ip_frequency = Counter(ip_list)
         most_common_ip = None
@@ -137,11 +130,7 @@ class SocRoom(BaseRoom):
     def _generate_token(self, most_common_ip, subnet_count):
         """
         Generate token from IP's last octet and subnet count.
-        Arguments:
-            most_common_ip (str): The most frequently failing IP
-            subnet_count (int): Total failures for the subnet
-        Returns:
-            str: Generated token
+        Returns: Generated token ={L}+{COUNT}
         """
         last_octet = most_common_ip.split('.')[-1]
         return last_octet + str(subnet_count)
@@ -149,22 +138,19 @@ class SocRoom(BaseRoom):
     def _write_results_to_transcript(self, results):
         """
         Write all results to transcript.
-        Arguments:
-            results (dict): Dictionary containing all result data
         """
         output_lines = [
             f"TOKEN[KEYPAD]={results['token']}",
             f"EVIDENCE[KEYPAD].TOP24={results['max_subnet']}/24",
             f"EVIDENCE[KEYPAD].COUNT={results['subnet_count']}",
-            # f"EVIDENCE[KEYPAD].IP_COUNT={results['ip_count']}",
+            #f"EVIDENCE[KEYPAD].IP_COUNT={results['ip_count']}",
             f"EVIDENCE[KEYPAD].SAMPLE={results['sample']}",
-            # f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={results['accepted_count']}",
+            #f"EVIDENCE[KEYPAD].ACCEPTED_COUNT={results['accepted_count']}",
             f"EVIDENCE[KEYPAD].MALFORMED_SKIPPED={results['malformed_count']}"
         ]
 
-        # Debug output
         for line in output_lines:
-            print(line)
+            self.transcript.print_message(line)
             self.add_log_to_transcript(line)
 
         return results['token']
@@ -172,18 +158,17 @@ class SocRoom(BaseRoom):
     def solve(self):
         """
         Find the most likely attacking subnet by analysing auth.log.
-        Returns:
-            str: Formatted results with token and evidence
+        Returns: Formatted results with token and evidence
         """
         # Parse the log file
         parse_result = self._parse_log_file()
         if parse_result[0] is None:
             return None
 
-        # At this point we have completed reading the auth.log file
-        # And found out all the counts and information we need from the file.
-
         subnet_count, subnet_ips, sample_lines, accepted_count, malformed_count = parse_result
+
+        # At this point we have completed reading the auth.log file
+        # And found out all the counts and evidence we need from the file.
 
         if not subnet_count:
             self.transcript.print_message("[ERROR] No failed passwords found!")
@@ -201,6 +186,7 @@ class SocRoom(BaseRoom):
         # Find most common IP within that subnet
         most_common_ip, frequency = self._find_most_common_ip(
             subnet_ips[max_subnet])
+
         # Generate token
         token = self._generate_token(most_common_ip, max_count)
 
