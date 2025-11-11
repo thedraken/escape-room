@@ -1,0 +1,4 @@
+# Final gate spec for group
+group_id=msc-group-04
+expected_hmac=771360e51a90a21d66c78cf6188890df689ddefa8d02432b9387ffb07c723daa
+token_order=KEYPAD,PID,SAFE,DNS

